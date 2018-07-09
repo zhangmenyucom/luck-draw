@@ -1,0 +1,289 @@
+     @import '../../common/util.less';
+     .activitiesDetails {
+       padding: 16*@2;
+       background: #fff;
+       line-height: 0;
+       text {
+         font-size: 16*@2;
+       }
+       span {
+         font-size: 14*@2;
+         display: inline-block;
+       }
+       >img {
+         width: 100%;
+         height: 179*@2;
+       }
+       .prompt {
+         padding: 0 16*@2;
+         height: 40*@2;
+         background: rgba(0, 0, 0, 0.8);
+         font-size: 14*@2;
+         line-height: 40*@2;
+         position: relative;
+         margin-top: -40*@2;
+         z-index: 2;
+         color: #fff;
+         span {
+           color: #FFDD3E
+         }
+       }
+       .name {
+         font-size: 16*@2;
+         line-height: 20*@2;
+         margin-top: 16*@2;
+         font-weight: 600;
+         color: #434343;
+         span {
+           color: #FE4C52;
+         }
+       }
+       .goldBean {
+         display: flex;
+         margin-top: 10*@2;
+         img {
+           width: 15*@2;
+           height: 14*@2;
+           margin-top: 2*@2;
+         }
+         text {
+           color: #F3B913;
+           font-size: 14*@2;
+           line-height: 18*@2
+         }
+         span {
+           text-decoration: line-through;
+           font-size: 14*@2;
+           line-height: 17*@2;
+           color: #999999;
+           margin-left: 8*@2;
+         }
+       }
+       .hint {
+         padding: 0 8*@2;
+         width: 100%;
+         margin-top: 24*@2;
+         color: #EF8229;
+         text-align: center;
+         line-height: 32*@2;
+         background: RGBA(250, 175, 108, 0.1);
+         font-size: 12*@2;
+         margin-bottom: 8*@2;
+         .bets {
+
+           span {
+             margin-top: 8*@2;
+             font-size: 14*@2;
+             line-height: 18*@2;
+             color: RGBA(102, 102, 102, 1);
+           }
+           >div {
+             display: block;
+             color: RGBA(254, 76, 82, 1);
+             font-size: 38*@2;
+             font-weight: 600;
+             margin: 8*@2 auto;
+             position: relative;
+             padding-left: 30*@2;
+             >span {
+               color: RGBA(254, 76, 82, 1);
+               position: relative;
+               left: 5*@2;
+             }
+           }
+           text {
+             color: RGBA(67, 67, 67, 1);
+             font-size: 14*@2;
+           }
+           i {
+             width: 0;
+             height: 0;
+             border-width: 6*@2;
+             border-style: solid;
+             border-color: transparent transparent transparent RGBA(102, 102, 102, 1);
+             display: inline-block;
+           }
+         }
+       }
+       .prize {
+         width: 110*@2;
+         height: 110*@2;
+         background: -webkit-linear-gradient(RGBA(255, 151, 94, 0.3), RGBA(255, 50, 72, 0.3));
+         /* Safari 5.1 - 6.0 */
+         border-radius: 55*@2;
+         margin: 24*@2 auto;
+         >div {
+           width: 100*@2;
+           height: 100*@2;
+           background: -webkit-linear-gradient(RGBA(255, 151, 94, 1), RGBA(255, 50, 72, 1));
+           /* Safari 5.1 - 6.0 */
+           border-radius: 50*@2;
+           margin: auto;
+           position: relative;
+           top: 5*@2;
+           >div {
+             width: 84*@2;
+             height: 84*@2;
+             background: -webkit-linear-gradient(RGBA(255, 100, 113, 1), RGBA(255, 115, 42, 1));
+             /* Safari 5.1 - 6.0 */
+             border-radius: 42*@2;
+             margin: auto;
+             position: relative;
+             top: 8*@2;
+             font-size: 22*@2;
+             line-height: 28*@2;
+             color: #fff;
+             font-family: "HYe4gj";
+             text-align: center;
+             padding: 16*@2 20*@2;
+             box-sizing: border-box;
+           }
+         }
+       }
+       .participant {
+         text-align: center;
+         span {
+           font-size: 12*@2;
+           line-height: 18*@2;
+           margin-bottom: 8*@2;
+           display: block;
+         }
+       }
+       .button {
+         background: RGBA(243, 185, 19, 1);
+         color: RGBA(255, 255, 255, 1);
+         font-size: 16*@2;
+         height: 40*@2;
+         line-height: 40*@2;
+         text-align: center;
+       }
+       .bottom {
+         margin-top: 24*@2;
+       }
+     }
+
+
+
+     .modal {
+       background: RGBA(0, 0, 0, 0.6);
+       position: fixed;
+       top: 0;
+       bottom: 0;
+       left: 0;
+       right: 0;
+       z-index: 100;
+       .content {
+         width: 263*@2;
+         margin: 86*@2 auto;
+         >img {
+           width: 100%;
+         }
+         ;
+         >div {
+           background: RGBA(96, 76, 58, 1);
+           border: 4*@2 solid RGBA(140, 90, 44, 1);
+           >div {
+             border: 1*@1 solid RGBA(68, 51, 36, 1);
+             padding: 0 10*@2;
+             max-height: 280*@2;
+             overflow: auto;
+             button {
+               width: 120*@2;
+             }
+             .luckyList {
+               margin-right: 15*@2;
+               padding: 16*@2;
+               border-bottom: 1*@1 solid RGBA(75, 59, 45, 1);
+               display: flex;
+               line-height: 33*@2;
+               .number {
+                 width: 33*@2;
+                 height: 33*@2;
+                 border-radius: 17*@2;
+                 position: relative;
+                 img {
+                   width: 100%;
+                   height: 100%;
+                 }
+                 >div {
+                   position: absolute;
+                   top: 0;
+                   left: 0;
+                   height: 100%;
+                   width: 100%;
+                   font-size: 16*@2;
+                   text-align: center;
+                   color: RGBA(128, 90, 26, 1);
+                 }
+               }
+               text {
+                 flex: 1;
+                 text-align: center;
+                 color: RGBA(249, 224, 181, 1);
+               }
+             }
+
+             .betting {
+               margin-top: 40*@2;
+               .operation {
+                 width: 148*@2;
+                 height: 40*@2;
+                 background: RGBA(255, 255, 255, 0.1);
+                 border: 1*@2 solid RGBA(61, 43, 26, 1);
+                 margin: 0 auto;
+                 border-radius: 20*@2;
+                 overflow: hidden;
+                 display: flex;
+                 >div {
+                   line-height: 38*@2;
+                   flex: 1;
+                   text-align: center;
+                   color: RGBA(255, 255, 255, 1);
+                 }
+                 >div:nth-child(2) {
+                   color: RGBA(252, 229, 194, 1);
+                   border-left: 1*@2 solid RGBA(61, 43, 26, 1);
+                   border-right: 1*@2 solid RGBA(61, 43, 26, 1);
+                   background: RGBA(96, 76, 58, 1);
+                 }
+               }
+               .cancel {
+                 line-height: 20*@2;
+                 margin: 18*@2 auto 29*@2;
+                 display: inline-block;
+                 width: 100%;
+                 text-align: center;
+                 color: RGBA(252, 229, 194, 1);
+               }
+               .record {
+                 text-align: center;
+                 color: RGBA(252, 229, 194, 1);
+                 line-height: 20*@2;
+                 width: 100%;
+                 margin: 17*@2 auto 34*@2;
+               }
+             }
+             .point {
+               >div {
+                 font-size: 18*@2;
+                 color: RGBA(252, 229, 194, 1);
+                 margin: 50*@2 auto 56*@2;
+                 text-align: center;
+                 line-height: 26*@2;
+                 span {
+                   font-size: 22*@2;
+                 }
+               }
+               >span {
+                 font-size: 12*@2;
+                 line-height: 16*@2;
+                 margin: 8*@2 auto;
+                 display: block;
+                 color: RGBA(252, 229, 194, 0.6);
+                 text-align: center;
+               }
+             }
+           }
+         }
+       }
+     }

@@ -1,0 +1,125 @@
+ @import '../../common/util.less';
+ .activitiesDetails {
+   padding: 16*@2;
+   background: #fff;
+   line-height: 0;
+   >img {
+     width: 100%;
+     height: 179*@2;
+   }
+   .prompt {
+     padding: 0 16*@2;
+     height: 40*@2;
+     background: rgba(0, 0, 0, 0.8);
+     font-size: 14*@2;
+     line-height: 40*@2;
+     position: relative;
+     margin-top: -40*@2;
+     z-index: 2;
+     color: #fff;
+     span {
+       color: #FFDD3E
+     }
+   }
+   .name {
+     font-size: 16*@2;
+     line-height: 20*@2;
+     margin-top: 16*@2;
+     font-weight: 600;
+     color: #434343;
+     span {
+       color: #FE4C52;
+     }
+   }
+   .goldBean {
+     display: flex;
+     margin-top: 10*@2;
+     img {
+       width: 15*@2;
+       height: 14*@2;
+       margin-top: 2*@2;
+     }
+     text {
+       color: #F3B913;
+       font-size: 14*@2;
+       line-height: 18*@2
+     }
+     span {
+       text-decoration: line-through;
+       font-size: 14*@2;
+       line-height: 17*@2;
+       color: #999999;
+       margin-left: 8*@2;
+     }
+   }
+   .hint {
+     height: 32*@2;
+     width: 100%;
+     margin-top: 24*@2;
+     color: #EF8229;
+     text-align: center;
+     line-height: 32*@2;
+     background: RGBA(250, 175, 108, 0.1);
+     font-size: 12*@2;
+     margin-bottom: 8*@2;
+     .bets {
+       margin-top: 8*@2;
+       font-size: 14*@2;
+       line-height: 18*@2;
+     }
+   }
+   .prize {
+     width: 110*@2;
+     height: 110*@2;
+     background: -webkit-linear-gradient(RGBA(255, 151, 94, 0.3), RGBA(255, 50, 72, 0.3));
+     /* Safari 5.1 - 6.0 */
+     border-radius: 55*@2;
+     margin: 24*@2 auto;
+     >div {
+       width: 100*@2;
+       height: 100*@2;
+       background: -webkit-linear-gradient(RGBA(255, 151, 94, 1), RGBA(255, 50, 72, 1));
+       /* Safari 5.1 - 6.0 */
+       border-radius: 50*@2;
+       margin: auto;
+       position: relative;
+       top: 5*@2;
+       >div {
+         width: 84*@2;
+         height: 84*@2;
+         background: -webkit-linear-gradient(RGBA(255, 100, 113, 1), RGBA(255, 115, 42, 1));
+         /* Safari 5.1 - 6.0 */
+         border-radius: 42*@2;
+         margin: auto;
+         position: relative;
+         top: 8*@2;
+         font-size: 22*@2;
+         line-height: 28*@2;
+         color: #fff;
+         font-family: "HYe4gj";
+         text-align: center;
+         padding: 16*@2 20*@2;
+         box-sizing: border-box;
+       }
+     }
+   }
+   .participant {
+     text-align: center;
+     span {
+       color: RGBA(67, 67, 67, 1);
+       font-size: 12*@2;
+       line-height: 18*@2;
+       margin-bottom: 8*@2;
+       display: block;
+     }
+   }
+   .bottom {
+     background: RGBA(243, 185, 19, 1);
+     color: RGBA(255, 255, 255, 1);
+     font-size: 16*@2;
+     height: 40*@2;
+     margin-top: 24*@2;
+     line-height: 40*@2;
+     text-align: center;
+   }
+ }
