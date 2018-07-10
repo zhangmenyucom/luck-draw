@@ -27,8 +27,7 @@
       <div>
       </div>
     </div>
-
-    <div class="hint">
+    <div class="hint" v-if='false'>
       <div class="c"></div>
       <div class="bets">
         <span>
@@ -44,15 +43,47 @@
       </div>
       提示：注数越多，获胜几率越大，开奖以幸运号为准。
     </div>
+    <!-- 中间提示结束 -->
+    <!-- 中奖 -->
+    <div class="draw hint">
+      <span></span>
+      <div class="">
+        恭喜，你已中奖
+      </div>
+      <div class="divButton">
+        <button class="butotn-o">去领奖</button>
+        <button class="button">炫耀一下</button>
+      </div>
+      <span></span>
+    </div>
+    <!-- 中奖结束 -->
 
-  <!-- 抽奖按钮 -->
-    <div class="prize">
+    <!-- 抽奖按钮 -->
+    <div class="prize" v-if='false'>
       <div>
         <div class='bold antialiased'>
           点我抽奖
         </div>
       </div>
     </div>
+    <!-- 抽奖按钮结束 -->
+    <!-- 中奖名单 -->
+    <div class="drawList">
+      <div class="border">
+        <div>
+          中奖名单
+        </div>
+      </div>
+      <div class="list">
+        <headPortrait :list="['http://www.runoob.com/images/compatible_chrome.gif']" :size="56" />
+        <text>
+          幸运号：111111
+        </text>
+      </div>
+
+    </div>
+    <!-- 中奖名单结束 -->
+    <!-- 参加列表 -->
     <div class="participant">
       <span class='antialiased'>
         已有XXX人参加
@@ -62,7 +93,8 @@
     <div class="bottom button">
       分享领金币
     </div>
-    <!-- 抽奖按钮结束 -->
+    <!-- 参加列表结束 -->
+
     <!-- 弹出层 -->
     <div class="modal" v-if='false'>
       <div class="content">

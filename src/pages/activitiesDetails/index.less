@@ -10,6 +10,14 @@
          font-size: 14*@2;
          display: inline-block;
        }
+       .button {
+         background: RGBA(243, 185, 19, 1);
+         color: RGBA(255, 255, 255, 1);
+         font-size: 16*@2;
+         height: 40*@2;
+         line-height: 40*@2;
+         text-align: center;
+       }
        >img {
          width: 100%;
          height: 179*@2;
@@ -57,6 +65,35 @@
            line-height: 17*@2;
            color: #999999;
            margin-left: 8*@2;
+         }
+       }
+       .draw {
+         >div {
+           margin: 16*@2 0 8*@2;
+           text-align: center;
+           font-size: 20*@2;
+           line-height: 24*@2;
+           color: RGBA(67, 67, 67, 1);
+         }
+         >.divButton {
+           display: flex;
+           /*padding: */
+           >button {
+             width: 120*@2;
+             background: RGBA(254, 76, 82, 1);
+             border: none;
+             border-radius: 2*@2;
+             font-size: 16*@2;
+           }
+           >button::after {
+             border: none;
+             border-radius: 2*@2;
+           }
+           .butotn-o {
+             background: transparent;
+             border: 1*@1 solid RGBA(254, 76, 82, 1);
+             color: RGBA(254, 76, 82, 1);
+           }
          }
        }
        .hint {
@@ -140,6 +177,7 @@
            }
          }
        }
+
        .participant {
          text-align: center;
          span {
@@ -149,141 +187,159 @@
            display: block;
          }
        }
-       .button {
-         background: RGBA(243, 185, 19, 1);
-         color: RGBA(255, 255, 255, 1);
-         font-size: 16*@2;
-         height: 40*@2;
-         line-height: 40*@2;
-         text-align: center;
-       }
        .bottom {
          margin-top: 24*@2;
        }
      }
 
-
-
-     .modal {
-       background: RGBA(0, 0, 0, 0.6);
-       position: fixed;
-       top: 0;
-       bottom: 0;
-       left: 0;
-       right: 0;
-       z-index: 100;
-       .content {
-         width: 263*@2;
-         margin: 86*@2 auto;
-         >img {
-           width: 100%;
-         }
-         ;
+     .drawList {
+       .border {
+         height: 11*@2;
+         border-bottom: 1*@1 dotted RGBA(151, 151, 151, 0.22);
+         margin: 25*@2 0;
          >div {
-           background: RGBA(96, 76, 58, 1);
-           border: 4*@2 solid RGBA(140, 90, 44, 1);
-           >div {
-             border: 1*@1 solid RGBA(68, 51, 36, 1);
-             padding: 0 10*@2;
-             max-height: 280*@2;
-             overflow: auto;
-             button {
-               width: 120*@2;
-             }
-             .luckyList {
-               margin-right: 15*@2;
-               padding: 16*@2;
-               border-bottom: 1*@1 solid RGBA(75, 59, 45, 1);
-               display: flex;
-               line-height: 33*@2;
-               .number {
-                 width: 33*@2;
-                 height: 33*@2;
-                 border-radius: 17*@2;
-                 position: relative;
-                 img {
-                   width: 100%;
-                   height: 100%;
-                 }
-                 >div {
-                   position: absolute;
-                   top: 0;
-                   left: 0;
-                   height: 100%;
-                   width: 100%;
-                   font-size: 16*@2;
-                   text-align: center;
-                   color: RGBA(128, 90, 26, 1);
-                 }
+           margin: auto;
+           text-align: center;
+           color: RGBA(243, 185, 19, 1);
+           font-size: 16*@2;
+           line-height: 22*@2;
+           height: 22*@2;
+           width: 100*@2;
+           background: #fff;
+         }
+       }
+       .list{
+        text-align: center;
+        >text{
+          color: RGBA(153, 153, 153, 1);
+          line-height: 20*@2;
+          margin: 16*@2 auto 24*@2;
+          display: inline-block;
+        }
+      }
+    }
+
+
+    .modal {
+     background: RGBA(0, 0, 0, 0.6);
+     position: fixed;
+     top: 0;
+     bottom: 0;
+     left: 0;
+     right: 0;
+     z-index: 100;
+     .content {
+       width: 263*@2;
+       margin: 86*@2 auto;
+       >img {
+         width: 100%;
+       }
+       ;
+       >div {
+         background: RGBA(96, 76, 58, 1);
+         border: 4*@2 solid RGBA(140, 90, 44, 1);
+         >div {
+           border: 1*@1 solid RGBA(68, 51, 36, 1);
+           padding: 0 10*@2;
+           max-height: 280*@2;
+           overflow: auto;
+           button {
+             width: 120*@2;
+           }
+           .luckyList {
+             margin-right: 15*@2;
+             padding: 16*@2;
+             border-bottom: 1*@1 solid RGBA(75, 59, 45, 1);
+             display: flex;
+             line-height: 33*@2;
+             .number {
+               width: 33*@2;
+               height: 33*@2;
+               border-radius: 17*@2;
+               position: relative;
+               img {
+                 width: 100%;
+                 height: 100%;
                }
-               text {
+               >div {
+                 position: absolute;
+                 top: 0;
+                 left: 0;
+                 height: 100%;
+                 width: 100%;
+                 font-size: 16*@2;
+                 text-align: center;
+                 color: RGBA(128, 90, 26, 1);
+               }
+             }
+             text {
+               flex: 1;
+               text-align: center;
+               color: RGBA(249, 224, 181, 1);
+             }
+           }
+
+           .betting {
+             margin-top: 40*@2;
+             .operation {
+               width: 148*@2;
+               height: 40*@2;
+               background: RGBA(255, 255, 255, 0.1);
+               border: 1*@2 solid RGBA(61, 43, 26, 1);
+               margin: 0 auto;
+               border-radius: 20*@2;
+               overflow: hidden;
+               display: flex;
+               >div {
+                 line-height: 38*@2;
                  flex: 1;
                  text-align: center;
-                 color: RGBA(249, 224, 181, 1);
+                 color: RGBA(255, 255, 255, 1);
+               }
+               >div:nth-child(2) {
+                 color: RGBA(252, 229, 194, 1);
+                 border-left: 1*@2 solid RGBA(61, 43, 26, 1);
+                 border-right: 1*@2 solid RGBA(61, 43, 26, 1);
+                 background: RGBA(96, 76, 58, 1);
                }
              }
-
-             .betting {
-               margin-top: 40*@2;
-               .operation {
-                 width: 148*@2;
-                 height: 40*@2;
-                 background: RGBA(255, 255, 255, 0.1);
-                 border: 1*@2 solid RGBA(61, 43, 26, 1);
-                 margin: 0 auto;
-                 border-radius: 20*@2;
-                 overflow: hidden;
-                 display: flex;
-                 >div {
-                   line-height: 38*@2;
-                   flex: 1;
-                   text-align: center;
-                   color: RGBA(255, 255, 255, 1);
-                 }
-                 >div:nth-child(2) {
-                   color: RGBA(252, 229, 194, 1);
-                   border-left: 1*@2 solid RGBA(61, 43, 26, 1);
-                   border-right: 1*@2 solid RGBA(61, 43, 26, 1);
-                   background: RGBA(96, 76, 58, 1);
-                 }
-               }
-               .cancel {
-                 line-height: 20*@2;
-                 margin: 18*@2 auto 29*@2;
-                 display: inline-block;
-                 width: 100%;
-                 text-align: center;
-                 color: RGBA(252, 229, 194, 1);
-               }
-               .record {
-                 text-align: center;
-                 color: RGBA(252, 229, 194, 1);
-                 line-height: 20*@2;
-                 width: 100%;
-                 margin: 17*@2 auto 34*@2;
+             .cancel {
+               line-height: 20*@2;
+               margin: 18*@2 auto 29*@2;
+               display: inline-block;
+               width: 100%;
+               text-align: center;
+               color: RGBA(252, 229, 194, 1);
+             }
+             .record {
+               text-align: center;
+               color: RGBA(252, 229, 194, 1);
+               line-height: 20*@2;
+               width: 100%;
+               margin: 17*@2 auto 34*@2;
+             }
+           }
+           .point {
+             >div {
+               font-size: 18*@2;
+               color: RGBA(252, 229, 194, 1);
+               margin: 50*@2 auto 56*@2;
+               text-align: center;
+               line-height: 26*@2;
+               span {
+                 font-size: 22*@2;
                }
              }
-             .point {
-               >div {
-                 font-size: 18*@2;
-                 color: RGBA(252, 229, 194, 1);
-                 margin: 50*@2 auto 56*@2;
-                 text-align: center;
-                 line-height: 26*@2;
-                 span {
-                   font-size: 22*@2;
-                 }
-               }
-               >span {
-                 font-size: 12*@2;
-                 line-height: 16*@2;
-                 margin: 8*@2 auto;
-                 display: block;
-                 color: RGBA(252, 229, 194, 0.6);
-                 text-align: center;
-               }
+             >span {
+               font-size: 12*@2;
+               line-height: 16*@2;
+               margin: 8*@2 auto;
+               display: block;
+               color: RGBA(252, 229, 194, 0.6);
+               text-align: center;
              }
            }
          }
        }
      }
+   }

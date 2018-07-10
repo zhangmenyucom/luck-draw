@@ -1,8 +1,8 @@
 {
 	"description": "项目配置文件。",
 	"setting": {
-		"urlCheck": true,
-		"es6": false,
+		"urlCheck": false,
+		"es6": true,
 		"postcss": true,
 		"minified": true,
 		"newFeature": true
@@ -11,6 +11,7 @@
 	"compileType": "miniprogram",
 	"appid": "wxfb7be0751102cf64",
 	"projectname": "%E6%8A%BD%E5%A5%96%E5%B0%8F%E7%A8%8B%E5%BA%8F-%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83",
+	"libVersion": "1.0.1",
 	"condition": {
 		"search": {
 			"current": -1,
@@ -35,6 +36,12 @@
 					"id": -1,
 					"name": "活动详情",
 					"pathName": "pages/activitiesDetails/main",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "获取金豆",
+					"pathName": "pages/obtainGoldBean/main",
 					"query": ""
 				}
 			]
