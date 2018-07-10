@@ -3,9 +3,9 @@ import config from 'config'
 import ext from '../ext/ext'
 var Fly = require(`flyio/dist/npm/wx`)
 var fly = new Fly()
-  // 配置请求基地址
+// 配置请求基地址
 fly.config.baseURL = config.baseURL
-  // 添加拦截器
+// 添加拦截器
 fly.interceptors.request.use((request) => {
   // 给所有请求添加自定义header
   request.headers = {

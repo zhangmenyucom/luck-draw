@@ -13,11 +13,11 @@ class AuthService extends ServiceBase {
       jsCode: userInfo.code,
       appId: config.appId
     }).then((res) => {
-        if (res.code === 0) {
-          ext.setStorageSync('token', `${res.data.tokenType} ${res.data.accessToken}`)
-          ext.setStorageSync('refreshToken', res.data.refreshToken)
-        }
-        return res
+      if (res.code === 0) {
+        ext.setStorageSync('token', `${res.data.tokenType} ${res.data.accessToken}`)
+        ext.setStorageSync('refreshToken', res.data.refreshToken)
+      }
+      return res
     })
   }
   refreshToken () { // 刷新认证令牌

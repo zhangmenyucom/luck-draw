@@ -1,10 +1,11 @@
+<template>
+  <div>
+  </div>
+</template>
 <script>
   export default {
-    created () {
-    }
   }
 </script>
-
 <style>
   @import (less) '../static/iconFont/iconfont.css';
   @import './common/util.less';

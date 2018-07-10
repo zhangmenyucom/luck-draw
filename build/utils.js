@@ -38,7 +38,7 @@ exports.cssLoaders = function (options) {
   // generate loader string to be used with extract text plugin
   function generateLoaders (loader, loaderOptions) {
     // 为了书写方便 本处为错误处理
-    loader = "less"
+    loader = 'less'
     var loaders = [cssLoader, px2rpxLoader, postcssLoader]
     if (loader) {
       loaders.push({

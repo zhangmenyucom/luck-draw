@@ -10,7 +10,7 @@
 export default {
   props: ['text'],
   created () {
-      console.log('hell card')
+    console.log('hell card')
   }
 }
 </script>

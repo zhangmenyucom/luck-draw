@@ -1,5 +1,6 @@
+
 import {isWx} from '../decorator'
-@isWx
+@isWx // eslint-disable-line
 export default class ext {
   static getStorageSync (key) {
     if (this.isWx) {
