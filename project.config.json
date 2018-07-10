@@ -30,7 +30,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": -1,
+			"current": 3,
 			"list": [
 				{
 					"id": -1,
@@ -43,6 +43,17 @@
 					"name": "获取金豆",
 					"pathName": "pages/obtainGoldBean/main",
 					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "我的活动列表",
+					"pathName": "pages/meActivitiesList/index",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "我的金豆",
+					"pathName": "pages/meIntegral/index"
 				}
 			]
 		}
