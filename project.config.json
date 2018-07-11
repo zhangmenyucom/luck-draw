@@ -30,13 +30,13 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 3,
+			"current": 0,
 			"list": [
 				{
-					"id": -1,
+					"id": 0,
 					"name": "活动详情",
-					"pathName": "pages/activitiesDetails/main",
-					"query": ""
+					"pathName": "pages/activitiesDetails/index",
+					"query": "id=5b42c364711eae4cb0ac967d"
 				},
 				{
 					"id": -1,
@@ -45,15 +45,16 @@
 					"query": ""
 				},
 				{
-					"id": -1,
+					"id": 2,
 					"name": "我的活动列表",
 					"pathName": "pages/meActivitiesList/index",
-					"query": ""
+					"query": "id=5b42c364711eae4cb0ac967d"
 				},
 				{
 					"id": -1,
 					"name": "我的金豆",
-					"pathName": "pages/meIntegral/index"
+					"pathName": "pages/meIntegral/index",
+					"query": ""
 				}
 			]
 		}

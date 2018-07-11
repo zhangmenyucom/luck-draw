@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a class="list" v-for="(item , i) in list" :href="'/pages/activitiesDetails/main'">
+    <a class="list" v-for="(item , i) in list" :href="item.url">
       <div class='state'>
         正在抽奖 <i class="icon iconfont icon-Fillx"></i>
       </div>

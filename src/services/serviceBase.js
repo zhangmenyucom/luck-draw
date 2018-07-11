@@ -9,7 +9,7 @@ export default class ServiceBase {
     return request.get(`${this.url}?${qs.stringify(data, true)}`)
   }
   get (data) {
-    return request.get(`${this.url}/${data.id}${qs.stringify(data, true)}`)
+    return request.get(`${this.url}/${data.id}?${qs.stringify(data, true)}`)
   }
   add (data) {
     return request.post(`${this.url}`, data)

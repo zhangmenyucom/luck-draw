@@ -40,7 +40,7 @@
 <script>
   import activitieList from '@/components/activitieList'
   import ActivitiesService from '@/services/activitiesService'
-  import AuthService from '@/services/authService'
+  // import AuthService from '@/services/authService'
   export default {
     data () {
       return {
@@ -62,14 +62,11 @@
       getActivitieList () {
         ActivitiesService.getList({type: 'LUCKY_DRAW'}).then((res) => {
           if (res.code === 0) {
+            // 获取到activitie数据，对数据处理。
+            res.data.forEach((activitie) => {
+              activitie.url = `/pages/activitiesDetails/index?id=${activitie.id}`
+            })
             this.activitieList = [...res.data, ...this.activitieList]
-          }
-        })
-      },
-      getUserInfo () {
-        AuthService.wxLogin().then((res) => {
-          if (res.code === 0) {
-            this.getActivitieList()
           }
         })
       }
@@ -77,9 +74,9 @@
 
     onLoad () {
       // 调用应用实例的方法获取全局数据
-      this.getUserInfo()
+      // this.getUserInfo()
       console.log('index')
-      // this.getActivitieList()
+      this.getActivitieList()
     }
   }
 </script>

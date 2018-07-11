@@ -25,11 +25,13 @@
         ¥8799
       </span>
       <div>
+        <i />中奖规则
       </div>
     </div>
-    <div class="hint" v-if='false'>
+
+    <div class="hint"  v-if="state == 'NotInvolved' || state == 'ParticipateIn'">
       <div class="c"></div>
-      <div class="bets">
+      <div class="bets" v-if="state == 'ParticipateIn'">
         <span>
           已下注
         </span>
@@ -44,8 +46,9 @@
       提示：注数越多，获胜几率越大，开奖以幸运号为准。
     </div>
     <!-- 中间提示结束 -->
+
     <!-- 中奖 -->
-    <div class="draw hint">
+    <div class="draw hint" v-if="false">
       <span></span>
       <div class="">
         恭喜，你已中奖
@@ -59,7 +62,7 @@
     <!-- 中奖结束 -->
 
     <!-- 抽奖按钮 -->
-    <div class="prize" v-if='false'>
+    <div class="prize" v-if ="state == 'NotInvolved' || state == 'ParticipateIn' ">
       <div>
         <div class='bold antialiased'>
           点我抽奖
@@ -68,7 +71,7 @@
     </div>
     <!-- 抽奖按钮结束 -->
     <!-- 中奖名单 -->
-    <div class="drawList">
+    <div class="drawList" v-if='false'>
       <div class="border">
         <div>
           中奖名单
@@ -80,7 +83,6 @@
           幸运号：111111
         </text>
       </div>
-
     </div>
     <!-- 中奖名单结束 -->
     <!-- 参加列表 -->
@@ -96,7 +98,7 @@
     <!-- 参加列表结束 -->
 
     <!-- 弹出层 -->
-    <div class="modal" v-if='false'>
+    <div class="modal" v-if='isModal'>
       <div class="content">
         <img src="../../../static/img/group.png" mode='widthFix'>
         <div>
@@ -173,7 +175,15 @@
           'http://www.runoob.com/images/compatible_chrome.gif',
           'http://www.runoob.com/images/compatible_chrome.gif'
         ],
-        luckyList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14]
+        luckyList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14],
+        isModal: false,
+        state: `NotInvolved` // 页面总的状态
+        // NotInvolved 未参与
+        // Bets 下注
+        // ParticipateIn 参与过
+        // LookAtTheLuckyNumber 查看幸运号
+        // WinningThePrize 中奖
+        // NotWinningThePrize 未中奖
       }
     },
     onPullDownRefresh () {
@@ -183,18 +193,21 @@
       headPortrait
     },
     methods: {
-      getActivitie () {
+      getActivitie (id) {
         ActivitiesService.get({
-          id: `asdffasd`
+          id
         }).then((res) => {
           if (res.code === 0) {
             this.activitie = res.data
           }
         })
+      },
+      bets () {
+        this.isModal = true
       }
     },
-    onLoad () {
-      console.log('activitiesDetails')
+    onLoad (a) {
+      this.getActivitie(a.id)
     }
   }
 </script>
