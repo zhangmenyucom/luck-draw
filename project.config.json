@@ -3,8 +3,8 @@
 	"setting": {
 		"urlCheck": false,
 		"es6": true,
-		"postcss": true,
-		"minified": true,
+		"postcss": false,
+		"minified": false,
 		"newFeature": true
 	},
 	"miniprogramRoot": "./dist/",
@@ -30,7 +30,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": -1,
+			"current": 4,
 			"list": [
 				{
 					"id": 0,
@@ -39,9 +39,9 @@
 					"query": "id=5b42c364711eae4cb0ac967d"
 				},
 				{
-					"id": -1,
+					"id": 1,
 					"name": "获取金豆",
-					"pathName": "pages/obtainGoldBean/main",
+					"pathName": "pages/obtainGoldBean/index",
 					"query": ""
 				},
 				{
@@ -57,9 +57,9 @@
 					"query": ""
 				},
 				{
-					"id": -1,
+					"id": 4,
 					"name": "jkkl",
-					"pathName": "pages/infoDetail/main",
+					"pathName": "pages/infoDetail/index",
 					"query": ""
 				},
 				{

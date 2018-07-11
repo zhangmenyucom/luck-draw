@@ -7,9 +7,9 @@
             </div>
             <div class="info_r">
               <div class="editInfo">
-                <a :href="'/pages/editInfo/main'">
+                <a :href="'/pages/editInfo/index'">
                   <span >完善资料</span>
-                  <span >+100 <i calss="icon"></i></span>
+                  <span >+100 </span><img src="/static/img/goldBean.png">
                 </a>  
               </div>
             </div>
@@ -47,15 +47,15 @@
                    </li>
                    <li>
                      <div class="job_l">
-                       <div class="job_l_w">可得 10<span class="job_icon"></span></div>
+                       <div class="job_l_w">可得 10<img src="/static/img/goldBean.png"></div>
                      </div>
                      <div class="job_l">
-                       <div class="job_l_w">一次可得:0 <span class="job_icon"></span></div>
+                       <div class="job_l_w">一次可得:0 </span><img src="/static/img/goldBean.png"></div>
                      </div>
                    </li>
                    <li class="btn">
-                     <div class="getWard"><i></i> &nbsp;立即领取</div>
-                     <div class="shareWard"><i></i> &nbsp;立即分享</div>
+                     <div class="getWard"><img src="/static/img/goldBean.png"> &nbsp;立即领取</div>
+                     <div class="shareWard"><img src="/static/img/goldBean.png"> &nbsp;立即分享</div>
                    </li>
                  </ul>
                </div>
