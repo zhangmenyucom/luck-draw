@@ -28,4 +28,5 @@ module.exports = [{
     navigationBarTitleText: '我的金豆',
     enablePullDownRefresh: true
   }
-}]
+}
+]
