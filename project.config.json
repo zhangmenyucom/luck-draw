@@ -30,7 +30,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 0,
+			"current": -1,
 			"list": [
 				{
 					"id": 0,
@@ -54,6 +54,18 @@
 					"id": -1,
 					"name": "我的金豆",
 					"pathName": "pages/meIntegral/index",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "jkkl",
+					"pathName": "pages/infoDetail/main",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "editInfo",
+					"pathName": "pages/editInfo/main",
 					"query": ""
 				}
 			]
