@@ -10,7 +10,7 @@
                 <a :href="'/pages/editInfo/main'">
                   <span >完善资料</span>
                   <span >+100 <i calss="icon"></i></span>
-                </a>  
+                </a>
               </div>
             </div>
         </div >
@@ -21,10 +21,10 @@
                         <div class="detailNum">1000</div>
                         <div class="detailContent">我的金豆</div>
                     </div>
-                    <div style="flex:1">
+                    <a href="/pages/meActivitiesList/index" style="flex:1">
                         <div  class="detailNum">5</div>
                         <div  class="detailContent">全部抽奖</div>
-                    </div>
+                    </a>
                     <div style="flex:1">
                         <div class="detailNum">5</div>
                         <div class="detailContent">中奖记录</div>
@@ -59,23 +59,24 @@
                    </li>
                  </ul>
                </div>
-            </div> 
+            </div>
             <div class="infoQue">
                 <div>常见问题</div>
                 <div class="arrow"></div>
             </div>
         </div>
+        <signIn/>
     </div>
 
 </template>
 <style scoped>
   @import './index.less';
-
 </style>
 <script>
+    import signIn from '@/components/signIn'
     export default {
-      data () {
-
+      components: {
+        signIn
       }
     }
 </script>

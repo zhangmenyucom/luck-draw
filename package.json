@@ -5,9 +5,9 @@
   "author": "weilongfei <weilongfei@qianbaocard.com>",
   "private": true,
   "scripts": {
-    "dev": "npm run standard  && node build/dev-server.js",
+    "dev": "npm run standard && DISABLE_ESLINT=no node build/dev-server.js",
+    "start": "npm run standard && node build/dev-server.js",
     "standard": "standard --fix && standard --fix --plugin html '**/*.vue'",
-    "start": "node build/dev-server.js",
     "build": "node build/build.js",
     "lint": "eslint --ext .js,.vue src"
   },

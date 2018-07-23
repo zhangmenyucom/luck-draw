@@ -1,10 +1,13 @@
 <template>
   <div>
     <a class="list" v-for="(item , i) in list" :href="item.url">
-      <div class='state'>
+      <div class='state' v-if='item.isOpen'>
         正在抽奖 <i class="icon iconfont icon-Fillx"></i>
       </div>
-      <img :src='item.media[0].url'>
+      <div  class='state' v-else>
+        即将开始
+      </div>
+      <img mode='center' :src='item.media[0].url'>
       <div class="name antialiased">
         {{item.name}}
       </div>
@@ -18,9 +21,12 @@
         </span>
       </div>
       <div class="button">
-        <button>
+        <button v-if='item.isOpen'>
           去抽奖
         </button>
+        <div v-else>
+          马上预约
+        </div>
       </div>
     </a>
   </div>
@@ -28,6 +34,7 @@
 
 <script>
   export default {
+    name: 'activitieList',
     props: ['list']
   }
 </script>
@@ -91,7 +98,17 @@
   }
   .button{
     padding:24*@2;
-
+    >div{
+      background: #CCCCCC;
+      color: #fff;
+      border-radius: 2*@2;
+      height: 40*@2;
+      width: 201*@2;
+      line-height: 40*@2;
+      margin: auto;
+      text-align: center;
+      font-size: 16*@2
+    }
     button{
       border-radius: 2*@2;
       background: #FE4C52;

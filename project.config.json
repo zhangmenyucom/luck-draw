@@ -30,13 +30,14 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": -1,
+			"current": 6,
 			"list": [
 				{
 					"id": 0,
 					"name": "活动详情",
 					"pathName": "pages/activitiesDetails/index",
-					"query": "id=5b42c364711eae4cb0ac967d"
+					"query": "id=5b51b44d711eae33439ed673",
+					"scene": "1008"
 				},
 				{
 					"id": -1,
@@ -67,6 +68,31 @@
 					"name": "editInfo",
 					"pathName": "pages/editInfo/main",
 					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "我的",
+					"pathName": "pages/infoDetail/index",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "中奖记录",
+					"pathName": "pages/meActivitiesList/index",
+					"query": ""
+				},
+				{
+					"id": -1,
+					"name": "中奖名单",
+					"pathName": "pages/drawList/index",
+					"query": "id=5b517ba5711eae2ec5c50fb3"
+				},
+				{
+					"id": -1,
+					"name": "活动详情",
+					"pathName": "pages/activitiesDetails/index",
+					"query": "id=5b51b44d711eae33439ed673",
+					"scene": "1008"
 				}
 			]
 		}

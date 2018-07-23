@@ -14,11 +14,11 @@ export default {
 
 <style scoped>
 @import '../common/util.less';
-
 img{
   width: 30*@2;
   height: 30*@2;
   border:15*@2;
   margin-left: -10*@2;
+  border-radius: 15*@2;
 }
 </style>

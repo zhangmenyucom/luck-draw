@@ -28,7 +28,7 @@ const pagesEntry = getEntry(resolve('./src'), 'pages/**/main.js')
 const entry = Object.assign({}, appEntry, pagesEntry)
 
 console.log('process.env.NODE_ENV', process.env.NODE_ENV)
-const rules = [
+const rules = process.env.DISABLE_ESLINT == 'no'?[]:[
 {
   test: /\.(js|vue)$/,
   loader: 'eslint-loader',
@@ -63,7 +63,7 @@ module.exports = {
     mainFields: ['browser', 'module', 'main']
   },
   module: {
-    rules: [{
+    rules: [...rules, {
       test: /\.vue$/,
       loader: 'mpvue-loader',
       options: vueLoaderConfig

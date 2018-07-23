@@ -1,26 +1,27 @@
 <template>
   <div>
     <a class="list" v-for='(item, index) in list '>
-      <img src="http://fanyi.bdstatic.com/static/translation/img/header/logo_cbfea26.png" alt="">
+      <img mode='center' :src='item.media[0].url' alt="">
       <div>
         <span class='title'>
-          超炫酷iphone X（256G）深灰色
+          {{item.name}}
         </span>
         <div class="info">
           <span>
-            已有999人参与
+            <!-- 已有999人参与 -->
           </span>
           <br />
           <span>
-            满1000人开奖
-            <span class="state">
+            {{item.time}}
+            <!-- <span class="state">
               已结束
-            </span>
+            </span> -->
           </span>
         </div>
 
       </div>
     </a>
+
   </div>
 </template>
 
@@ -43,6 +44,7 @@
       width:80*@2;
       height: 80*@2;
       margin-right: 16*@2;
+      background: #eee;
     }
     >div{
       flex:1;

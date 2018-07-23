@@ -7,15 +7,20 @@ import {
 } from '../utils'
 
 class AuthService extends ServiceBase {
-  async wxLogin () { // 通过微信小程序登录
+  async wxLogin (data) { // 通过微信小程序登录
+    console.log(data)
     const userInfo = await wxLogin
     return request.post(`${this.url}login/wx-miniapp`, {
       jsCode: userInfo.code,
-      appId: config.appId
+      appId: config.appId,
+      scene: 'MINI_APP',
+      encryptedData: data.encryptedData,
+      iv: data.iv
     }).then((res) => {
       if (res.code === 0) {
         ext.setStorageSync('token', `${res.data.tokenType} ${res.data.accessToken}`)
         ext.setStorageSync('refreshToken', res.data.refreshToken)
+        ext.setStorageSync('userInfo', res.data.user)
       }
       return res
     })

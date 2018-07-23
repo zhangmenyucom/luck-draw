@@ -1,5 +1,6 @@
      @import '../../common/util.less';
      .activitiesDetails {
+       min-height: 100vh;
        padding: 16*@2;
        background: #fff;
        line-height: 0;
@@ -66,26 +67,35 @@
            color: #999999;
            margin-left: 8*@2;
          }
-         div{
-          font-size: 12*@2;
-          line-height: 16*@2;
-          color: RGBA(153, 153, 153, 1);
-          flex:1;
-          text-align: right;
+         div {
+           font-size: 12*@2;
+           line-height: 16*@2;
+           color: RGBA(153, 153, 153, 1);
+           flex: 1;
+           text-align: right;
          }
        }
        .draw {
+         line-height: 0!important;
+         font-size: 0!important;
+         >span {
+           line-height: 0!important;
+           font-size: 0!important;
+         }
          >div {
-           margin: 16*@2 0 8*@2;
+           margin: 24*@2 0 8*@2;
            text-align: center;
-           font-size: 20*@2;
+           font-size: 18*@2;
            line-height: 24*@2;
            color: RGBA(67, 67, 67, 1);
          }
          >.divButton {
            display: flex;
+           margin-bottom: 24*@2;
            /*padding: */
-           >button {
+           >button,
+           >a {
+             margin: auto;
              width: 120*@2;
              background: RGBA(254, 76, 82, 1);
              border: none;
@@ -175,17 +185,27 @@
              position: relative;
              top: 8*@2;
              font-size: 22*@2;
-             line-height: 28*@2;
              color: #fff;
-             font-family: "HYe4gj";
              text-align: center;
              padding: 16*@2 20*@2;
              box-sizing: border-box;
+             button {
+               font-family: "HYe4gj";
+               background: transparent!important;
+               padding: 0;
+               color: #fff;
+               line-height: 28*@2;
+               border: none;
+             }
+             button::after {
+               border: none;
+             }
            }
          }
        }
 
        .participant {
+         margin-top: 24*@2;
          text-align: center;
          span {
            font-size: 12*@2;
@@ -196,10 +216,18 @@
        }
        .bottom {
          margin-top: 24*@2;
+         border: none;
+         position: fixed;
+         bottom: 8*@2;
+         width: calc(100% - 32*@2);
+       }
+       .bottom::after {
+         border: none;
        }
      }
 
      .drawList {
+       margin-bottom: 32*@2;
        .border {
          height: 11*@2;
          border-bottom: 1*@1 dotted RGBA(151, 151, 151, 0.22);
@@ -215,138 +243,28 @@
            background: #fff;
          }
        }
-       .list{
-        text-align: center;
-        >text{
-          color: RGBA(153, 153, 153, 1);
-          line-height: 20*@2;
-          margin: 16*@2 auto 24*@2;
-          display: inline-block;
-        }
-      }
-    }
-
-
-    .modal {
-     background: RGBA(0, 0, 0, 0.6);
-     position: fixed;
-     top: 0;
-     bottom: 0;
-     left: 0;
-     right: 0;
-     z-index: 100;
-     .content {
-       width: 263*@2;
-       margin: 86*@2 auto;
-       >img {
-         width: 100%;
+       .list {
+         text-align: center;
+         >text {
+           color: RGBA(153, 153, 153, 1);
+           line-height: 20*@2;
+           margin: 16*@2 auto 24*@2;
+           display: inline-block;
+         }
        }
-       ;
-       >div {
-         background: RGBA(96, 76, 58, 1);
-         border: 4*@2 solid RGBA(140, 90, 44, 1);
-         >div {
-           border: 1*@1 solid RGBA(68, 51, 36, 1);
-           padding: 0 10*@2;
-           max-height: 280*@2;
-           overflow: auto;
-           button {
-             width: 120*@2;
-           }
-           .luckyList {
-             margin-right: 15*@2;
-             padding: 16*@2;
-             border-bottom: 1*@1 solid RGBA(75, 59, 45, 1);
-             display: flex;
-             line-height: 33*@2;
-             .number {
-               width: 33*@2;
-               height: 33*@2;
-               border-radius: 17*@2;
-               position: relative;
-               img {
-                 width: 100%;
-                 height: 100%;
-               }
-               >div {
-                 position: absolute;
-                 top: 0;
-                 left: 0;
-                 height: 100%;
-                 width: 100%;
-                 font-size: 16*@2;
-                 text-align: center;
-                 color: RGBA(128, 90, 26, 1);
-               }
-             }
-             text {
-               flex: 1;
-               text-align: center;
-               color: RGBA(249, 224, 181, 1);
-             }
-           }
-
-           .betting {
-             margin-top: 40*@2;
-             .operation {
-               width: 148*@2;
-               height: 40*@2;
-               background: RGBA(255, 255, 255, 0.1);
-               border: 1*@2 solid RGBA(61, 43, 26, 1);
-               margin: 0 auto;
-               border-radius: 20*@2;
-               overflow: hidden;
-               display: flex;
-               >div {
-                 line-height: 38*@2;
-                 flex: 1;
-                 text-align: center;
-                 color: RGBA(255, 255, 255, 1);
-               }
-               >div:nth-child(2) {
-                 color: RGBA(252, 229, 194, 1);
-                 border-left: 1*@2 solid RGBA(61, 43, 26, 1);
-                 border-right: 1*@2 solid RGBA(61, 43, 26, 1);
-                 background: RGBA(96, 76, 58, 1);
-               }
-             }
-             .cancel {
-               line-height: 20*@2;
-               margin: 18*@2 auto 29*@2;
-               display: inline-block;
-               width: 100%;
-               text-align: center;
-               color: RGBA(252, 229, 194, 1);
-             }
-             .record {
-               text-align: center;
-               color: RGBA(252, 229, 194, 1);
-               line-height: 20*@2;
-               width: 100%;
-               margin: 17*@2 auto 34*@2;
-             }
-           }
-           .point {
-             >div {
-               font-size: 18*@2;
-               color: RGBA(252, 229, 194, 1);
-               margin: 50*@2 auto 56*@2;
-               text-align: center;
-               line-height: 26*@2;
-               span {
-                 font-size: 22*@2;
-               }
-             }
-             >span {
-               font-size: 12*@2;
-               line-height: 16*@2;
-               margin: 8*@2 auto;
-               display: block;
-               color: RGBA(252, 229, 194, 0.6);
-               text-align: center;
-             }
-           }
+       >a {
+         background: #fff;
+         font-size: 14*@2;
+         line-height: 18*@2;
+         text-align: center;
+         display: block;
+         width: 100%;
+         color: #999999;
+         >img {
+           width: 12*@2;
+           height: 12*@2;
          }
        }
      }
-   }
+
+

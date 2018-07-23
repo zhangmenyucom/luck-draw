@@ -1,107 +1,56 @@
- @import '../../common/util.less';
- span {
-   font-size: 15*@2
- }
+<template>
+ <div :class ="{model:true, showModel : isModel }">
+  <div :class="{signIn:true, showModel : isModel}" >
+    <img :class="{ transform: isModel }" src="/static/img/light.png" />
+    <div class="sign">
+      <img src="/static/img/signIn.png" />
+      <div class="goldBean">
+        <img src="/static/img/goldBean.png" />
+      </div>
+      <button class="signButton" open-type='getUserInfo' @getuserinfo="bindgetuserinfo">
+        签到领金豆
+      </button>
+    </div>
+  </div>
+</div>
+</template>
 
- @keyframes myfirst {
-   from {
-     transform: rotate(0deg);
-     -webkit-transform: rotate(0deg);
-     /* Safari and Chrome */
-   }
-   to {
-     transform: rotate(90deg);
-     -webkit-transform: rotate(90deg);
-     /* Safari and Chrome */
-   }
- }
+<script>
+  import AuthService from '@/services/authService'
+  import { getUserInfo } from '@/utils'
+  export default {
+    props: [`signInCB`],
+    data () {
+      return {
+        isModel: false
+      }
+    },
+    methods: {
+      bindgetuserinfo (e) {
+        AuthService.wxLogin(e.mp.detail).then((res) => {
+          if (res.code === 0) {
+            this.isModel = false
+            this.signInCB()
+          }
+        })
+      }
+    },
+    onLoad () {
+      const userInfo = getUserInfo()
+      if (!userInfo.id) {
+        this.isModel = true
+      }
+    }
+  }
+</script>
 
- text {
-   font-size: 12*@2
- }
-
- .head {
-   position: relative;
-   img {
-     width: 100%;
-     height: 190*@2;
-   }
-   >div {
-     padding: 8*@2 15*@2 13*@2;
-     position: absolute;
-     top: 0;
-     bottom: 0;
-     left: 0;
-     right: 0;
-     .calendar {
-       position: relative;
-       text-align: center;
-       margin-top: 12*@2;
-       >div {
-         position: absolute;
-         width: 100%;
-         bottom: 13*@2;
-         font-size: 13*@2;
-         line-height: 17*@2;
-         color: #fff;
-         text-align: center;
-         >span {
-           font-size: 30*@2;
-         }
-       }
-       >img {
-         width: 91*@2;
-         height: 67*@2;
-       }
-     }
-     .record {
-       border-top: 1*@2 solid RGBA(255, 255, 255, 0.3);
-       margin-top: 13*@2;
-       padding-top: 13*@2;
-       display: flex;
-       >div {
-         flex: 1;
-         line-height: 0;
-         font-size: 0;
-         text-align: center;
-         position: relative;
-         div {
-           font-size: 10*@2;
-           line-height: 10*@2;
-           position: absolute;
-           color: RGBA(255, 221, 62, 1);
-           right: 10*@2;
-           top: -3*@2;
-         }
-         img {
-           width: 20*@2;
-           height: 20*@2;
-           margin-bottom: 5*@2;
-         }
-         text {
-           color: RGBA(255, 221, 62, 1);
-           line-height: 16*@2;
-         }
-       }
-     }
-     >span {
-       line-height: 19*@2;
-     }
-     .left {
-       color: RGBA(255, 255, 255, 1);
-     }
-     .right {
-       color: RGBA(255, 221, 62, 1);
-     }
-   }
- }
-/*
- .showModel {
+<style scoped>
+  @import '../common/util.less';
+  .showModel {
    transform: scale3d(1, 1, 1)!important;
    opacity: 1!important;
    pointer-events:auto!important;
  }
-
  .model {
    pointer-events:none;
    position: fixed;
@@ -136,7 +85,9 @@
            font-family: helvetica;
            text-align: center;
            background: -webkit-linear-gradient(top, RGBA(255, 236, 164, 1), RGBA(252, 241, 85, 1));
+           /* 背景色渐变 */
            -webkit-background-clip: text;
+           /* 规定背景的划分区域 */
            color: transparent;
            position: absolute;
          }
@@ -183,6 +134,7 @@
        animation: myfirst 2s;
        -webkit-animation: myfirst 2s;
        animation-delay:1s;
+       /* Safari 与 Chrome */
      }
      >.sign {
        width: 160*@2;
@@ -204,7 +156,7 @@
          box-shadow: 2*22 4*@2 #B3191E;
          transition: width 2s;
          -webkit-transition: width 2s;
-
+         /* Safari */
        }
        .goldBean {
          height: 80*@1;
@@ -218,4 +170,5 @@
        }
      }
    }
- }*/
+ }
+</style>

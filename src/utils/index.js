@@ -1,5 +1,5 @@
 import wxLogin from './wxLogin'
-
+import ext from '../ext/ext'
 function formatNumber (n) {
   const str = n.toString()
   return str[1] ? str : `0${str}`
@@ -21,16 +21,19 @@ function formatTime (date) {
 }
 
 const operatingEnvironment = () => window ? 'window' : 'miniApp'
+const getUserInfo = () => ext.getStorageSync('userInfo') || {}
 
 export {
   wxLogin,
   operatingEnvironment,
-  formatTime
+  formatTime,
+  getUserInfo
 }
 
 export default {
   formatNumber,
   formatTime,
   operatingEnvironment,
-  wxLogin
+  wxLogin,
+  getUserInfo
 }

@@ -28,5 +28,23 @@ module.exports = [{
     navigationBarTitleText: '我的金豆',
     enablePullDownRefresh: true
   }
+}, {
+  path: 'pages/editInfo/index',
+  config: {
+    navigationBarTitleText: '我的资料',
+    enablePullDownRefresh: true
+  }
+}, {
+  path: 'pages/infoDetail/index',
+  config: {
+    navigationBarTitleText: '完善资料',
+    enablePullDownRefresh: true
+  }
+}, {
+  path: 'pages/drawList/index',
+  config: {
+    navigationBarTitleText: '完善资料',
+    enablePullDownRefresh: true
+  }
 }
 ]
