@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a class="list" v-for='(item, index) in list '>
+    <a class="list"  v-for='(item, index) in list ' :href="'/pages/activitiesDetails/index?id=' + item.id">
       <img mode='center' :src='item.media[0].url' alt="">
       <div>
         <span class='title'>

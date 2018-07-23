@@ -8,7 +8,7 @@ module.exports = [{
   path: 'pages/activitiesDetails/index',
   config: {
     navigationBarTitleText: '抽奖详情',
-    enablePullDownRefresh: true
+    enablePullDownRefresh: false
   }
 }, {
   path: 'pages/meActivitiesList/index',
@@ -38,7 +38,7 @@ module.exports = [{
   path: 'pages/infoDetail/index',
   config: {
     navigationBarTitleText: '完善资料',
-    enablePullDownRefresh: true
+    enablePullDownRefresh: false
   }
 }, {
   path: 'pages/drawList/index',

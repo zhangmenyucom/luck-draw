@@ -46,7 +46,21 @@
 
 <style scoped>
   @import '../common/util.less';
-  .showModel {
+
+  @keyframes myfirst {
+   from {
+     transform: rotate(0deg);
+     -webkit-transform: rotate(0deg);
+     /* Safari and Chrome */
+   }
+   to {
+     transform: rotate(90deg);
+     -webkit-transform: rotate(90deg);
+     /* Safari and Chrome */
+   }
+ }
+
+ .showModel {
    transform: scale3d(1, 1, 1)!important;
    opacity: 1!important;
    pointer-events:auto!important;

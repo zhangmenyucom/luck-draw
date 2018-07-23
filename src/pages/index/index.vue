@@ -1,5 +1,6 @@
 <template>
   <div class='index'>
+    <top title="首页" />
     <div class="head">
       <img src="/static/img/bitmap.png" alt="">
       <div>
@@ -78,6 +79,7 @@
 // export {default} from './a'
 import activitieList from '@/components/activitieList'
 import signIn from '@/components/signIn'
+import top from '@/components/top'
 import ActivitiesService from '@/services/activitiesService'
 import AuthService from '@/services/authService'
 import {getUserInfo} from '@/utils'
@@ -88,17 +90,31 @@ export default {
       userInfo: {},
       activitieList: [],
       week: ['一', '二', '三', '四', '五', '六', '七'],
-      goldBean: [10, 15, 20, 25, 30, 35, 40]
+      goldBean: [10, 15, 20, 25, 30, 35, 40],
+      complete: false,
+      isGet: false,
+      onPullDownRefresh: false,
+      pageNum: 1
     }
   },
   onPullDownRefresh () {
-    this.$stopPullDownRefresh()
+    this.pullDownRefresh()
   },
   components: {
     activitieList,
-    signIn
+    signIn,
+    top
+  },
+  onReachBottom () {
+    this.getActivitieList(this.pageNum)
   },
   methods: {
+    pullDownRefresh () {
+      this.pageNum = 1
+      this.onPullDownRefresh = true
+      this.complete = false
+      this.getActivitieList()
+    },
     bindgetuserinfo (e) {
       AuthService.wxLogin(e.mp.detail).then((res) => {
         if (res.code === 0) {
@@ -107,16 +123,29 @@ export default {
         }
       })
     },
-    getActivitieList () {
-      ActivitiesService.getList({type: 'PLATFORM_LUCKY_DRAW', status: 'CREATED'}).then((res) => {
+    getActivitieList (pageNum = 1, pageSize = 20) {
+      if (this.complete || this.isGet) return false
+
+      this.isGet = true
+      ActivitiesService.getList({
+        type: 'PLATFORM_LUCKY_DRAW',
+        status: 'CREATED',
+        pageNum,
+        pageSize
+      }).then((res) => {
+        this.$stopPullDownRefresh()
+        this.isGet = false
         if (res.code === 0) {
           const date = new Date().getTime()
+          const oldActivitieList = !this.onPullDownRefresh ? this.activitieList : []
           // 获取到activitie数据，对数据处理。
           res.data.forEach((activitie) => {
             activitie.url = date > activitie.startTime && `/pages/activitiesDetails/index?id=${activitie.id}`
             activitie.isOpen = date > activitie.startTime
           })
-          this.activitieList = [...res.data, ...this.activitieList]
+          this.activitieList = [...res.data, ...oldActivitieList]
+          this.pageNum++
+          if (this.activitieList.length >= res.total) this.complete = true
         }
       })
     },

@@ -1,5 +1,6 @@
 <template>
   <div class="activitiesDetails">
+    <top title="首页" />
     <img mode='center' :src="activitie.media[0].url">
     <div class="prompt antialiased">
       <div class="left">
@@ -54,7 +55,7 @@
         很遗憾，去看看其他活动
       </div>
       <div class="divButton">
-        <a url='page/index/index'>去看看</a>
+        <a href='/pages/index/index'>去看看</a>
       </div>
       <span></span>
     </div>
@@ -202,6 +203,7 @@
   import headPortrait from '@/components/headPortrait'
   import drawList from '@/components/drawList'
   import signIn from '@/components/signIn'
+  import top from '@/components/top'
   import ActivitiesService from '@/services/activitiesService'
   import ParticipantsService from '@/services/participantsService'
   import {
@@ -247,7 +249,8 @@
     components: {
       headPortrait,
       drawList,
-      signIn
+      signIn,
+      top
     },
     methods: {
       getActivitie (id) { // 获取活动详情
@@ -345,6 +348,7 @@
           if (res.code === 0) {
             this.modifyState(2)
             this.participants = res.data
+            this.signInCB()
           }
         })
       },
