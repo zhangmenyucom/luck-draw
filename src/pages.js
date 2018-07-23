@@ -46,17 +46,4 @@ module.exports = [{
     navigationBarTitleText: '完善资料',
     enablePullDownRefresh: true
   }
-}
-,{
-  path: 'pages/editInfo/index',
-  config: {
-    navigationBarTitleText: '我的资料',
-    enablePullDownRefresh: true
-  }
-}, {
-  path: 'pages/infoDetail/index',
-  config: {
-    navigationBarTitleText: '完善资料',
-    enablePullDownRefresh: true
-  }
 }]
