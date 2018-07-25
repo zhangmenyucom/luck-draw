@@ -1,5 +1,6 @@
 import wxLogin from './wxLogin'
 import ext from '../ext/ext'
+import formatDate from './formatDate'
 function formatNumber (n) {
   const str = n.toString()
   return str[1] ? str : `0${str}`
@@ -27,7 +28,8 @@ export {
   wxLogin,
   operatingEnvironment,
   formatTime,
-  getUserInfo
+  getUserInfo,
+  formatDate
 }
 
 export default {
@@ -35,5 +37,6 @@ export default {
   formatTime,
   operatingEnvironment,
   wxLogin,
-  getUserInfo
+  getUserInfo,
+  formatDate
 }

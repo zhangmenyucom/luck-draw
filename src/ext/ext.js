@@ -32,6 +32,12 @@ export default class ext {
       })
     }
   }
+  static clearStorageSync () {
+    if (this.isWx) {
+      wx.clearStorageSync()
+    }
+  }
+
   static showToast (title) {
     if (this.isWx) {
       wx.showToast({
@@ -40,11 +46,20 @@ export default class ext {
       })
     }
   }
+
+  static switchTab (url) {
+    if (this.isWx) {
+      wx.switchTab({ url })
+    }
+  }
+
   static install (Vue, options) {
     Vue.prototype.$getStorageSync = this.getStorageSync.bind(this)
     Vue.prototype.$setStorageSync = this.setStorageSync.bind(this)
     Vue.prototype.$stopPullDownRefresh = this.stopPullDownRefresh.bind(this)
     Vue.prototype.$chooseAddress = this.chooseAddress.bind(this)
     Vue.prototype.$showToast = this.showToast.bind(this)
+    Vue.prototype.$clearStorageSync = this.clearStorageSync.bind(this)
+    Vue.prototype.$switchTab = this.switchTab.bind(this)
   }
 }

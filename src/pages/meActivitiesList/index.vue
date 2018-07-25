@@ -7,7 +7,8 @@
 <script>
   import meActivitieList from '@/components/meActivitieList'
   import ParticipantsService from '@/services/participantsService'
-  import { getUserInfo } from '@/utils'
+  import { getUserInfo, formatDate } from '@/utils'
+  import config from 'config'
   export default {
     data () {
       return {
@@ -48,14 +49,14 @@
           if (res.code === 0) {
             const oldParticipantList = !this.onPullDownRefresh ? this.participantList : []
             const participantList = res.data.map((participant) => {
-              participant.activity.time = new Date(participant.createdTime)
+              participant.activity.time = formatDate(new Date(participant.createdTime), 'yy/mm/dd HH:mm:ss')
+              participant.activity.prize = participant.activity.items[0]
               return participant.activity
             })
             if (this.onPullDownRefresh) {
               this.onPullDownRefresh = false
               this.$stopPullDownRefresh()
             }
-
             this.pageNum++
             this.isGet = false
             this.participantList = [...oldParticipantList, ...participantList]
@@ -67,6 +68,9 @@
     onLoad (data) {
       this.type = data.type
       this.pullDownRefresh()
+    },
+    onShareAppMessage () {
+      return config.share
     }
   }
 </script>

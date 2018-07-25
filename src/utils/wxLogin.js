@@ -1,4 +1,4 @@
-export default new Promise((resolve, reject) => {
+export default () => new Promise((resolve, reject) => {
   wx.login({
     success (res) {
       resolve(res)

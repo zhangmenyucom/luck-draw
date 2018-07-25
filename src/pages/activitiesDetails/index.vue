@@ -40,7 +40,7 @@
           {{participants.tickets ? participants.tickets.length : 0}}<span>注</span>
         </div>
         <text data-state="4" @tap="modifyState">
-          查看辛运号
+          查看幸运号
         </text>
         <i></i>
       </div>
@@ -52,10 +52,11 @@
     <div class="draw hint" v-if="state === 5">
       <span></span>
       <div class="">
-        很遗憾，去看看其他活动
+        很遗憾，您未中奖<br />
+        去看看其他活动
       </div>
       <div class="divButton">
-        <a href='/pages/index/index'>去看看</a>
+        <a open-type="switchTab" class="button" href='/pages/index/index'>去看看</a>
       </div>
       <span></span>
     </div>
@@ -106,7 +107,7 @@
       <div class="list">
         <drawList :list="luckyItems" />
       </div>
-      <a :href="'/pages/drawList/index?id='+ activitie.id" >
+      <a :href="'/pages/drawList/index?id='+ activitie.id" v-if="luckyItems.length < 4" >
         查看更多<img src="/static/img/right.png" alt="">
       </a>
     </div>
@@ -314,17 +315,17 @@
         })
         // 查询活动总参与人数
         ParticipantsService.get({
-          activityId,
-          pageSize: 8,
-          pageNum: 1
+          activityId
         }).then((res) => {
           if (res.code === 0) {
             let ticketsTotal = 0
+            res.data = res.data.slice(0, 7)
             this.participantList = res.data.map((data) => {
               ticketsTotal += data.tickets.length
               data.img = data.user.avatar
               return data
             })
+
             this.ticketsTotal = ticketsTotal
             this.participantTotal = res.total
           }
@@ -386,10 +387,9 @@
     },
     onShareAppMessage () {
       const introductionImageUrl = this.activitie.media.filter(media => media.layout === 'INTRODUCTION')[0]
-      console.log('introductionImageUrl', introductionImageUrl)
       return {
         title: this.activitie.name,
-        path: `pages/activitiesDetails/index`,
+        path: `pages/activitiesDetails/index?id=${this.activitie.id}`,
         imageUrl: introductionImageUrl && introductionImageUrl.url
       }
     }

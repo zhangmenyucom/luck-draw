@@ -8,8 +8,7 @@ import {
 
 class AuthService extends ServiceBase {
   async wxLogin (data) { // 通过微信小程序登录
-    console.log(data)
-    const userInfo = await wxLogin
+    const userInfo = await wxLogin()
     return request.post(`${this.url}login/wx-miniapp`, {
       jsCode: userInfo.code,
       appId: config.appId,

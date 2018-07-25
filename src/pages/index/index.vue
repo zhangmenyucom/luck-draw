@@ -36,7 +36,7 @@
       <activitieList :list="activitieList" />
     </div>
     <!-- 活动列表结束 -->
-    <signIn :signInCB = "signInCB"/>
+    <signIn :signInCB = "signInCB" :showModel="isModel"/>
    <!--  <div class="model" v-if='isModel'>
       <div class="welfare">
         <img src="/static/img/welfare.png" alt="" />
@@ -76,13 +76,12 @@
 </template>
 
 <script>
-// export {default} from './a'
 import activitieList from '@/components/activitieList'
 import signIn from '@/components/signIn'
 import top from '@/components/top'
 import ActivitiesService from '@/services/activitiesService'
-import AuthService from '@/services/authService'
 import {getUserInfo} from '@/utils'
+import config from 'config'
 export default {
   data () {
     return {
@@ -94,7 +93,8 @@ export default {
       complete: false,
       isGet: false,
       onPullDownRefresh: false,
-      pageNum: 1
+      pageNum: 1,
+      isModel: false
     }
   },
   onPullDownRefresh () {
@@ -115,17 +115,8 @@ export default {
       this.complete = false
       this.getActivitieList()
     },
-    bindgetuserinfo (e) {
-      AuthService.wxLogin(e.mp.detail).then((res) => {
-        if (res.code === 0) {
-          this.getActivitieList()
-          this.isModel = false
-        }
-      })
-    },
     getActivitieList (pageNum = 1, pageSize = 20) {
       if (this.complete || this.isGet) return false
-
       this.isGet = true
       ActivitiesService.getList({
         type: 'PLATFORM_LUCKY_DRAW',
@@ -150,14 +141,20 @@ export default {
       })
     },
     signInCB () {
-      this.getActivitieList()
+      this.isModel = false
+      this.pullDownRefresh()
     }
   },
-  onLoad () {
+  onShow () {
     const userInfo = getUserInfo()
     if (userInfo.id) {
       this.getActivitieList()
+    } else {
+      this.isModel = true
     }
+  },
+  onShareAppMessage () {
+    return config.share
   }
 }
 </script>

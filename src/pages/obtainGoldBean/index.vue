@@ -58,6 +58,7 @@
 </template>
 
 <script>
+  import config from 'config'
   export default {
     data () {
       return {
@@ -76,6 +77,9 @@
     onLoad () {
       // 调用应用实例的方法获取全局数据
 
+    },
+    onShareAppMessage () {
+      return config.share
     }
   }
 </script>

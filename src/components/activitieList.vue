@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a class="list" v-for="(item , i) in list" :href="item.url">
+    <a v-if='list.length > 0' class="list" v-for="(item , i) in list" :href="item.url">
       <div class='state' v-if='item.isOpen'>
         正在抽奖 <i class="icon iconfont icon-Fillx"></i>
       </div>
@@ -29,6 +29,7 @@
         </div>
       </div>
     </a>
+    <!-- <img v-else src=""> -->
   </div>
 </template>
 

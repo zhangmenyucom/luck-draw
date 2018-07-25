@@ -33,12 +33,17 @@ fly.interceptors.response.use(
     // 发生网络错误后会走到这里
     console.log('err', err)
     if (err.status === 401) {
-      return refreshToken().then((res) => {
-        if (res.code === 0) {
-          console.log('res', res)
-          return fly.request(err.request.url, err.request.body, err.request)
-        }
-      })
+      if (err.request.url !== `/uc/v1/auth/refresh-token`) {
+        return refreshToken().then((res) => {
+          if (res.code === 0) {
+            console.log('res', res)
+            return fly.request(err.request.url, err.request.body, err.request)
+          }
+        })
+      } else {
+        ext.clearStorageSync()
+        ext.switchTab('/pages/index/index')
+      }
     } else {
       ext.showToast('当前服务不可用，请稍后在试！')
     }

@@ -1,7 +1,8 @@
 <template>
- <div :class ="{model:true, showModel : isModel }">
-  <div :class="{signIn:true, showModel : isModel}" >
-    <img :class="{ transform: isModel }" src="/static/img/light.png" />
+ <div :class ="{model:true, showModel : isModel || showModel  }">
+  {{isModel}}
+  <div :class="{signIn:true, showModel : isModel || showModel}" >
+    <img :class="{ transform: isModel || showModel }" src="/static/img/light.png" />
     <div class="sign">
       <img src="/static/img/signIn.png" />
       <div class="goldBean">
@@ -19,23 +20,24 @@
   import AuthService from '@/services/authService'
   import { getUserInfo } from '@/utils'
   export default {
-    props: [`signInCB`],
+    name: 'signIn',
+    props: [`signInCB`, `showModel`],
     data () {
       return {
         isModel: false
       }
     },
     methods: {
-      bindgetuserinfo (e) {
-        AuthService.wxLogin(e.mp.detail).then((res) => {
-          if (res.code === 0) {
-            this.isModel = false
-            this.signInCB()
-          }
-        })
+      async bindgetuserinfo (e) {
+        const res = await AuthService.wxLogin(e.mp.detail)
+        if (res.code === 0) {
+          this.isModel = false
+          this.signInCB()
+        }
       }
     },
     onLoad () {
+      console.log('onLoad')
       const userInfo = getUserInfo()
       if (!userInfo.id) {
         this.isModel = true
@@ -54,8 +56,8 @@
      /* Safari and Chrome */
    }
    to {
-     transform: rotate(90deg);
-     -webkit-transform: rotate(90deg);
+     transform: rotate(180deg);
+     -webkit-transform: rotate(180deg);
      /* Safari and Chrome */
    }
  }
@@ -145,9 +147,14 @@
        position: absolute;
        width: 100%;
        height: 100%;
-       animation: myfirst 2s;
-       -webkit-animation: myfirst 2s;
        animation-delay:1s;
+       animation: myfirst 1.5s;
+       -webkit-animation: myfirst 1.5s;
+       animation-iteration-count:infinite;
+       -webkit-animation-iteration-count:infinite; /*Safari and
+       Chrome*/
+       animation-timing-function:linear;
+       -webkit-animation-timing-function:linear; /* Safari and Chrome */
        /* Safari 与 Chrome */
      }
      >.sign {

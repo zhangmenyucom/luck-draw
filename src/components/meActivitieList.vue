@@ -8,11 +8,11 @@
         </span>
         <div class="info">
           <span>
-            <!-- 已有999人参与 -->
+            <span>「奖&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;品」</span>{{item.prize.name}}
           </span>
           <br />
           <span>
-            {{item.time}}
+            <span>「参与时间」</span>{{item.time}}
             <!-- <span class="state">
               已结束
             </span> -->
@@ -43,6 +43,7 @@
     > img {
       width:80*@2;
       height: 80*@2;
+      min-width: 80*@2;
       margin-right: 16*@2;
       background: #eee;
     }
@@ -52,6 +53,11 @@
       .title{
         font-size: 14*@2;
         line-height: 18*@2;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
       }
       .info{
         position: absolute;
@@ -60,6 +66,17 @@
         line-height: 16*@2;
         color: RGBA(153, 153, 153, 1);
         width: 100%;
+        > span{
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+          height: 16*@2;
+          overflow: hidden;
+          /*>span{
+            color: #FE4C52;
+          }*/
+        }
         .state{
           color: RGBA(153, 153, 153, 1);
           float: right;
