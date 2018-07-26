@@ -81,7 +81,9 @@
   import signIn from '@/components/signIn'
   import top from '@/components/top'
   import ActivitiesService from '@/services/activitiesService'
-  import {getUserInfo} from '@/utils'
+  import {
+    getUserInfo
+  } from '@/utils'
   import ScoreRulesService from '@/services/scoreRulesService'
 
   import config from 'config'
@@ -120,61 +122,61 @@
         this.complete = false
         this.getActivitieList()
       },
-    getScoreRules () { // 获取积分规则
-      ScoreRulesService.getList().then(res => {
-        if (res.code === 0) {
+      getScoreRules () { // 获取积分规则
+        ScoreRulesService.getList().then(res => {
+          if (res.code === 0) {
             // 处理每天对应的积分数
             const goldBeanRules = JSON.parse(res.data.filter((rule) => rule.type === 2)[0].rule)
             --goldBeanRules.maxStep
             this.goldBean = [...Array(7)].map((v, i) => parseInt(goldBeanRules.base) + (i > parseInt(goldBeanRules.maxStep) ? parseInt(goldBeanRules.maxStep) : i) * parseInt(goldBeanRules.stepAdd))
           }
         })
-    },
-    getActivitieList (pageNum = 1, pageSize = 20) {
-      if (this.complete || this.isGet) return false
+      },
+      getActivitieList (pageNum = 1, pageSize = 20) {
+        if (this.complete || this.isGet) return false
         this.isGet = true
-      ActivitiesService.getList({
-        type: 'PLATFORM_LUCKY_DRAW',
-        status: 'CREATED',
-        pageNum,
-        pageSize
-      }).then((res) => {
-        this.$stopPullDownRefresh()
-        this.isGet = false
-        if (res.code === 0) {
-          const date = new Date().getTime()
-          const oldActivitieList = !this.onPullDownRefresh ? this.activitieList : []
-          // 获取到activitie数据，对数据处理。
-          res.data.forEach((activitie) => {
-            activitie.url = date > activitie.startTime && `/pages/activitiesDetails/index?id=${activitie.id}`
-            activitie.isOpen = date > activitie.startTime
-          })
-          this.activitieList = [...res.data, ...oldActivitieList]
-          this.pageNum++
-          if (this.activitieList.length >= res.total) this.complete = true
-        }
-    })
+        ActivitiesService.getList({
+          type: 'PLATFORM_LUCKY_DRAW',
+          status: 'CREATED',
+          pageNum,
+          pageSize
+        }).then((res) => {
+          this.$stopPullDownRefresh()
+          this.isGet = false
+          if (res.code === 0) {
+            const date = new Date().getTime()
+            const oldActivitieList = !this.onPullDownRefresh ? this.activitieList : []
+            // 获取到activitie数据，对数据处理。
+            res.data.forEach((activitie) => {
+              activitie.url = date > activitie.startTime && `/pages/activitiesDetails/index?id=${activitie.id}`
+              activitie.isOpen = date > activitie.startTime
+            })
+            this.activitieList = [...res.data, ...oldActivitieList]
+            this.pageNum++
+            if (this.activitieList.length >= res.total) this.complete = true
+          }
+        })
+      },
+      signInCB (data) {
+        this.isModel = false
+        this.pullDownRefresh()
+        this.score = data.score || this.$getStorageSync('score')
+        this.scoreCounters = data.scoreCounters || this.$getStorageSync('scoreCounters')
+        this.getScoreRules()
+      }
     },
-    signInCB (data) {
-      this.isModel = false
-      this.pullDownRefresh()
-      this.score = data.score || this.$getStorageSync('score')
-      this.scoreCounters = data.scoreCounters || this.$getStorageSync('scoreCounters')
-      this.getScoreRules()
+    onShow () {
+      const userInfo = getUserInfo()
+      if (userInfo.id) {
+        this.signInCB({})
+      } else {
+        this.isModel = true
+      }
+    },
+    onShareAppMessage () {
+      return config.share
     }
-  },
-  onShow () {
-    const userInfo = getUserInfo()
-    if (userInfo.id) {
-      this.signInCB({})
-    } else {
-      this.isModel = true
-    }
-  },
-  onShareAppMessage () {
-    return config.share
   }
-}
 </script>
 
 <style scoped>

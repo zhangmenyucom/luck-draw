@@ -52,16 +52,17 @@
             })
           } else {
             // 获取用户积分数
+            this.signIn = true // 记录是否登录过
             return MeScoresService.getList()
           }
         }).then(res => {
           if (res.code === 0) {
             this.isModel = false
-
+            console.log('this.scoreCounters', this.scoreCounters)
+            console.log('this.signIn', this.signIn)
             if (!this.signIn) {
               this.scoreCounters.durationSignInDays = this.scoreCounters.durationSignInDays ? ++this.scoreCounters.durationSignInDays : 1
             }
-
             this.$setStorageSync('score', res.data.score)
             this.$setStorageSync('scoreCounters', this.scoreCounters)
             this.signInCB({
@@ -81,6 +82,7 @@
           if (res.code === 0 && res.data.length > 0) {
             const scoreCounters = res.data[0]
             // 记录最新签到信息
+            console.log('scoreCounters', scoreCounters)
             this.scoreCounters = scoreCounters
 
             // 对比今天是否签到
