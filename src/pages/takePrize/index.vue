@@ -46,7 +46,7 @@
     methods: {
       captcha () {
         if (this.countDown === 0) return
-          const that = this
+        const that = this
         AccountService.captcha({
           phone: this.mobile,
           type: 30

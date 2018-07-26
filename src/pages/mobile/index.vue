@@ -22,8 +22,8 @@
     },
     methods: {
       captcha () {
-        if (this.countDown === 0) return
-          const that = this
+        if (this.countDown !== 0) return
+        const that = this
         AccountService.captcha({
           phone: this.mobile,
           type: 30
@@ -32,7 +32,6 @@
             this.countDown = 60
             const countDown = setInterval(() => {
               --that.countDown
-              console.log(countDown)
               if (that.countDown <= 0) {
                 clearInterval(countDown)
               }

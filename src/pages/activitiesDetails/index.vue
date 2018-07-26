@@ -207,6 +207,7 @@
   import top from '@/components/top'
   import ActivitiesService from '@/services/activitiesService'
   import ParticipantsService from '@/services/participantsService'
+  import ScoreActivities from '@/services/scoreActivities'
   import {
     getUserInfo
   } from '@/utils'
@@ -233,7 +234,8 @@
         isModal: false,
         ticketsNum: 1, // 下注数
         ticketsTotal: 0, // 用户下注总数
-        state: 0
+        state: 0,
+        userInfo: {}
         // 0 NotInvolved 页面总的状态
         // 1 Bets 下注
         // 2 ParticipateIn 参与过
@@ -381,6 +383,7 @@
       this.state = 0
       const userInfo = getUserInfo()
       this.id = a.id
+      this.userInfo = userInfo
       if (userInfo.id) {
         this.signInCB()
       }
@@ -390,7 +393,19 @@
       return {
         title: this.activitie.name,
         path: `pages/activitiesDetails/index?id=${this.activitie.id}`,
-        imageUrl: introductionImageUrl && introductionImageUrl.url
+        imageUrl: introductionImageUrl && introductionImageUrl.url,
+        success (res) {
+          if (res) {
+            ScoreActivities.share({
+              user: this.userInfo,
+              target: this.activitie
+            }).then((res) => {
+              if (res.code === 0) {
+
+              }
+            })
+          }
+        }
       }
     }
   }

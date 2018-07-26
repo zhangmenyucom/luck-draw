@@ -25,7 +25,7 @@
   <div class="list_l">生日 <span v-if="rule.birthday">+{{rule.birthday}} <img src='/static/img/goldBean.png'></span></div>
   <div class="list_r" style="display:flex;">
    <div class="index_section">
-    <picker mode="date" @change="bindDateChangeUser('birthday', $event)">
+    <picker mode="date" :endDate = "endDate" @change="bindDateChangeUser('birthday', $event)">
       <div class="index_picker">
         <div class="">{{ userInfo.birthday||'未添加' }}</div>
       </div>
@@ -63,13 +63,6 @@
         rule: {}
       }
     },
-    mounted () {
-      // 设置时间
-      let today = this.getToday()
-      this.startDate = today
-      this.endDate = today
-      this.pickerStart = today
-    },
     methods: {
       getToday () {
         let myDate = new Date()
@@ -99,7 +92,7 @@
       },
       // 获取积分规则
       getScoreRules () {
-        ScoreRulesService.get().then(res => {
+        ScoreRulesService.getList().then(res => {
           if (res.code === 0) {
             this.rule = JSON.parse(res.data.filter(data => data.type === 4)[0] ? res.data.filter(data => data.type === 4)[0].rule : {})
           }
@@ -113,6 +106,11 @@
       }
     },
     onShow () {
+      let today = this.getToday()
+      this.startDate = today
+      this.endDate = today
+      this.pickerStart = today
+
       const userInfo = getUserInfo()
       this.userInfo = userInfo
       this.getScoreRules()

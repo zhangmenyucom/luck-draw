@@ -20,7 +20,7 @@
   <div class="content_detail">
     <div class="infoDetail clearfix">
       <div  class="" style="flex:1">
-        <div class="detailNum">1000</div>
+        <div class="detailNum">{{score + ''}}</div>
         <div class="detailContent">我的金豆</div>
         <div class="interval"></div>
       </div>
@@ -105,18 +105,20 @@
         },
         activitieTotal: 0,
         LuckyActivitieTotal: 0,
-        isModel: false
+        isModel: false,
+        score: 0
       })
     },
     components: {
       signIn
     },
     methods: {
-      signInCB () {
+      signInCB (data) {
         const userInfo = getUserInfo()
         this.isModel = false
         this.userInfo = userInfo
         this.getParticipants(userInfo)
+        this.score = data.score || this.$getStorageSync('score')
       },
       getParticipants (userInfo) {
         // 查询用户一共参与多少活动
@@ -141,7 +143,7 @@
     onShow () {
       const userInfo = getUserInfo()
       if (userInfo.id) {
-        this.signInCB()
+        this.signInCB({})
       }
     },
     onShareAppMessage () {

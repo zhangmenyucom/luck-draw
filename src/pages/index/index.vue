@@ -5,7 +5,7 @@
       <img src="/static/img/bitmap.png" alt="">
       <div>
         <span class='left'>
-          我的金豆：126
+          我的金豆：{{score+''}}
         </span>
         <span class='right'>
           赚金豆>
@@ -14,18 +14,18 @@
         <div class="calendar">
           <img src="/static/img/calendar.png" />
           <div>
-            第<span>1</span>天
+            第<span>{{scoreCounters.durationSignInDays}}</span>天
           </div>
         </div>
         <div class="record">
-          <div v-for='i in 7'>
+          <div v-for='i in 7' :class="{opacity:(i +1 ) > scoreCounters.durationSignInDays}">
             <div>
               {{goldBean[i]}}
             </div>
             <img src="/static/img/goldBean.png" alt="" />
             <br />
             <text>
-              第{{i+1}}天
+              {{i==6 ? '大于' : '第'}}{{i+1}}天
             </text>
           </div>
         </div>
@@ -37,6 +37,7 @@
     </div>
     <!-- 活动列表结束 -->
     <signIn :signInCB = "signInCB" :showModel="isModel"/>
+    <!-- 登录各种样式 勿删 防止变回来 -->
    <!--  <div class="model" v-if='isModel'>
       <div class="welfare">
         <img src="/static/img/welfare.png" alt="" />
@@ -76,48 +77,62 @@
 </template>
 
 <script>
-import activitieList from '@/components/activitieList'
-import signIn from '@/components/signIn'
-import top from '@/components/top'
-import ActivitiesService from '@/services/activitiesService'
-import {getUserInfo} from '@/utils'
-import config from 'config'
-export default {
-  data () {
-    return {
-      motto: 'Hello World',
-      userInfo: {},
-      activitieList: [],
-      week: ['一', '二', '三', '四', '五', '六', '七'],
-      goldBean: [10, 15, 20, 25, 30, 35, 40],
-      complete: false,
-      isGet: false,
-      onPullDownRefresh: false,
-      pageNum: 1,
-      isModel: false
-    }
-  },
-  onPullDownRefresh () {
-    this.pullDownRefresh()
-  },
-  components: {
-    activitieList,
-    signIn,
-    top
-  },
-  onReachBottom () {
-    this.getActivitieList(this.pageNum)
-  },
-  methods: {
-    pullDownRefresh () {
-      this.pageNum = 1
-      this.onPullDownRefresh = true
-      this.complete = false
-      this.getActivitieList()
+  import activitieList from '@/components/activitieList'
+  import signIn from '@/components/signIn'
+  import top from '@/components/top'
+  import ActivitiesService from '@/services/activitiesService'
+  import {getUserInfo} from '@/utils'
+  import ScoreRulesService from '@/services/scoreRulesService'
+
+  import config from 'config'
+  export default {
+    data () {
+      return {
+        motto: 'Hello World',
+        userInfo: {},
+        activitieList: [],
+        week: ['一', '二', '三', '四', '五', '六', '七'],
+        goldBean: [0, 0, 0, 0, 0, 0, 0],
+        complete: false,
+        isGet: false,
+        onPullDownRefresh: false,
+        pageNum: 1,
+        isModel: false,
+        score: 0,
+        scoreCounters: {}
+      }
+    },
+    onPullDownRefresh () {
+      this.pullDownRefresh()
+    },
+    components: {
+      activitieList,
+      signIn,
+      top
+    },
+    onReachBottom () {
+      this.getActivitieList(this.pageNum)
+    },
+    methods: {
+      pullDownRefresh () {
+        this.pageNum = 1
+        this.onPullDownRefresh = true
+        this.complete = false
+        this.getActivitieList()
+      },
+    getScoreRules () { // 获取积分规则
+      ScoreRulesService.getList().then(res => {
+        if (res.code === 0) {
+            // 处理每天对应的积分数
+            const goldBeanRules = JSON.parse(res.data.filter((rule) => rule.type === 2)[0].rule)
+            --goldBeanRules.maxStep
+            this.goldBean = [...Array(7)].map((v, i) => parseInt(goldBeanRules.base) + (i > parseInt(goldBeanRules.maxStep) ? parseInt(goldBeanRules.maxStep) : i) * parseInt(goldBeanRules.stepAdd))
+          }
+        })
     },
     getActivitieList (pageNum = 1, pageSize = 20) {
       if (this.complete || this.isGet) return false
-      this.isGet = true
+        this.isGet = true
       ActivitiesService.getList({
         type: 'PLATFORM_LUCKY_DRAW',
         status: 'CREATED',
@@ -138,17 +153,20 @@ export default {
           this.pageNum++
           if (this.activitieList.length >= res.total) this.complete = true
         }
-      })
+    })
     },
-    signInCB () {
+    signInCB (data) {
       this.isModel = false
       this.pullDownRefresh()
+      this.score = data.score || this.$getStorageSync('score')
+      this.scoreCounters = data.scoreCounters || this.$getStorageSync('scoreCounters')
+      this.getScoreRules()
     }
   },
   onShow () {
     const userInfo = getUserInfo()
     if (userInfo.id) {
-      this.getActivitieList()
+      this.signInCB({})
     } else {
       this.isModel = true
     }

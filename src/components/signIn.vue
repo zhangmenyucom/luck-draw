@@ -18,29 +18,108 @@
 
 <script>
   import AuthService from '@/services/authService'
+  import ScoreActivities from '@/services/scoreActivities'
+  import ScoreCountersService from '@/services/scoreCountersService'
+  import MeScoresService from '@/services/meScoresService'
+
   import { getUserInfo } from '@/utils'
   export default {
     name: 'signIn',
     props: [`signInCB`, `showModel`],
     data () {
       return {
-        isModel: false
+        isModel: false,
+        userInfo: {},
+        scoreCounters: {},
+        signIn: false
       }
     },
     methods: {
-      async bindgetuserinfo (e) {
-        const res = await AuthService.wxLogin(e.mp.detail)
-        if (res.code === 0) {
-          this.isModel = false
-          this.signInCB()
+      bindgetuserinfo (e) {
+        const userInfo = getUserInfo()
+        AuthService.wxLogin(e.mp.detail).then((res) => {
+          if (!userInfo.id) { // 判断之前是否 执行过 this.isSignIn
+            return this.isSignIn() // 判断是否今天签到过
+          } else {
+            return this.signIn
+          }
+        }).then((res) => {
+          if (!res) {
+            // 签到
+            const newUserInfo = getUserInfo()
+            return ScoreActivities.signIn({
+              user: newUserInfo
+            })
+          } else {
+            // 获取用户积分数
+            return MeScoresService.getList()
+          }
+        }).then(res => {
+          if (res.code === 0) {
+            this.isModel = false
+
+            if (!this.signIn) {
+              this.scoreCounters.durationSignInDays = this.scoreCounters.durationSignInDays ? ++this.scoreCounters.durationSignInDays : 1
+            }
+
+            this.$setStorageSync('score', res.data.score)
+            this.$setStorageSync('scoreCounters', this.scoreCounters)
+            this.signInCB({
+              scoreCounters: this.scoreCounters,
+              score: res.data.score
+            })
+          }
+        })
+      },
+      isSignIn () { // 判断今天是否签到
+        const userInfo = getUserInfo()
+        return ScoreCountersService.getList({
+          userId: userInfo.id,
+          pageNum: 1,
+          pageSize: 1
+        }).then(res => {
+          if (res.code === 0 && res.data.length > 0) {
+            const scoreCounters = res.data[0]
+            // 记录最新签到信息
+            this.scoreCounters = scoreCounters
+
+            // 对比今天是否签到
+            const lastSignInTime = scoreCounters.lastSignInTime
+            if (!lastSignInTime) return false
+            const newDate = new Date()
+            const date = parseInt(newDate.getFullYear() + '' + this.check(newDate.getMonth() + 1) + this.check(newDate.getDate()), 10)
+            if (date > parseInt(lastSignInTime)) {
+              return false
+            } else {
+              return true
+            }
+          } else {
+            return false
+          }
+        })
+      },
+      check (str) {
+        str = str.toString()
+        if (str.length < 2) {
+          str = '0' + str
         }
+        return str
       }
     },
     onLoad () {
-      console.log('onLoad')
       const userInfo = getUserInfo()
+      // 判断是否登录过
       if (!userInfo.id) {
         this.isModel = true
+      } else {
+        // 判断今天是否签到过
+        this.isSignIn().then(res => {
+          if (!res) {
+            this.isModel = true
+          } else {
+            this.signIn = true
+          }
+        })
       }
     }
   }
