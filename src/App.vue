@@ -49,5 +49,9 @@
   .c{
     clear: both;
   }
+  .top{
+    height: 0;
+    overflow: hidden;
+  }
 
 </style>

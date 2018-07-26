@@ -1,0 +1,51 @@
+@import '../../common/util.less';
+.mobile {
+  background: #fff;
+  min-height: 100vh;
+  padding-left: 15*@2;
+  >div {
+    line-height: 50*@2;
+    color: RGBA(67, 67, 67, 1);
+    display: flex;
+    font-size: 14*@2;
+    border-bottom:1*@2 solid RGBA(234, 234, 234, 0.5);
+    input,
+    button {
+      flex: 1;
+      line-height: 50*@2;
+      height: 50*@2
+    }
+    >span{
+      margin-right: 10*@2
+    }
+    >button{
+      position: relative;
+      height: 32*@2;
+      line-height:32*@2;
+      color: #fff;
+      background: RGBA(254, 76, 82, 1);
+      max-width: 132*@2;
+      border-radius: 2*@2;
+      font-size: 14*@2;
+      margin-right: 10*@2;
+      margin-top: 8*@2;
+      font-weight: 500;
+    }
+  }
+  button {
+   height: 40*@2;
+   line-height:40*@2;
+   color: #fff;
+   background: RGBA(254, 76, 82, 1);
+   max-width: 230*@2;
+   border-radius: 2*@2;
+   font-size: 16*@2;
+   margin-right: 10*@2;
+   margin-top: 20*@2;
+   position: absolute;
+   left: 0;
+   right: 0;
+   margin-left:auto;
+   margin-right:auto;
+ }
+}

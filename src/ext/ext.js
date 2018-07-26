@@ -49,7 +49,24 @@ export default class ext {
 
   static switchTab (url) {
     if (this.isWx) {
-      wx.switchTab({ url })
+      wx.switchTab({
+        url
+      })
+    }
+  }
+
+  static chooseLocation () {
+    if (this.isWx) {
+      return new Promise((resolve, reject) => {
+        wx.chooseLocation({
+          success (res) {
+            resolve(res)
+          },
+          fail (err) {
+            reject(err)
+          }
+        })
+      })
     }
   }
 
@@ -61,5 +78,6 @@ export default class ext {
     Vue.prototype.$showToast = this.showToast.bind(this)
     Vue.prototype.$clearStorageSync = this.clearStorageSync.bind(this)
     Vue.prototype.$switchTab = this.switchTab.bind(this)
+    Vue.prototype.$chooseLocation = this.chooseLocation.bind(this)
   }
 }

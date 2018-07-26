@@ -21,7 +21,7 @@ module.exports = [{
   config: {
     navigationBarTitleText: '赚金豆',
     enablePullDownRefresh: false,
-    disableScroll:true
+    disableScroll: true
   }
 }, {
   path: 'pages/meIntegral/index',
@@ -46,5 +46,20 @@ module.exports = [{
   config: {
     navigationBarTitleText: '完善资料',
     enablePullDownRefresh: true
+  }
+}, {
+  path: 'pages/mobile/index',
+  config: {
+    navigationBarTitleText: '完善资料',
+    enablePullDownRefresh: false,
+    disableScroll: true
+  }
+}, {
+  path: 'pages/takePrize/index',
+  config: {
+    navigationBarTitleText: '完善资料',
+    enablePullDownRefresh: false,
+    disableScroll: true,
+    backgroundColor: '#FF191919'
   }
 }]

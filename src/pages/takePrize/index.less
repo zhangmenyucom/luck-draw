@@ -1,0 +1,65 @@
+@import '../../common/util.less';
+span {
+  font-size: 14*@2;
+}
+
+text {
+  font-size: 16*@2;
+}
+
+.takePrize {
+  font-family: PingFangSC;
+  font-weight: regular;
+  padding: 16*@2;
+  background: RGBA(25, 25, 25, 1);
+  min-height: 100vh;
+  .address {
+    >.title {
+      color: RGBA(255, 255, 255, 0.8);
+      line-height: 18*@2;
+    }
+    >div {
+      font-size: 18*@2;
+      line-height: 22*@2;
+      margin-top: 8*@2;
+      color: #fff;
+    }
+  }
+  .activitie {
+    margin-top: 42*@2;
+    width: 100%;
+    background: #fff;
+    border-radius: 5*@2;
+    .user {
+      text-align: center;
+      .head {
+        width: 70*@2;
+        height: 70*@2;
+        border-radius: 35*@2;
+        position: relative;
+        padding: 5*@2;
+        margin: -31*@2 auto 0;
+        background: #fff;
+
+        >img {
+          width: 60*@2;
+          height: 60*@2;
+          margin: auto;
+          border-radius: 30*@2;
+          overflow: hidden;
+          display: block;
+        }
+      }
+      .nickName{
+        color: RGBA(67, 67, 67, 1);
+        margin-top: 10*@2;
+        margin-bottom: 16*@2;
+      }
+      .luckyNumber{
+        color: RGBA(243, 185, 19, 1);
+        font-weight: 500;
+
+      }
+    }
+  }
+}

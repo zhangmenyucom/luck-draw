@@ -4,7 +4,7 @@
     <img mode='center' :src="activitie.media[0].url">
     <div class="prompt antialiased">
       <div class="left">
-        剩余<span>{{0+activitie.metadata.ticketsNum-ticketsTotal}}</span> 注
+        剩余<span>{{0+activitie.metadata.ticketsNum-participantTotal}}</span> 注
       </div>
       <div class="right">
         |  满{{activitie.metadata.ticketsNum}}注开奖
@@ -319,12 +319,12 @@
         }).then((res) => {
           if (res.code === 0) {
             let ticketsTotal = 0
-            res.data = res.data.slice(0, 7)
+
             this.participantList = res.data.map((data) => {
               ticketsTotal += data.tickets.length
               data.img = data.user.avatar
               return data
-            })
+            }).slice(0, 9)
 
             this.ticketsTotal = ticketsTotal
             this.participantTotal = res.total

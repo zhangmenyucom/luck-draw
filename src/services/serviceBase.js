@@ -15,7 +15,7 @@ export default class ServiceBase {
     return request.post(`${this.url}`, data)
   }
   up (data) {
-    return request.put(`${this.url}/${data.id}`, data)
+    return request.put(`${this.url}/${data.id}?trace=true`, data)
   }
   delete (data) {
     return request.delete(`${this.url}/${data.id}`, data)

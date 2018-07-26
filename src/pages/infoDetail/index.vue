@@ -85,7 +85,7 @@
   <div class="arrow"></div>
 </div>
 </div>
-<signIn :signInCB = "signInCB"/>
+<signIn :signInCB = "signInCB" :showModel = "isModel"/>
 </div>
 
 </template>
@@ -104,7 +104,8 @@
           wx: {}
         },
         activitieTotal: 0,
-        LuckyActivitieTotal: 0
+        LuckyActivitieTotal: 0,
+        isModel: false
       })
     },
     components: {
@@ -113,6 +114,7 @@
     methods: {
       signInCB () {
         const userInfo = getUserInfo()
+        this.isModel = false
         this.userInfo = userInfo
         this.getParticipants(userInfo)
       },
