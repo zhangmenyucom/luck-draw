@@ -4,7 +4,7 @@
     <img mode='center' :src="activitie.media[0].url">
     <div class="prompt antialiased">
       <div class="left">
-        剩余<span>{{0+activitie.metadata.ticketsNum-participantTotal}}</span> 注
+        剩余<span>{{0+activitie.metadata.ticketsNum-betNum}}</span> 注
       </div>
       <div class="right">
         |  满{{activitie.metadata.ticketsNum}}注开奖
@@ -22,17 +22,17 @@
       <text class='bold'>
         {{activitie.metadata.price}} 金豆 1 注
       </text>
-      <span>
+      <!-- <span>
         ¥{{prize.price}}
-      </span>
+      </span> -->
       <div>
         <i />中奖规则 {{state}}
       </div>
     </div>
 
-    <div class="hint" v-if="state >= 0 && state <= 4">
+    <div class="hint" v-if="state >= 0 && state < 5">
       <div class="c"></div>
-      <div class="bets" v-if="state >= 2 && state <= 4">
+      <div class="bets" v-if="state >= 2 && state < 5">
         <span>
           已下注
         </span>
@@ -62,20 +62,20 @@
     </div>
     <!-- 未中奖结束 -->
     <!-- 中奖 -->
-    <div class="draw hint" v-if="state === 6">
+    <div class="draw hint" v-if="state === 6 || state === 7">
       <span></span>
       <div class="">
         恭喜，你已中奖
       </div>
       <div class="divButton">
-        <button class="butotn-o" @tap="chooseAddress">去领奖</button>
-        <button class="button" open-type="share" >炫耀一下</button>
+        <button class="butotn-o" @tap="chooseAddress">{{state === 6 ? '去领奖' : '信息已填写'}}</button>
+        <a :href="'/pages/imgDownload/index?url=' + melucky.metadata.image" class="button" >炫耀一下</a>
       </div>
       <span></span>
     </div>
     <!-- 中奖结束 -->
     <!-- 中奖 -->
-    <div class="draw hint" v-if="state === 7">
+    <div class="draw hint" v-if="state === 8">
       <span></span>
       <div class="">
         本次活动已结束，去看看其他活动
@@ -87,11 +87,12 @@
     </div>
     <!-- 中奖结束 -->
     <!-- 抽奖按钮 -->
-    <div class="prize" v-if ="state >= 0 && state <= 1">
+    <div class="prize" v-if ="state >= 0 && state <= 3">
       <div>
         <div class='bold antialiased'>
-          <form report-submit @submit.stop = "bets">
-            <button form-type = "submit">点我抽奖</button>
+          <form :data-state="state + 1" @submit.stop = "modifyState">
+            <button v-if="state >= 0 && state <= 1" form-type = "submit">点我抽奖</button>
+            <button v-if="state >= 2 && state <= 4" form-type = "submit">点我加注</button>
           </form>
         </div>
       </div>
@@ -107,7 +108,8 @@
       <div class="list">
         <drawList :list="luckyItems" />
       </div>
-      <a :href="'/pages/drawList/index?id='+ activitie.id" v-if="luckyItems.length < 4" >
+      <!-- {{luckyItemTotal}} -->
+      <a :href="'/pages/drawList/index?id='+ activitie.id"  v-if="luckyItemTotal > 3">
         查看更多<img src="/static/img/right.png" alt="">
       </a>
     </div>
@@ -117,11 +119,11 @@
       <span class='antialiased'>
         已有{{participantTotal}}人参加
       </span>
-      <headPortrait :list="participantList" rangeKey="img" />
+      <headPortrait :list="participantList" rangeKey="img" :url="'/pages/participantList/index?id=' + activitie.id" />
     </div>
     <!-- 参加列表结束 -->
 
-    <button class="bottom button" open-type="share">
+    <button class="bottom button" open-type="share" v-if="state <= 3">
       分享领金币
     </button>
 
@@ -164,8 +166,9 @@
                 </div>
               </div>
               <span class="record antialiased">
-                你有152金豆<br />
-                本次还可以下注25次
+                你有{{score}}金豆<br />
+                本次还可以下注 {{participateBet}} 次
+
               </span>
               <form report-submit @submit.stop = "bets">
                 <button class="button" form-type = "submit">
@@ -190,34 +193,39 @@
               </span>
             </div>
             <!-- 提示结束 -->
-
           </div>
-
         </div>
       </div>
     </div>
+    <!-- <load :isModel= "true" /> -->
     <signIn :signInCB = "signInCB"/>
+
   </div>
 </template>
 
 <script>
+  import load from '@/components/loading'
   import headPortrait from '@/components/headPortrait'
   import drawList from '@/components/drawList'
   import signIn from '@/components/signIn'
   import top from '@/components/top'
+  import FootprintsActivities from '@/services/footprintsActivities'
   import ActivitiesService from '@/services/activitiesService'
   import ParticipantsService from '@/services/participantsService'
-  import ScoreActivities from '@/services/scoreActivities'
   import {
     getUserInfo
   } from '@/utils'
+  import MeScoresService from '@/services/meScoresService.js'
+  import getMeScores from '@/common/js/getMeScores.js'
+
   export default {
     data () {
       return {
         id: '',
+        score: 0,
         participantList: [],
         participantTotal: 0,
-        luckyList: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14],
+        luckyList: [],
         activitie: {
           id: '',
           metadata: {
@@ -232,34 +240,56 @@
           tickets: []
         },
         isModal: false,
-        ticketsNum: 1, // 下注数
-        ticketsTotal: 0, // 用户下注总数
-        state: 0,
-        userInfo: {}
-        // 0 NotInvolved 页面总的状态
+        ticketsNum: 1, // 当前用户下注数
+        ticketsTotal: 0, // 所有用户下注总数
+        luckyItemTotal: 0,
+        userInfo: {},
+        participateBet: 0,
+        betNum: 0,
+        oldState: 0,
+        melucky: {
+          metadata: {
+            image: ''
+          }
+        },
+        state: 0
+        // 0 NotInvolved 未参与
         // 1 Bets 下注
         // 2 ParticipateIn 参与过
         // 3 重新下注
+        // 3.1 已经满注
         // 4 LookAtTheLuckyNumber 查看幸运号
+
         // 5 NotWinningThePrize 未中奖
         // 6 已中奖
         // 7 已添加地址
+        // 8 未参加活动结束
       }
     },
     onPullDownRefresh () {
       this.$stopPullDownRefresh()
     },
     components: {
+      load,
       headPortrait,
       drawList,
       signIn,
       top
     },
     methods: {
+      getMeScores () {
+        MeScoresService.getList().then(res => {
+          if (res.code === 0) {
+            this.score = res.data.score
+            this.participateBet = parseInt(this.score / parseInt(this.activitie.metadata.price))
+          }
+        })
+      },
       getActivitie (id) { // 获取活动详情
         const userInfo = getUserInfo()
         ActivitiesService.get({
-          id
+          id,
+          append: 'BET_NUM'
         }).then((res) => {
           if (res.code === 0) {
             if (res.data.metadata.ticketsNum) {
@@ -267,17 +297,25 @@
             }
             this.prize = res.data.items[0]
             this.activitie = res.data
-            // 处理中奖信息
-            if (res.data.metadata.luckyItems) {
+            this.betNum = res.data.betNum
+
+            if (res.data.metadata.ticketsNum === res.data.betNum) {
+              this.modifyState(3.1)
+            }
+            if (res.data.metadata.luckyItems) { // 活动已结束
+              // 处理中奖信息
               const luckyItems = JSON.parse(res.data.metadata.luckyItems)
+              this.luckyItemTotal = luckyItems.length
               this.luckyItems = luckyItems.slice(0, 3)
-              console.log('this.luckyItems', this.luckyItems)
-              if (luckyItems.some(luckyItem => luckyItem.luckyGuy.eid === userInfo.id)) {
+              const melucky = luckyItems.filter(luckyItem => luckyItem.luckyGuy.eid === userInfo.id)
+              if (melucky.length > 0) {
+                this.melucky = melucky[0]
                 this.modifyState(6)
               } else {
                 this.modifyState(5)
               }
             }
+            this.participateBet = parseInt(this.score / parseInt(this.activitie.metadata.price))
           }
         })
       },
@@ -285,11 +323,18 @@
         const type = e.target.dataset.type
         let newTicketsNum
         if (type === 'add') {
-          newTicketsNum = ++this.ticketsNum
+          newTicketsNum = this.ticketsNum + 1
         } else {
-          newTicketsNum = --this.ticketsNum
+          newTicketsNum = this.ticketsNum - 1
         }
-        this.ticketsNum = newTicketsNum
+
+        // 开始判断是否可添加
+        const surplusTicketsNum = parseInt(this.activitie.metadata.ticketsNum) - parseInt(this.betNum) // 活动剩余注数
+        const price = this.activitie.metadata.price // 每注需要金豆
+        const totalTicketsNum = newTicketsNum * price // 需要金豆数
+        if (newTicketsNum > 0 && this.score >= totalTicketsNum && surplusTicketsNum >= newTicketsNum) {
+          this.ticketsNum = newTicketsNum
+        }
       },
       modifyState (e) {
         const state = typeof e === 'number' ? e : parseInt(e.target.dataset.state, 10)
@@ -308,7 +353,7 @@
         }).then((res) => {
           if (res.code === 0 && res.data.length > 0) {
             this.participants = res.data[0]
-            if (res.data[0].metadata.address) {
+            if (res.data[0].metadata.address) { // 判断是否添加过地址
               this.modifyState(7)
             } else {
               this.modifyState(2)
@@ -321,7 +366,6 @@
         }).then((res) => {
           if (res.code === 0) {
             let ticketsTotal = 0
-
             this.participantList = res.data.map((data) => {
               ticketsTotal += data.tickets.length
               data.img = data.user.avatar
@@ -341,7 +385,7 @@
         ParticipantsService.add({
           activityId: activitie.id,
           scene: 'MEMBER_JOIN_LUCKY_DRAW',
-          ticketsNum: 1,
+          ticketsNum: this.ticketsNum,
           sellerId: 'system',
           user,
           metadata: {
@@ -349,40 +393,45 @@
           }
         }).then(res => {
           if (res.code === 0) {
-            this.modifyState(2)
             this.participants = res.data
+            getMeScores.end()
             this.signInCB()
           }
         })
       },
       hideModal () {
-        if (this.oldState) {
+        if (this.oldState || this.oldState === 0) {
           this.state = this.oldState
         }
+        this.ticketsNum = 1
         this.isModal = false
       },
-      async chooseAddress () {
-        const address = await this.$chooseAddress()
-        ParticipantsService.addMetadata({
-          id: this.participants.id,
-          key: 'address',
-          value: JSON.stringify(address)
-        }).then((res) => {
-          if (res.code === 0) {
-            this.modifyState(7)
-          }
-        })
+      chooseAddress () {
+        this.$navigateTo('/pages/takePrize/index?id=' + this.activitie.id)
       },
       signInCB () {
+        this.ticketsNum = 1
+        this.state = 0
         const id = this.id
         this.getActivitie(id)
         this.getParticipants(id)
+        this.getMeScores()
+        getMeScores.start(this)
       }
     },
     onLoad (a) {
-      this.state = 0
-      const userInfo = getUserInfo()
       this.id = a.id
+    },
+    onHide () {
+      getMeScores.end()
+    },
+    onUnload () {
+      getMeScores.end()
+    },
+    onShow () {
+      this.state = 0
+      this.ticketsNum = 1
+      const userInfo = getUserInfo()
       this.userInfo = userInfo
       if (userInfo.id) {
         this.signInCB()
@@ -396,12 +445,16 @@
         imageUrl: introductionImageUrl && introductionImageUrl.url,
         success (res) {
           if (res) {
-            ScoreActivities.share({
-              user: this.userInfo,
-              target: this.activitie
+            FootprintsActivities.add({
+              type: 'SHARE',
+              target: {
+                type: 'VINCI_CC_FOOTPRINT',
+                id: this.activitie.id,
+                name: this.activitie.name
+              }
             }).then((res) => {
               if (res.code === 0) {
-
+                this.$showToast('分享成功')
               }
             })
           }

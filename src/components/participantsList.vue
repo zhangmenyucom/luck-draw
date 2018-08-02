@@ -1,13 +1,12 @@
 <template>
   <div class="drawList">
     <a class="list" v-for="(item , i) in list" >
-      <img :src="item.luckyGuy.avatar">
+      <img :src="item.user.avatar">
       <br />
       <span>
-        {{ item.luckyGuy.nickName ? item.luckyGuy.nickName : '' }}
+        {{item.user.nickName}}
       </span>
     </a>
-
   </div>
 </template>
 
@@ -26,8 +25,8 @@
     flex-wrap:wrap;
     .list{
       text-align: center;
-      max-width: 25%;
-      min-width: 25%;
+      max-width: 33.333333%;
+      min-width: 33.3333333%;
       margin-bottom:24*@2;
       flex:1;
       img{

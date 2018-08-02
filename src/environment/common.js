@@ -6,6 +6,7 @@ export default {
     `/user/login/phone`,
     `/uc/v1/auth/login/wx-miniapp`
   ]),
+  noLoading: new Set([`/mc/v1/me/scores`, `/mc/v1/me/scores?`]),
   share: {
     title: `钱包抽奖吧`,
     path: `pages/index/index`,

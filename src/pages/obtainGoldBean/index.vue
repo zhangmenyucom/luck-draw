@@ -9,12 +9,12 @@
           分享微信群
         </span>
         <br />
-        图层+10～50 <img src="/static/img/goldBean.png" alt="">
+        +{{shareRule.base}}/剩余{{shareRule.maxStep - shareNumber}}次 <img src="/static/img/goldBean.png" alt="">
       </div>
       <div class="right">
-        <a>
+        <button open-type="share">
           去领取
-        </a>
+        </button>
       </div>
       <div class="c"></div>
     </div>
@@ -27,12 +27,15 @@
           绑定手机号
         </span>
         <br />
-        图层+100 <img src="/static/img/goldBean.png" alt="">
+        +{{rule.mobile}} <img src="/static/img/goldBean.png" alt="">
       </div>
       <div class="right">
-        <a>
+        <a v-if="!userInfo.phone" href="/pages/mobile/index">
           去绑定
         </a>
+        <div v-else class='complete'>
+          已完成
+        </div>
       </div>
       <div class="c"></div>
     </div>
@@ -45,47 +48,92 @@
           完善资料
         </span>
         <br />
-        图层+100 <img src="/static/img/goldBean.png" alt="">
+        +{{rule.total}} <img src="/static/img/goldBean.png" alt="">
       </div>
       <div class="right">
-        <a>
+        <a v-if="!(userInfo.phone && userInfo.location && userInfo.birthday)" href="/pages/editInfo/index">
           去完善
         </a>
+        <div v-else class='complete'>
+          已完成
+        </div>
       </div>
       <div class="c"></div>
     </div>
+    <signIn :signInCB = "signInCB" :showModel = "!isModel"/>
   </div>
 </template>
 
 <script>
-  import config from 'config'
+  import signIn from '@/components/signIn'
+  import {getUserInfo} from '@/utils'
+  import DailyFootprintsService from '@/services/dailyFootprintsService'
+  import ScoreRulesService from '@/services/scoreRulesService'
+  import share from '@/common/js/share.js'
   export default {
     data () {
       return {
-
+        userInfo: {},
+        rule: {},
+        isModel: false,
+        shareNumber: 0,
+        shareRule: {}
       }
     },
-    onPullDownRefresh () {
-
-    },
     components: {
-
+      signIn
     },
     methods: {
-
+      getScoreRules () {
+        ScoreRulesService.getList().then(res => {
+          if (res.code === 0) {
+            const rule = JSON.parse(res.data.filter(data => data.type === 4)[0] ? res.data.filter(data => data.type === 4)[0].rule : {})
+            rule.total = Object.values(rule).reduce((total, num) => parseInt(total, 10) + parseInt(num, 10))
+            const shareRule = JSON.parse(res.data.filter(data => data.type === 3)[0] ? res.data.filter(data => data.type === 3)[0].rule : {})
+            this.rule = rule
+            this.shareRule = shareRule
+          }
+        })
+      },
+      signInCB () {
+        const signIn = this.$getStorageSync('signIn')
+        if (signIn) {
+          this.isModel = false
+        }
+        this.getScoreRules()
+        this.getDailyFootprintsShare()
+      },
+      getDailyFootprintsShare () {
+        DailyFootprintsService.getList({
+          userId: this.userInfo.id,
+          pageNum: 1,
+          pageSize: 1,
+          type: 'SHARE'
+        }).then((res) => {
+          if (res.code === 0) {
+            this.shareNumber = res.data[0].number
+          }
+        })
+      }
     },
     onLoad () {
-      // 调用应用实例的方法获取全局数据
-
+      this.$setStorageSync('signIn', false)
     },
-    onShareAppMessage () {
-      return config.share
-    }
+    onShow () {
+      const userInfo = getUserInfo()
+      if (userInfo.id) {
+        this.userInfo = userInfo
+        this.signInCB()
+      } else {
+        this.isModel = true
+      }
+    },
+    onShareAppMessage: share()
   }
 </script>
 
 <style scoped>
-  @import '../../common/util.less';
+  @import '../../common/less/util.less';
   .list{
     min-height: 100vh;
     background: #fff;
@@ -113,7 +161,7 @@
       >.icon{
         margin-right: 14*@2
       }
-      a, button{
+      a, button {
         width: 80*@2;
         height: 32*@2;
         text-align: center;
@@ -122,6 +170,14 @@
         font-size: 14*@2;
         line-height: 32*@2;
         border-radius: 2*@2
+      }
+
+      .complete{
+        width: 80*@2;
+        height: 32*@2;
+        text-align: center;
+        line-height: 32*@2;
+        color: #999999;
       }
     }
   }

@@ -1,11 +1,11 @@
-@import '../../common/util.less';
+@import '../../common/less/util.less';
 .info_container {
 	background: #fff;
 	min-height: 100vh;
 	position: relative;
 	.infoHeader {
 		padding: 53*@2 0 67*@2 39*@2;
-		background: #333;
+		background: #333;jobDetail
 		color: #fff;
 		display: flex;
 		justify-content: space-between;
@@ -16,6 +16,10 @@
 			background: pink;
 			vertical-align: middle;
 			margin-right: 16*@2;
+
+		}
+		.infoImg{
+			color: #fff;
 		}
 		.info_r {
 			height: 56*@2;
@@ -28,14 +32,18 @@
 				line-height: 32*@2;
 				border-radius: 100*@2 0 0 100*@2;
 				border: 1*@2 solid #fff;
+				border-right: none;
 				font-size: 12*@2;
-
+				>a{
+					color: #fff;
+				}
 				span:nth-child(2) {
 					color: #FFDD3E;
 				}
 				img {
 					width: 9*@2;
 					height: 9*@2;
+					margin-left: 2*@2;
 				}
 			}
 		}
@@ -110,7 +118,7 @@
 					position: absolute;
 					left: 0;
 					width: 100%;
-					li {
+					li , a {
 						padding:0 8*@2;
 						flex: 1;
 						>div{

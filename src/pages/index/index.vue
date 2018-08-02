@@ -8,17 +8,17 @@
           我的金豆：{{score+''}}
         </span>
         <span class='right'>
-          赚金豆>
+          赚金豆&nbsp;>
         </span>
         <div class="c"></div>
         <div class="calendar">
           <img src="/static/img/calendar.png" />
           <div>
-            第<span>{{scoreCounters.durationSignInDays}}</span>天
+            第<span>{{scoreCounters.number}}</span>天
           </div>
         </div>
         <div class="record">
-          <div v-for='i in 7' :class="{opacity:(i +1 ) > scoreCounters.durationSignInDays}">
+          <div v-for='i in 7' :class="{opacity:(i +1 ) > scoreCounters.number}">
             <div>
               {{goldBean[i]}}
             </div>
@@ -36,7 +36,7 @@
       <activitieList :list="activitieList" />
     </div>
     <!-- 活动列表结束 -->
-    <signIn :signInCB = "signInCB" :showModel="isModel"/>
+    <signIn :signInCB = "signInCB" :showModel="!isModel"/>
     <!-- 登录各种样式 勿删 防止变回来 -->
    <!--  <div class="model" v-if='isModel'>
       <div class="welfare">
@@ -81,12 +81,11 @@
   import signIn from '@/components/signIn'
   import top from '@/components/top'
   import ActivitiesService from '@/services/activitiesService'
-  import {
-    getUserInfo
-  } from '@/utils'
+  import { getUserInfo } from '@/utils'
   import ScoreRulesService from '@/services/scoreRulesService'
-
-  import config from 'config'
+  import getMeScores from '@/common/js/getMeScores.js'
+  import share from '@/common/js/share.js'
+  import MeScoresService from '@/services/meScoresService.js'
   export default {
     data () {
       return {
@@ -99,7 +98,7 @@
         isGet: false,
         onPullDownRefresh: false,
         pageNum: 1,
-        isModel: false,
+        isModel: true,
         score: 0,
         scoreCounters: {}
       }
@@ -107,13 +106,13 @@
     onPullDownRefresh () {
       this.pullDownRefresh()
     },
+    onReachBottom () {
+      this.getActivitieList(this.pageNum)
+    },
     components: {
       activitieList,
       signIn,
       top
-    },
-    onReachBottom () {
-      this.getActivitieList(this.pageNum)
     },
     methods: {
       pullDownRefresh () {
@@ -129,6 +128,13 @@
             const goldBeanRules = JSON.parse(res.data.filter((rule) => rule.type === 2)[0].rule)
             --goldBeanRules.maxStep
             this.goldBean = [...Array(7)].map((v, i) => parseInt(goldBeanRules.base) + (i > parseInt(goldBeanRules.maxStep) ? parseInt(goldBeanRules.maxStep) : i) * parseInt(goldBeanRules.stepAdd))
+          }
+        })
+      },
+      getMeScores () {
+        MeScoresService.getList().then(res => {
+          if (res.code === 0) {
+            this.score = res.data.score
           }
         })
       },
@@ -151,19 +157,38 @@
               activitie.url = date > activitie.startTime && `/pages/activitiesDetails/index?id=${activitie.id}`
               activitie.isOpen = date > activitie.startTime
             })
-            this.activitieList = [...res.data, ...oldActivitieList]
+            if (this.onPullDownRefresh) {
+              this.onPullDownRefresh = false
+            }
+            this.activitieList = [...oldActivitieList, ...res.data]
             this.pageNum++
             if (this.activitieList.length >= res.total) this.complete = true
           }
         })
       },
       signInCB (data) {
-        this.isModel = false
+        const signIn = this.$getStorageSync('signIn')
+        if (signIn) {
+          this.isModel = false
+        }
         this.pullDownRefresh()
-        this.score = data.score || this.$getStorageSync('score')
+        if (data.score) {
+          // 签到后 直接获取积分数
+          this.score = data.score
+        } else {
+          this.getMeScores()
+        }
+
         this.scoreCounters = data.scoreCounters || this.$getStorageSync('scoreCounters')
         this.getScoreRules()
+        getMeScores.start(this)
       }
+    },
+    onLoad () {
+      this.$setStorageSync('signIn', false)
+    },
+    onHide () {
+      getMeScores.end()
     },
     onShow () {
       const userInfo = getUserInfo()
@@ -173,9 +198,7 @@
         this.isModel = true
       }
     },
-    onShareAppMessage () {
-      return config.share
-    }
+    onShareAppMessage: share()
   }
 </script>
 

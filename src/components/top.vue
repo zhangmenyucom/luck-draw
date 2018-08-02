@@ -18,12 +18,13 @@
       }
     },
     onLoad () {
+      console.log('ddd')
     }
   }
 </script>
 
 <style scoped>
-  @import '../common/util.less';
+  @import '../common/less/util.less';
   .top{
     left:0;
     position: fixed;

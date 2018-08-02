@@ -9,7 +9,8 @@
     "start": "npm run standard && node build/dev-server.js",
     "standard": "standard --fix && standard --fix --plugin html '**/*.vue'",
     "build": "node build/build.js",
-    "lint": "eslint --ext .js,.vue src"
+    "lint": "eslint --ext .js,.vue src",
+    "buildWorker": "webpack --watch --config build/webpack.worker.js"
   },
   "dependencies": {
     "css-loader": "^0.28.11",
@@ -90,7 +91,9 @@
       ":",
       "{",
       "}",
-      "="
+      "=",
+      "worker",
+      "setInerval"
     ]
   },
   "engines": {

@@ -1,7 +1,7 @@
 {
 	"description": "项目配置文件。",
 	"setting": {
-		"urlCheck": false,
+		"urlCheck": true,
 		"es6": true,
 		"postcss": false,
 		"minified": false,
@@ -9,7 +9,7 @@
 	},
 	"miniprogramRoot": "./dist/",
 	"compileType": "miniprogram",
-	"appid": "wxfb7be0751102cf64",
+	"appid": "wxfc15521de85e4d3a",
 	"projectname": "%E6%8A%BD%E5%A5%96%E5%B0%8F%E7%A8%8B%E5%BA%8F-%E6%B5%8B%E8%AF%95%E7%8E%AF%E5%A2%83",
 	"libVersion": "2.1.1",
 	"condition": {
@@ -30,13 +30,13 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 9,
+			"current": 17,
 			"list": [
 				{
 					"id": 0,
 					"name": "活动详情",
 					"pathName": "pages/activitiesDetails/index",
-					"query": "id=5b51b44d711eae33439ed673",
+					"query": "id=5b6189d459f04cbeff69dc4e",
 					"scene": "1008"
 				},
 				{
@@ -91,7 +91,7 @@
 					"id": 9,
 					"name": "活动详情",
 					"pathName": "pages/activitiesDetails/index",
-					"query": "id=5b5965bd711eae7660eda1d0",
+					"query": "id=5b6142b5711eae390630b8c7",
 					"scene": "1008"
 				},
 				{
@@ -119,6 +119,34 @@
 					"name": "添加地址",
 					"pathName": "pages/takePrize/index",
 					"query": ""
+				},
+				{
+					"id": 14,
+					"name": "参与者用户",
+					"pathName": "pages/participantList/index",
+					"query": "id=5b51b44d711eae33439ed673",
+					"scene": "1008"
+				},
+				{
+					"id": 15,
+					"name": "赚金豆",
+					"pathName": "pages/obtainGoldBean/index",
+					"query": "",
+					"scene": "1008"
+				},
+				{
+					"id": -1,
+					"name": "下载图片",
+					"pathName": "pages/imgDownload/index",
+					"query": "id=5b6142b5711eae390630b8c7",
+					"scene": "1008"
+				},
+				{
+					"id": -1,
+					"name": "我的金豆",
+					"pathName": "pages/meIntegral/index",
+					"query": "id=5b6189d459f04cbeff69dc4e",
+					"scene": "1008"
 				}
 			]
 		}

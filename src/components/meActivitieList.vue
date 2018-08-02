@@ -1,7 +1,7 @@
 <template>
   <div>
     <a class="list"  v-for='(item, index) in list ' :href="'/pages/activitiesDetails/index?id=' + item.id">
-      <img mode='center' :src='item.media[0].url' alt="">
+      <!-- <img mode='center' :src='item.media[0].url' alt=""> -->
       <div>
         <span class='title'>
           {{item.name}}
@@ -13,9 +13,9 @@
           <br />
           <span>
             <span>「参与时间」</span>{{item.time}}
-            <!-- <span class="state">
-              已结束
-            </span> -->
+            <span class="state">
+              {{status[item.status]}}
+            </span>
           </span>
         </div>
 
@@ -27,18 +27,34 @@
 
 <script>
   export default {
-    props: ['list', 'rangeKey', 'size']
+    props: ['list', 'rangeKey', 'size'],
+    data () {
+      return {
+        status: {
+          'CREATED': '进行中',
+          'CANCELED': '取消',
+          'PUBLISHED': '进行中',
+          'CLOSED': '关闭',
+          'FINISHED': '结束',
+          'REWARDED': '已开奖',
+          'REWARD_FAILED': '开奖失败',
+          'GROUP_BUY_SUCCESS': '拼团成功',
+          'GROUP_BUY_FAIL': '拼团失败',
+          'GROUP_COUPON_FAIL': '拼团砍价失败'
+        }
+      }
+    }
   }
 </script>
 
 <style scoped>
-  @import '../common/util.less';
+  @import '../common/less/util.less';
 
   .list{
     display: flex;
     padding : 15*@2;
     border-bottom: 1*@1 solid RGBA(234, 234, 234, 0.5);
-
+    /*height: 140*@2;*/
     box-sizing: border-box;
     > img {
       width:80*@2;
@@ -60,8 +76,9 @@
         -webkit-box-orient: vertical;
       }
       .info{
-        position: absolute;
-        bottom:0;
+        /*position: absolute;*/
+        /*bottom:0;*/
+        margin-top: 10*@2;
         font-size: 12*@2;
         line-height: 16*@2;
         color: RGBA(153, 153, 153, 1);

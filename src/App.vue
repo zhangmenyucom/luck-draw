@@ -9,7 +9,7 @@
 </script>
 <style>
   @import (less) '../static/iconFont/iconfont.css';
-  @import './common/util.less';
+  @import './common/less/util.less';
   .container {
     height: 100%;
     display: flex;
@@ -52,6 +52,11 @@
   .top{
     height: 0;
     overflow: hidden;
+  }
+  .disableButton{
+    background: #F1F1F1!important;
+    color: #999!important;
+    box-shadow:none!important;
   }
 
 </style>

@@ -7,87 +7,85 @@
       </div>
       <div class="info_r">
         <div class="editInfo">
-          <a :href="'/pages/editInfo/index'">
-            <span >完善资料</span>
-          <!--   <span >+100 <i calss="icon"></i></span>
-        </a> -->
-        <span >+100 </span><img src="/static/img/goldBean.png">
-      </a>
-    </div>
-  </div>
-</div >
-<div class="info_content">
-  <div class="content_detail">
-    <div class="infoDetail clearfix">
-      <div  class="" style="flex:1">
-        <div class="detailNum">{{score + ''}}</div>
-        <div class="detailContent">我的金豆</div>
-        <div class="interval"></div>
-      </div>
-      <a href="/pages/meActivitiesList/index?type=all" style="flex:1">
-        <div  class="detailNum">{{activitieTotal}}</div>
-        <div  class="detailContent">全部抽奖</div>
-        <div class="interval"></div>
-      </a>
-      <a href="/pages/meActivitiesList/index?type=lucky" style="flex:1">
-        <div class="detailNum">{{LuckyActivitieTotal}}</div>
-        <div class="detailContent">中奖记录</div>
-      </a>
-    </div>
-  </div>
-  <div class="makeJob">
-   <h5 class="antialiased">做任务 赚金豆</h5>
-   <div class="jobDetail">
-     <ul>
-      <li>
-        <div>
-          <div>
-            <span>绑定手机号</span>
-            <div class="right">
-              <span>
-                0
-              </span>
-              /10
-            </div>
-          </div>
-          <span>
-           可得：10<img src="/static/img/goldBean.png" />
-         </span>
-         <button>
-          立即领取
-        </button>
-      </div>
-    </li>
-    <li>
-      <div>
-        <div>
-          <span>分享</span>
-          <div class="right">
-            <span>
-              0
-            </span>
-            /10
-          </div>
+          <a href="/pages/editInfo/index" class="antialiased">
+            <span >完善资料&nbsp;&nbsp;</span>
+            <span >+{{rule.total}}</span>&nbsp;
+            <img src="/static/img/goldBean.png">
+          </a>
         </div>
-        <span>
-         一次可得：10<img src="/static/img/goldBean.png" />
-       </span>
-       <button>
-        立即领取
-      </button>
-    </div>
-  </li>
-</ul>
-</div>
+      </div>
+    </div >
+    <div class="info_content">
+      <div class="content_detail">
+        <div class="infoDetail clearfix">
+          <a href="/pages/meIntegral/index" class="" style="flex:1">
+            <div class="detailNum">{{score + ''}}</div>
+            <div class="detailContent">我的金豆</div>
+            <div class="interval"></div>
+          </a>
+          <a href="/pages/meActivitiesList/index?type=all" style="flex:1">
+            <div  class="detailNum">{{activitieTotal}}</div>
+            <div  class="detailContent">全部抽奖</div>
+            <div class="interval"></div>
+          </a>
+          <a href="/pages/meActivitiesList/index?type=lucky" style="flex:1">
+            <div class="detailNum">{{LuckyActivitieTotal}}</div>
+            <div class="detailContent">中奖记录</div>
+          </a>
+        </div>
+      </div>
+      <div class="makeJob">
+       <h5 class="antialiased">做任务 赚金豆</h5>
+       <div class="jobDetail">
+         <ul>
+          <li>
+            <div>
+              <div>
+                <span>分享</span>
+                <div class="right">
+                  <span>
+                    {{shareRule.base * shareNumber}}
+                  </span>
+                  /{{shareRule.maxStep * shareRule.base}}
+                </div>
+              </div>
+              <span>
+               一次/{{shareRule.base}}<img src="/static/img/goldBean.png" />
+             </span>
+             <button open-type="share">
+              立即领取
+            </button>
+          </div>
+        </li>
+        <a :href="!userInfo.phone? '/pages/mobile/index' : ''">
+          <div>
+            <div>
+              <span>绑定手机号</span>
+              <div class="right">
+                <span>
+                  {{userInfo.phone ? rule.mobile : 0}}
+                </span>
+                /{{rule.mobile}}
+              </div>
+            </div>
+            <span>
+             可得：10<img src="/static/img/goldBean.png" />
+           </span>
+           <button class="disableButton">
+            已领取
+          </button>
+        </div>
+      </a>
+    </ul>
+  </div>
 </div>
 <div class="infoQue">
   <div>常见问题</div>
   <div class="arrow"></div>
 </div>
 </div>
-<signIn :signInCB = "signInCB" :showModel = "isModel"/>
+<signIn :signInCB = "signInCB" :showModel = "!isModel"/>
 </div>
-
 </template>
 <style scoped>
   @import './index.less';
@@ -96,7 +94,12 @@
   import {getUserInfo} from '@/utils'
   import signIn from '@/components/signIn'
   import ParticipantsService from '@/services/participantsService'
-  import config from 'config'
+
+  import MeScoresService from '@/services/meScoresService.js'
+  import ScoreRulesService from '@/services/scoreRulesService'
+  import getMeScores from '@/common/js/getMeScores.js'
+  import share from '@/common/js/share.js'
+  import DailyFootprintsService from '@/services/dailyFootprintsService'
   export default {
     data () {
       return ({
@@ -105,8 +108,12 @@
         },
         activitieTotal: 0,
         LuckyActivitieTotal: 0,
-        isModel: false,
-        score: 0
+        isModel: true,
+        score: 0,
+        rule: {},
+        shareRule: {},
+        shareNumber: 0
+
       })
     },
     components: {
@@ -115,10 +122,21 @@
     methods: {
       signInCB (data) {
         const userInfo = getUserInfo()
-        this.isModel = false
+        const signIn = this.$getStorageSync('signIn')
+        if (signIn) {
+          this.isModel = false
+        }
         this.userInfo = userInfo
         this.getParticipants(userInfo)
-        this.score = data.score || this.$getStorageSync('score')
+        this.getScoreRules()
+        if (data.score) {
+          // 签到后 直接获取积分数
+          this.score = data.score
+        } else {
+          this.getMeScores()
+        }
+        this.getDailyFootprintsShare()
+        getMeScores.start(this)
       },
       getParticipants (userInfo) {
         // 查询用户一共参与多少活动
@@ -138,17 +156,69 @@
             this.LuckyActivitieTotal = res.total
           }
         })
+      },
+      getMeScores () {
+        MeScoresService.getList().then(res => {
+          if (res.code === 0) {
+            this.score = res.data.score
+          }
+        })
+      },
+      getScoreRules () { // 获取积分规则
+        ScoreRulesService.getList().then(res => {
+          if (res.code === 0) {
+            const map = {
+              area: 'location',
+              mobile: 'phone',
+              birthday: 'birthday',
+              gender: 'gender'
+            }
+            const rule = JSON.parse(res.data.filter(data => data.type === 4)[0] ? res.data.filter(data => data.type === 4)[0].rule : {})
+            rule.total = Object.entries(rule).reduce((total, num) => {
+              if (Array.isArray(total)) {
+                total = (!this.userInfo[map[total[0]]] ? parseInt(total[1], 10) : 0)
+              }
+              return parseInt(total, 10) + (!this.userInfo[map[num[0]]] ? parseInt(num[1], 10) : 0)
+            })
+            const shareRule = JSON.parse(res.data.filter(data => data.type === 3)[0] ? res.data.filter(data => data.type === 3)[0].rule : {})
+            console.log('shareRule', shareRule)
+            this.shareRule = shareRule
+            this.rule = rule
+          }
+        })
+      },
+      getDailyFootprintsShare () {
+        DailyFootprintsService.getList({
+          userId: this.userInfo.id,
+          pageNum: 1,
+          pageSize: 1,
+          type: 'SHARE'
+        }).then((res) => {
+          if (res.code === 0) {
+            this.shareNumber = res.data[0].number
+          }
+        })
+      },
+      shareCb () {
+        console.log('aaa')
+        this.shareNumber = this.shareNumber + 1
       }
+    },
+    onLoad () {
+      this.$setStorageSync('signIn', false)
+    },
+    onHide () {
+      getMeScores.end()
     },
     onShow () {
       const userInfo = getUserInfo()
       if (userInfo.id) {
         this.signInCB({})
+      } else {
+        this.isModel = true
       }
     },
-    onShareAppMessage () {
-      return config.share
-    }
+    onShareAppMessage: share(this.shareCb)
   }
 </script>
 

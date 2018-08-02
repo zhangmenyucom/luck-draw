@@ -38,8 +38,8 @@ module.exports = [{
 }, {
   path: 'pages/infoDetail/index',
   config: {
-    navigationBarTitleText: '完善资料',
-    enablePullDownRefresh: false
+    navigationBarTitleText: '我的',
+    disableScroll: true
   }
 }, {
   path: 'pages/drawList/index',
@@ -57,9 +57,23 @@ module.exports = [{
 }, {
   path: 'pages/takePrize/index',
   config: {
-    navigationBarTitleText: '完善资料',
+    navigationBarTitleText: '填写地址',
     enablePullDownRefresh: false,
     disableScroll: true,
     backgroundColor: '#FF191919'
+  }
+}, {
+  path: 'pages/participantList/index',
+  config: {
+    navigationBarTitleText: '参与者用户',
+    enablePullDownRefresh: true,
+    backgroundColor: '#fff'
+  }
+}, {
+  path: 'pages/imgDownload/index',
+  config: {
+    navigationBarTitleText: '炫耀一下',
+    disableScroll: true,
+    backgroundColor: '#00000000'
   }
 }]

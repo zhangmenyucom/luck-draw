@@ -2,27 +2,31 @@
   <div class="mobile">
     <div>
       <span>手机号</span>
-      <input :value="mobile" maxlength='11' v-model="mobile" placeholder='请输入正确的手机号' />
+      <input maxlength='11' v-model="mobile" placeholder='请输入正确的手机号' />
     </div>
     <div>
-      <input type="number" placeholder='验证码'><button @tap='captcha' class="antialiased">{{countDown === 0 ? '获取验证码' : countDown}}</button>
+      <input v-model="c" type="number" placeholder='验证码'>
+      <button @tap='captcha' class="antialiased">{{countDown === 0 ? '获取验证码' : countDown}}</button>
     </div>
-    <button>确&nbsp;&nbsp;&nbsp;定</button>
+    <button @tap='changePhone'>确&nbsp;&nbsp;&nbsp;定</button>
   </div>
 </template>
 <script>
   import AccountService from '@/services/accountService'
+  import share from '@/common/js/share.js'
   export default{
     data () {
       return {
         mobile: '',
         countDown: 0,
-        userInfo: {}
+        userInfo: {},
+        c: ''
       }
     },
     methods: {
       captcha () {
         if (this.countDown !== 0) return
+
         const that = this
         AccountService.captcha({
           phone: this.mobile,
@@ -39,10 +43,19 @@
           }
         })
       },
-      inputChang (e) {
-        console.log('e', e)
+      changePhone () {
+        AccountService.changePhone({
+          phone: this.mobile,
+          captcha: this.c
+        }).then((res) => {
+          if (res.code === 0) {
+            this.$setStorageSync('userInfo', res.data)
+            this.$navigateBack()
+          }
+        })
       }
-    }
+    },
+    onShareAppMessage: share()
   }
 </script>
 <style scoped>

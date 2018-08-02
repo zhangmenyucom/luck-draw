@@ -1,9 +1,9 @@
-@import '../../common/util.less';
+@import '../../common/less/util.less';
 span {
   font-size: 14*@2;
 }
 
-text {
+text, button {
   font-size: 16*@2;
 }
 
@@ -24,6 +24,12 @@ text {
       margin-top: 8*@2;
       color: #fff;
     }
+    >text{
+      color: RGBA(255, 255, 255, 1);
+      font-size: 14*@2;
+      line-height: 18*@2;
+      margin-top: 8*@2;
+    }
   }
   .activitie {
     margin-top: 42*@2;
@@ -40,7 +46,6 @@ text {
         padding: 5*@2;
         margin: -31*@2 auto 0;
         background: #fff;
-
         >img {
           width: 60*@2;
           height: 60*@2;
@@ -58,8 +63,35 @@ text {
       .luckyNumber{
         color: RGBA(243, 185, 19, 1);
         font-weight: 500;
-
       }
     }
+    .content{
+      text-align: center;
+      margin-top: 28*@2;
+      > text {
+        font-weight: 500;
+      }
+      >img{
+        width: 304*@2;
+        height: 162*@2;
+        margin-top: 10*@2;
+      }
+    }
+    .tips{
+      margin-top: 30*@2;
+      background: RGBA(250, 175, 108, 0.1);
+      color: RGBA(239, 130, 41, 1);
+      font-size:12*@2;
+      line-height: 48*@2;
+      text-align: center;
+    }
+  }
+  .bottom{
+    margin-top: 14*@2;
+    font-weight: 500;
+    background: RGBA(243, 185, 19, 1);
+    color: RGBA(255, 255, 255, 1);
+    height: 40*@2;
+    line-height: 40*@2;
   }
 }

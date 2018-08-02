@@ -14,11 +14,11 @@
       <div class="goldBean">
         <img src='/static/img/goldBean.png'>
         <text class='bold'>
-          10 金豆 1 注
+          &nbsp;&nbsp;{{item.metadata.price}} 金豆 1 注
         </text>
-        <span>
+        <!-- <span>
           ¥8799
-        </span>
+        </span> -->
       </div>
       <div class="button">
         <button v-if='item.isOpen'>
@@ -29,7 +29,13 @@
         </div>
       </div>
     </a>
-    <!-- <img v-else src=""> -->
+    <div class="v" v-if='list.length === 0'>
+      <img mode='widthFix' src="/static/img/v.png" />
+      <br />
+      <text>
+        活动正在紧张筹备中！
+      </text>
+    </div>
   </div>
 </template>
 
@@ -41,7 +47,21 @@
 </script>
 
 <style scoped >
-  @import '../common/util.less';
+  @import '../common/less/util.less';
+  .v{
+    margin-top: 103*@2;
+    text-align: center;
+    >img{
+      width: 189*@2;
+    }
+    >text{
+      font-size: 12*@2;
+      line-height: 17*@2;
+      position: relative;
+      top: 26*@2;
+      color: RGBA(204, 204, 204, 1);
+    }
+  }
   .list{
     padding: 30*@1 15*@2 0;
     background: #FFFFFF;

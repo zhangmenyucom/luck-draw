@@ -2,10 +2,10 @@ import Vue from 'vue'
 import App from './App'
 import ext from './ext/ext'
 // import activitieList from '@/components/activitieList'
-import components from '@/components'
+// import components from '@/components'
 Vue.use(ext)
 // components.install(Vue)
-Vue.use(components)
+// Vue.use(components)
 // components.forEach((component) => {
 //   if (component.default.name) {
 //     // const name = component.default.name
@@ -18,7 +18,7 @@ Vue.use(components)
 // var a = 'name'
 // Vue.component('activitieList', activitieList)
 // console.log('==1==')
-console.log(Vue.component)
+// console.log(Vue.component)
 Vue.config.productionTip = false
 App.mpType = 'app'
 
@@ -34,6 +34,7 @@ export default {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#000'
     },
+    workers: 'workers',
     tabBar: {
       backgroundColor: '#ffffff',
       color: '#999999',

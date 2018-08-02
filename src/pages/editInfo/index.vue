@@ -17,28 +17,43 @@
   <li class="bd">
     <div class="list_l">性别</div>
     <div class="list_r list_info">
-     <div class="male" :class="{active:userInfo.gender === 'MALE'}">男</div>
-     <div class="male" :class="{active:chooseMale == 1}">女</div>
+     <div class="male active" v-if="userInfo.gender === 'MALE'">男</div>
+     <div class="male active" v-else>女</div>
    </div>
  </li>
  <li class="bd">
-  <div class="list_l">生日 <span v-if="rule.birthday">+{{rule.birthday}} <img src='/static/img/goldBean.png'></span></div>
+  <div class="list_l">生日 <span v-if="rule.birthday && !userInfo.birthday">+{{rule.birthday}} <img src='/static/img/goldBean.png'></span></div>
   <div class="list_r" style="display:flex;">
    <div class="index_section">
-    <picker mode="date" :endDate = "endDate" @change="bindDateChangeUser('birthday', $event)">
+    <div class="index_picker" v-if='userInfo.birthday'>
+      <div class="">{{ userInfo.birthday}}</div>
+    </div>
+    <picker v-else mode="date" :endDate = "endDate" @change="bindDateChangeUser('birthday', $event)">
       <div class="index_picker">
-        <div class="">{{ userInfo.birthday||'未添加' }}</div>
+        <div class="">未添加</div>
       </div>
     </picker>
   </div>
-  &nbsp;&nbsp;<i class="arrow icon iconfont icon-huise"></i>
+  &nbsp;&nbsp;<i v-if="!rule.birthday" class="arrow icon iconfont icon-huise"></i>
 </div>
 </li>
-<a href="/pages/mobile/index" class="bd">
-  <div class="list_l">手机号 <span>+{{rule.mobile}} <img src='/static/img/goldBean.png'></span></div>
-  <div class="list_r">{{getNum}}<i class="arrow icon iconfont icon-huise"></i></div>
+<a v-if="userInfo.phone" class="bd">
+  <div class="list_l">手机号</div>
+  <div class="list_r">
+    {{userInfo.phone}}
+  </div>
 </a>
-<li class="bd" @click ="chooseLocation">
+<a v-else href="/pages/mobile/index" class="bd">
+  <div class="list_l">手机号 <span>+{{rule.mobile}} <img src='/static/img/goldBean.png'></span></div>
+  <div class="list_r"> 去绑定
+    <i class="arrow icon iconfont icon-huise"></i>
+  </div>
+</a>
+<li v-if="userInfo.location" class="bd" >
+  <div class="list_l">地址</div>
+  <div class="list_r">{{userInfo.location.address}}</div>
+</li>
+<li v-else class="bd" @click ="chooseLocation">
   <div class="list_l">地址 <span>+{{rule.area}} <img src='/static/img/goldBean.png'></span></div>
   <div class="list_r">{{infoArea}}<i class="arrow icon iconfont icon-huise"></i></div>
 </li>
@@ -50,7 +65,7 @@
   import {getUserInfo} from '@/utils'
   import userService from '@/services/userService'
   import ScoreRulesService from '@/services/scoreRulesService'
-
+  import share from '@/common/js/share.js'
   export default {
     data () {
       return {
@@ -79,11 +94,15 @@
       },
       bindDateChangeUser (type, e) {
         const val = e.target.value
+        this.userPut(type, val)
+      },
+      userPut (type, val) {
         userService.put({
           id: this.userInfo.id,
           [type]: val
         }).then(res => {
           if (res.code === 0) {
+            console.log('res.data', res.data)
             res.data.birthday = res.data.birthday.toString()
             this.userInfo = res.data
             this.$setStorageSync('userInfo', res.data)
@@ -95,6 +114,7 @@
         ScoreRulesService.getList().then(res => {
           if (res.code === 0) {
             this.rule = JSON.parse(res.data.filter(data => data.type === 4)[0] ? res.data.filter(data => data.type === 4)[0].rule : {})
+            console.log('rule', this.rule)
           }
         })
       },
@@ -102,6 +122,39 @@
       chooseLocation () {
         this.$chooseLocation().then(res => {
           console.log('res', res)
+          this.userPut('location', {
+            addition: res.address + '-' + res.name,
+            address: res.address,
+            area: {
+              code: '',
+              name: ''
+            },
+            circle: {
+              code: '',
+              name: ''
+            },
+            city: {
+              code: '',
+              name: ''
+            },
+            country: {
+              code: '',
+              name: ''
+            },
+            gps: '0,0',
+            province: {
+              code: '',
+              name: ''
+            },
+            region: {
+              code: '',
+              name: ''
+            },
+            street: {
+              code: '',
+              name: ''
+            }
+          })
         })
       }
     },
@@ -114,7 +167,8 @@
       const userInfo = getUserInfo()
       this.userInfo = userInfo
       this.getScoreRules()
-    }
+    },
+    onShareAppMessage: share()
   }
 </script>
 <style scoped>

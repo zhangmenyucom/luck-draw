@@ -12,7 +12,7 @@
   </div>
 </template>
 <style scoped>
-  @import '../../common/util.less';
+  @import '../../common/less/util.less';
   .drawList {
     >span{
       display: block;
@@ -64,6 +64,7 @@
 <script>
   import drawList from '@/components/drawList'
   import ActivitiesService from '@/services/activitiesService'
+  import share from '@/common/js/share.js'
   export default {
     data () {
       return {
@@ -90,6 +91,7 @@
     },
     onLoad (a) {
       this.getActivitie(a.id)
-    }
+    },
+    onShareAppMessage: share()
   }
 </script>

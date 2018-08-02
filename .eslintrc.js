@@ -35,6 +35,8 @@ module.exports = {
     wx: true,
     getApp: true,
     getPage: true,
-    requirePlugin: true
+    requirePlugin: true,
+    worker: true,
+    setInerval: true
   }
 }

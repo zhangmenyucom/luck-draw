@@ -8,7 +8,7 @@
   import meActivitieList from '@/components/meActivitieList'
   import ParticipantsService from '@/services/participantsService'
   import { getUserInfo, formatDate } from '@/utils'
-  import config from 'config'
+  import share from '@/common/js/share.js'
   export default {
     data () {
       return {
@@ -41,7 +41,8 @@
         const getData = {
           userId: userInfo.id,
           pageNum,
-          pageSize
+          pageSize,
+          append: 'ACTIVITY'
         }
         if (type === `lucky`) getData.lucky = true
         this.isGet = true
@@ -69,14 +70,12 @@
       this.type = data.type
       this.pullDownRefresh()
     },
-    onShareAppMessage () {
-      return config.share
-    }
+    onShareAppMessage: share()
   }
 </script>
 
 <style scoped>
-  @import '../../common/util.less';
+  @import '../../common/less/util.less';
   .list{
     min-height: 100vh;
     background: #fff;

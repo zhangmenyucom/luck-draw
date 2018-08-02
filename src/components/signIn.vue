@@ -1,8 +1,8 @@
 <template>
- <div :class ="{model:true, showModel : isModel || showModel  }">
+ <div :class ="{model:true, showModel : isModel && !showModel  }">
   {{isModel}}
-  <div :class="{signIn:true, showModel : isModel || showModel}" >
-    <img :class="{ transform: isModel || showModel }" src="/static/img/light.png" />
+  <div :class="{signIn:true, showModel : isModel && !showModel}" >
+    <img :class="{ transform: isModel && !showModel }" src="/static/img/light.png" />
     <div class="sign">
       <img src="/static/img/signIn.png" />
       <div class="goldBean">
@@ -18,8 +18,8 @@
 
 <script>
   import AuthService from '@/services/authService'
-  import ScoreActivities from '@/services/scoreActivities'
-  import ScoreCountersService from '@/services/scoreCountersService'
+  import FootprintsActivities from '@/services/footprintsActivities'
+  import DailyFootprintsService from '@/services/dailyFootprintsService'
   import MeScoresService from '@/services/meScoresService'
 
   import { getUserInfo } from '@/utils'
@@ -38,17 +38,18 @@
       bindgetuserinfo (e) {
         const userInfo = getUserInfo()
         AuthService.wxLogin(e.mp.detail).then((res) => {
-          if (!userInfo.id) { // 判断之前是否 执行过 this.isSignIn
-            return this.isSignIn() // 判断是否今天签到过
-          } else {
-            return this.signIn
+          if (res.code === 0) {
+            if (!userInfo.id) { // 判断之前是否 执行过 this.isSignIn
+              return this.isSignIn() // 判断是否今天签到过
+            } else {
+              return this.signIn
+            }
           }
         }).then((res) => {
           if (!res) {
             // 签到
-            const newUserInfo = getUserInfo()
-            return ScoreActivities.signIn({
-              user: newUserInfo
+            return FootprintsActivities.add({
+              type: 'SIGN_IN'
             })
           } else {
             // 获取用户积分数
@@ -58,13 +59,12 @@
         }).then(res => {
           if (res.code === 0) {
             this.isModel = false
-            console.log('this.scoreCounters', this.scoreCounters)
-            console.log('this.signIn', this.signIn)
             if (!this.signIn) {
-              this.scoreCounters.durationSignInDays = this.scoreCounters.durationSignInDays ? ++this.scoreCounters.durationSignInDays : 1
+              this.scoreCounters.number = this.scoreCounters.number ? ++this.scoreCounters.number : 1
             }
             this.$setStorageSync('score', res.data.score)
             this.$setStorageSync('scoreCounters', this.scoreCounters)
+            this.$setStorageSync('signIn', true)
             this.signInCB({
               scoreCounters: this.scoreCounters,
               score: res.data.score
@@ -74,19 +74,18 @@
       },
       isSignIn () { // 判断今天是否签到
         const userInfo = getUserInfo()
-        return ScoreCountersService.getList({
+        return DailyFootprintsService.getList({
           userId: userInfo.id,
           pageNum: 1,
-          pageSize: 1
+          pageSize: 1,
+          type: 'SIGN_IN'
         }).then(res => {
           if (res.code === 0 && res.data.length > 0) {
             const scoreCounters = res.data[0]
             // 记录最新签到信息
-            console.log('scoreCounters', scoreCounters)
             this.scoreCounters = scoreCounters
-
             // 对比今天是否签到
-            const lastSignInTime = scoreCounters.lastSignInTime
+            const lastSignInTime = scoreCounters.lastOperationTime
             if (!lastSignInTime) return false
             const newDate = new Date()
             const date = parseInt(newDate.getFullYear() + '' + this.check(newDate.getMonth() + 1) + this.check(newDate.getDate()), 10)
@@ -109,6 +108,7 @@
       }
     },
     onLoad () {
+      console.log('signIn')
       const userInfo = getUserInfo()
       // 判断是否登录过
       if (!userInfo.id) {
@@ -119,8 +119,10 @@
           if (!res) {
             this.isModel = true
           } else {
+            this.isModel = false
             this.signIn = true
           }
+          this.$setStorageSync('signIn', this.signIn)
         })
       }
     }
@@ -128,7 +130,7 @@
 </script>
 
 <style scoped>
-  @import '../common/util.less';
+  @import '../common/less/util.less';
 
   @keyframes myfirst {
    from {

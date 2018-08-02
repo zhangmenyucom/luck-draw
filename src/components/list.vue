@@ -3,15 +3,15 @@
     <a class="list" v-for='(item, index) in list '>
       <div class="info">
         <text>
-          注册用户
+          {{type[item.type]}}
         </text>
         <br />
         <span>
-          2018-06-23 11:36
+          {{item.createdTime}}
         </span>
       </div>
       <span>
-        +10
+        {{item.score < 0?item.score:'+'+item.score}}
       </span>
     </a>
   </div>
@@ -19,12 +19,17 @@
 
 <script>
   export default {
-    props: ['list', 'rangeKey', 'size']
+    props: ['list'],
+    data () {
+      return {
+        type: ['支付成功', '用户授权登录', '签到', '分享成功', '完善信息', '参与抽奖']
+      }
+    }
   }
 </script>
 
 <style scoped>
-  @import '../common/util.less';
+  @import '../common/less/util.less';
 
   .list{
     display: flex;

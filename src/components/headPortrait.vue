@@ -16,7 +16,7 @@ export default {
 </script>
 
 <style scoped>
-@import '../common/util.less';
+@import '../common/less/util.less';
 img{
   width: 30*@2;
   height: 30*@2;
