@@ -37,7 +37,7 @@
         <img :src="participant.activity.media[0].url">
       </div>
       <div class="tips antialiased">
-        友情提示：完善收货信息后我们会及时与您联
+        友情提示：完善收货信息后我们会及时与您联系
       </div>
     </div>
     <!-- 活动内容结束 -->

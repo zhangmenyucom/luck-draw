@@ -1,5 +1,6 @@
 <template>
   <div class='index'>
+    <!-- <load :isshow="isloadShow" /> -->
     <top title="首页" />
     <div class="head">
       <img src="/static/img/bitmap.png" alt="">
@@ -7,9 +8,9 @@
         <span class='left'>
           我的金豆：{{score+''}}
         </span>
-        <span class='right'>
+        <a class='right' open-type="switchTab" href="/pages/obtainGoldBean/index" >
           赚金豆&nbsp;>
-        </span>
+        </a>
         <div class="c"></div>
         <div class="calendar">
           <img src="/static/img/calendar.png" />
@@ -25,7 +26,7 @@
             <img src="/static/img/goldBean.png" alt="" />
             <br />
             <text>
-              {{i==6 ? '大于' : '第'}}{{i+1}}天
+              第{{i + 1 + number}}天
             </text>
           </div>
         </div>
@@ -77,6 +78,7 @@
 </template>
 
 <script>
+  // import load from '@/components/loading'
   import activitieList from '@/components/activitieList'
   import signIn from '@/components/signIn'
   import top from '@/components/top'
@@ -100,7 +102,8 @@
         pageNum: 1,
         isModel: true,
         score: 0,
-        scoreCounters: {}
+        scoreCounters: {},
+        number: 0
       }
     },
     onPullDownRefresh () {
@@ -125,9 +128,11 @@
         ScoreRulesService.getList().then(res => {
           if (res.code === 0) {
             // 处理每天对应的积分数
+            const number = this.scoreCounters.number > 7 ? this.scoreCounters.number - 7 : 0 // 需要展示的第一天
+            this.number = number
             const goldBeanRules = JSON.parse(res.data.filter((rule) => rule.type === 2)[0].rule)
             --goldBeanRules.maxStep
-            this.goldBean = [...Array(7)].map((v, i) => parseInt(goldBeanRules.base) + (i > parseInt(goldBeanRules.maxStep) ? parseInt(goldBeanRules.maxStep) : i) * parseInt(goldBeanRules.stepAdd))
+            this.goldBean = [...Array(7)].map((v, i) => parseInt(goldBeanRules.base) + ((i + number) > parseInt(goldBeanRules.maxStep) ? parseInt(goldBeanRules.maxStep) : (i + number)) * parseInt(goldBeanRules.stepAdd))
           }
         })
       },
@@ -138,12 +143,15 @@
           }
         })
       },
+
       getActivitieList (pageNum = 1, pageSize = 20) {
         if (this.complete || this.isGet) return false
         this.isGet = true
         ActivitiesService.getList({
           type: 'PLATFORM_LUCKY_DRAW',
           status: 'CREATED',
+          append: 'BET_NUM',
+          startTimeLt: new Date().getTime(),
           pageNum,
           pageSize
         }).then((res) => {
@@ -179,7 +187,7 @@
           this.getMeScores()
         }
 
-        this.scoreCounters = data.scoreCounters || this.$getStorageSync('scoreCounters')
+        this.scoreCounters = data.scoreCounters || this.$getStorageSync('scoreCounters') // 获取连续签到天数
         this.getScoreRules()
         getMeScores.start(this)
       }

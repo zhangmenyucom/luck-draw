@@ -14,7 +14,7 @@
           <span>
             <span>「参与时间」</span>{{item.time}}
             <span class="state">
-              {{status[item.status]}}
+             {{item.tickets.length}}/{{status[item.status]}}
             </span>
           </span>
         </div>
@@ -97,7 +97,7 @@
         .state{
           color: RGBA(153, 153, 153, 1);
           float: right;
-          font-size: 14*@2;
+          font-size: 12*@2;
           line-height: 18*@2;
           color: RGBA(254, 76, 82, 1)
         }

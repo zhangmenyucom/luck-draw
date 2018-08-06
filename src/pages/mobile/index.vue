@@ -44,6 +44,11 @@
         })
       },
       changePhone () {
+        const myreg = /^[1][3,4,5,7,8][0-9]{9}$/
+        if (!(this.mobile && myreg.test(this.mobile))) {
+          this.showToast('请填写正确的手机号！')
+        }
+
         AccountService.changePhone({
           phone: this.mobile,
           captcha: this.c

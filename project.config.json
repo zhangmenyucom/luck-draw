@@ -30,7 +30,7 @@
 			"list": []
 		},
 		"miniprogram": {
-			"current": 17,
+			"current": 9,
 			"list": [
 				{
 					"id": 0,
@@ -91,7 +91,7 @@
 					"id": 9,
 					"name": "活动详情",
 					"pathName": "pages/activitiesDetails/index",
-					"query": "id=5b6142b5711eae390630b8c7",
+					"query": "id=5b618799711eae042cb255b8",
 					"scene": "1008"
 				},
 				{

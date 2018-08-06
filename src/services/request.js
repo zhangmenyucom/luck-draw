@@ -9,7 +9,7 @@ var fly = new Fly()
 fly.config.baseURL = config.baseURL
 // 添加拦截器
 fly.interceptors.request.use((request) => {
-  if (!config.noLoading.has(request.url)) ext.showLoading()
+  // if (!config.noLoading.has(request.url)) ext.showLoading()
   // 给所有请求添加自定义header
   request.headers = {
     accept: `application/json,text/plain,text/html`,
@@ -23,7 +23,7 @@ fly.interceptors.request.use((request) => {
 
 fly.interceptors.response.use(
   (response) => {
-    ext.hideLoading()
+    // ext.hideLoading()
     // 只将请求结果的data字段返回
     if (response.data.code === 0) {
       return response.data
@@ -32,7 +32,7 @@ fly.interceptors.response.use(
     }
   },
   (err) => {
-    ext.hideLoading()
+    // ext.hideLoading()
     // 发生网络错误后会走到这里
     console.log('err', err)
     if (err.status === 401) {

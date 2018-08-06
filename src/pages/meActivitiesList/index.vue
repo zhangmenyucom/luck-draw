@@ -52,6 +52,7 @@
             const participantList = res.data.map((participant) => {
               participant.activity.time = formatDate(new Date(participant.createdTime), 'yy/mm/dd HH:mm:ss')
               participant.activity.prize = participant.activity.items[0]
+              participant.activity.tickets = participant.tickets
               return participant.activity
             })
             if (this.onPullDownRefresh) {

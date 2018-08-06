@@ -2,9 +2,9 @@
   <div>
     <div>
       <img :style="{width:size+'px', height:size+'px'}" v-for="(item, index) in list" :src="rangeKey?item[rangeKey]:item">
-      <a :href="url" class="more" v-if="list.length >= 8">
+      <div :href="url" class="more" v-if="list.length >= 8">
         ...
-      </a>
+      </div>
     </div>
   </div>
 </template>

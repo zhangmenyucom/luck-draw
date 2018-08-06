@@ -8,9 +8,10 @@
       <div class="info_r">
         <div class="editInfo">
           <a href="/pages/editInfo/index" class="antialiased">
-            <span >完善资料&nbsp;&nbsp;</span>
-            <span >+{{rule.total}}</span>&nbsp;
-            <img src="/static/img/goldBean.png">
+            <span v-if="rule.total">完善资料&nbsp;&nbsp;</span>
+            <span v-else>查看资料&nbsp;&nbsp;</span>
+            <span v-if="rule.total">+{{rule.total}}</span>&nbsp;
+            <img v-if="rule.total" src="/static/img/goldBean.png">
           </a>
         </div>
       </div>
@@ -44,7 +45,7 @@
                 <span>分享</span>
                 <div class="right">
                   <span>
-                    {{shareRule.base * shareNumber}}
+                    {{shareRule.base * (shareNumber > shareRule.maxStep ? shareRule.maxStep : shareNumber )}}
                   </span>
                   /{{shareRule.maxStep * shareRule.base}}
                 </div>
@@ -69,7 +70,7 @@
               </div>
             </div>
             <span>
-             可得：10<img src="/static/img/goldBean.png" />
+             可得：{{rule.mobile}}<img src="/static/img/goldBean.png" />
            </span>
            <button class="disableButton">
             已领取
@@ -94,7 +95,6 @@
   import {getUserInfo} from '@/utils'
   import signIn from '@/components/signIn'
   import ParticipantsService from '@/services/participantsService'
-
   import MeScoresService from '@/services/meScoresService.js'
   import ScoreRulesService from '@/services/scoreRulesService'
   import getMeScores from '@/common/js/getMeScores.js'

@@ -9,12 +9,18 @@
           分享微信群
         </span>
         <br />
-        +{{shareRule.base}}/剩余{{shareRule.maxStep - shareNumber}}次 <img src="/static/img/goldBean.png" alt="">
+        +{{shareRule.base}}<img src="/static/img/goldBean.png" alt=""> &nbsp;&nbsp;&nbsp;
       </div>
       <div class="right">
-        <button open-type="share">
+        <button v-if="shareRule.maxStep > shareNumber" open-type="share">
           去领取
         </button>
+        <div v-else class='complete'>
+          今日已领完
+        </div>
+        <div class="number">
+          剩余{{(shareRule.maxStep - shareNumber)<0?0:(shareRule.maxStep - shareNumber)}}次
+        </div>
       </div>
       <div class="c"></div>
     </div>
@@ -162,7 +168,7 @@
         margin-right: 14*@2
       }
       a, button {
-        width: 80*@2;
+        /*width: 80*@2;*/
         height: 32*@2;
         text-align: center;
         background: RGBA(254, 76, 82, 1);
@@ -171,13 +177,16 @@
         line-height: 32*@2;
         border-radius: 2*@2
       }
-
+      .number{
+        text-align: center;
+        color: #999999;
+      }
       .complete{
         width: 80*@2;
         height: 32*@2;
         text-align: center;
         line-height: 32*@2;
-        color: #999999;
+
       }
     }
   }
