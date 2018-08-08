@@ -1,98 +1,105 @@
 <template>
-  <div  class="info_container">
-    <div class="infoHeader">
-      <div class="infoImg">
-        <img :src='userInfo.wx.avatar' />
-        <text>{{userInfo.wx.nickName}}</text>
-      </div>
-      <div class="info_r">
-        <div class="editInfo">
-          <a href="/pages/editInfo/index" class="antialiased">
-            <span v-if="rule.total">完善资料&nbsp;&nbsp;</span>
-            <span v-else>查看资料&nbsp;&nbsp;</span>
-            <span v-if="rule.total">+{{rule.total}}</span>&nbsp;
-            <img v-if="rule.total" src="/static/img/goldBean.png">
-          </a>
+  <div class="info_container">
+    <top :hideIcone='true' title='我的' />
+    <load :isshow="isShow" />
+    <div v-if='!isShow'>
+      <div class="infoHeader">
+        <div class="infoImg">
+          <img :src='userInfo.wx.avatar' />
+          <text>{{userInfo.wx.nickName}}</text>
         </div>
-      </div>
-    </div >
-    <div class="info_content">
-      <div class="content_detail">
-        <div class="infoDetail clearfix">
-          <a href="/pages/meIntegral/index" class="" style="flex:1">
-            <div class="detailNum">{{score + ''}}</div>
-            <div class="detailContent">我的金豆</div>
-            <div class="interval"></div>
-          </a>
-          <a href="/pages/meActivitiesList/index?type=all" style="flex:1">
-            <div  class="detailNum">{{activitieTotal}}</div>
-            <div  class="detailContent">全部抽奖</div>
-            <div class="interval"></div>
-          </a>
-          <a href="/pages/meActivitiesList/index?type=lucky" style="flex:1">
-            <div class="detailNum">{{LuckyActivitieTotal}}</div>
-            <div class="detailContent">中奖记录</div>
-          </a>
+        <div class="info_r">
+          <div class="editInfo">
+            <a href="/pages/editInfo/index" class="antialiased">
+              <span v-if="rule.total">完善资料&nbsp;&nbsp;</span>
+              <span v-else>查看资料&nbsp;&nbsp;</span>
+              <span v-if="rule.total">+{{rule.total}}</span>&nbsp;
+              <img v-if="rule.total" src="/static/img/goldBean.png">
+            </a>
+          </div>
         </div>
-      </div>
-      <div class="makeJob">
-       <h5 class="antialiased">做任务 赚金豆</h5>
-       <div class="jobDetail">
-         <ul>
-          <li>
+      </div >
+      <div class="info_content">
+        <div class="content_detail">
+          <div class="infoDetail clearfix">
+            <a href="/pages/meIntegral/index" class="" style="flex:1">
+              <div class="detailNum">{{score + ''}}</div>
+              <div class="detailContent">我的金豆</div>
+              <div class="interval"></div>
+            </a>
+            <a href="/pages/meActivitiesList/index?type=all" style="flex:1">
+              <div  class="detailNum">{{activitieTotal}}</div>
+              <div  class="detailContent">全部抽奖</div>
+              <div class="interval"></div>
+            </a>
+            <a href="/pages/meActivitiesList/index?type=lucky" style="flex:1">
+              <div class="detailNum">{{LuckyActivitieTotal}}</div>
+              <div class="detailContent">中奖记录</div>
+            </a>
+          </div>
+        </div>
+        <div class="makeJob">
+         <h5 class="antialiased">做任务 赚金豆</h5>
+         <div class="jobDetail">
+           <ul>
+            <li>
+              <div>
+                <div>
+                  <span>分享</span>
+                  <div class="right">
+                    <span>
+                      {{shareRule.base * (shareNumber > shareRule.maxStep ? shareRule.maxStep : shareNumber )}}
+                    </span>
+                    /{{shareRule.maxStep * shareRule.base}}
+                  </div>
+                </div>
+                <span>
+                 一次/{{shareRule.base}}<img src="/static/img/goldBean.png" />
+               </span>
+               <button open-type="share">
+                立即领取
+              </button>
+            </div>
+          </li>
+          <a :href="!userInfo.contactNumber? '/pages/mobile/index' : ''">
             <div>
               <div>
-                <span>分享</span>
+                <span>绑定手机号</span>
                 <div class="right">
                   <span>
-                    {{shareRule.base * (shareNumber > shareRule.maxStep ? shareRule.maxStep : shareNumber )}}
+                    {{userInfo.contactNumber ? rule.mobile : 0}}
                   </span>
-                  /{{shareRule.maxStep * shareRule.base}}
+                  /{{rule.mobile}}
                 </div>
               </div>
               <span>
-               一次/{{shareRule.base}}<img src="/static/img/goldBean.png" />
+               可得：{{rule.mobile}}<img src="/static/img/goldBean.png" />
              </span>
-             <button open-type="share">
-              立即领取
+             <button :class="{disableButton:userInfo.contactNumber}">
+              {{userInfo.contactNumber ? '已领取' : '去领取'}}
             </button>
           </div>
-        </li>
-        <a :href="!userInfo.phone? '/pages/mobile/index' : ''">
-          <div>
-            <div>
-              <span>绑定手机号</span>
-              <div class="right">
-                <span>
-                  {{userInfo.phone ? rule.mobile : 0}}
-                </span>
-                /{{rule.mobile}}
-              </div>
-            </div>
-            <span>
-             可得：{{rule.mobile}}<img src="/static/img/goldBean.png" />
-           </span>
-           <button class="disableButton">
-            已领取
-          </button>
-        </div>
-      </a>
-    </ul>
+        </a>
+      </ul>
+    </div>
   </div>
-</div>
-<div class="infoQue">
-  <div>常见问题</div>
-  <div class="arrow"></div>
-</div>
+  <div class="infoQue">
+    <div>常见问题</div>
+    <div class="arrow"></div>
+  </div>
 </div>
 <signIn :signInCB = "signInCB" :showModel = "!isModel"/>
 </div>
+</div>
+
 </template>
 <style scoped>
   @import './index.less';
 </style>
 <script>
-  import {getUserInfo} from '@/utils'
+  import load from '@/components/loading'
+  import top from '@/components/top'
+  import {getUserInfo, check} from '@/utils'
   import signIn from '@/components/signIn'
   import ParticipantsService from '@/services/participantsService'
   import MeScoresService from '@/services/meScoresService.js'
@@ -112,12 +119,14 @@
         score: 0,
         rule: {},
         shareRule: {},
-        shareNumber: 0
-
+        shareNumber: 0,
+        isShow: true
       })
     },
     components: {
-      signIn
+      signIn,
+      load,
+      top
     },
     methods: {
       signInCB (data) {
@@ -169,7 +178,7 @@
           if (res.code === 0) {
             const map = {
               area: 'location',
-              mobile: 'phone',
+              mobile: 'contactNumber',
               birthday: 'birthday',
               gender: 'gender'
             }
@@ -181,9 +190,9 @@
               return parseInt(total, 10) + (!this.userInfo[map[num[0]]] ? parseInt(num[1], 10) : 0)
             })
             const shareRule = JSON.parse(res.data.filter(data => data.type === 3)[0] ? res.data.filter(data => data.type === 3)[0].rule : {})
-            console.log('shareRule', shareRule)
             this.shareRule = shareRule
             this.rule = rule
+            this.isShow = false
           }
         })
       },
@@ -195,12 +204,19 @@
           type: 'SHARE'
         }).then((res) => {
           if (res.code === 0) {
-            this.shareNumber = res.data[0].number
+            const scoreCounters = res.data[0]
+            const lastSignInTime = scoreCounters.lastOperationTime
+            if (lastSignInTime) {
+              const newDate = new Date()
+              const date = parseInt(newDate.getFullYear() + '' + check(newDate.getMonth() + 1) + check(newDate.getDate()), 10)
+              if (date <= parseInt(lastSignInTime)) {
+                this.shareNumber = res.data[0].number
+              }
+            }
           }
         })
       },
       shareCb () {
-        console.log('aaa')
         this.shareNumber = this.shareNumber + 1
       }
     },

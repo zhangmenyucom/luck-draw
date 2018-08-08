@@ -21,7 +21,6 @@
   import FootprintsActivities from '@/services/footprintsActivities'
   import DailyFootprintsService from '@/services/dailyFootprintsService'
   import MeScoresService from '@/services/meScoresService'
-
   import { getUserInfo } from '@/utils'
   export default {
     name: 'signIn',
@@ -62,8 +61,8 @@
             if (!this.signIn) {
               this.scoreCounters.number = this.scoreCounters.number ? ++this.scoreCounters.number : 1
             }
-            this.$setStorageSync('score', res.data.score)
             this.$setStorageSync('scoreCounters', this.scoreCounters)
+            this.$setStorageSync('score', res.data.score)
             this.$setStorageSync('signIn', true)
             this.signInCB({
               scoreCounters: this.scoreCounters,
@@ -82,8 +81,16 @@
         }).then(res => {
           if (res.code === 0 && res.data.length > 0) {
             const scoreCounters = res.data[0]
+            const oldScoreCounters = this.$getStorageSync('scoreCounters')
+            if (oldScoreCounters.number !== scoreCounters) {
+              this.$setStorageSync('scoreCounters', scoreCounters)
+              this.signInCB({
+                scoreCounters
+              })
+            }
             // 记录最新签到信息
             this.scoreCounters = scoreCounters
+
             // 对比今天是否签到
             const lastSignInTime = scoreCounters.lastOperationTime
             if (!lastSignInTime) return false
@@ -160,6 +167,7 @@
    background: RGBA(0, 0, 0, 0.6);
    opacity:0;
    transition: opacity 2s;
+   z-index: 101;
    .welfare {
      top: 150*@1;
      width: 280*@2;

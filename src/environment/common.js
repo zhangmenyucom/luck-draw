@@ -10,6 +10,6 @@ export default {
   share: {
     title: `钱包抽奖吧`,
     path: `pages/index/index`,
-    imageUrl: `/static/img/share.jpg`
+    imageUrl: `/static/img/share.png`
   }
 }

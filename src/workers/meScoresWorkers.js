@@ -11,7 +11,6 @@ const getMeScores = () => {
       }
     }
   })
-  // console.log(worker)
 }
 // getMeScores()
 // const getMeScores = () => {

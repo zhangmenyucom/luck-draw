@@ -1,5 +1,5 @@
 // 检查是不是两位数字，不足补全
-function check (str) {
+const check = (str) => {
   str = str.toString()
   if (str.length < 2) {
     str = '0' + str
@@ -7,7 +7,7 @@ function check (str) {
   return str
 }
 
-export default (date, str) => {
+const formatDate = (date, str) => {
   var mat = {}
   mat.M = date.getMonth() + 1// 月份记得加1
   mat.H = date.getHours()
@@ -33,4 +33,8 @@ export default (date, str) => {
   if (str.indexOf('-') > -1) {
     return mat.Y + '-' + mat.M + '-' + mat.D + ' ' + mat.H + '-' + mat.m + '-' + mat.s
   }
+}
+export {
+  check,
+  formatDate
 }

@@ -1,11 +1,12 @@
 <template>
   <div>
+    <top title="抽奖" />
     <load :isshow="isShow" />
+    <signIn :signInCB = "signInCB"/>
     <div v-if='!isShow'>
-      <top title="首页" />
       <meIntegral :score='score' />
       <div class="activitiesDetails">
-        <img mode='center' :src="activitie.media[0].url">
+        <img mode='aspectFit' :src="activitie.media[0].url">
         <div class="prompt antialiased">
           <div class="left" v-if='(0+activitie.metadata.ticketsNum-betNum) != 0'>
             剩余<span>{{0+activitie.metadata.ticketsNum-betNum}}</span> 注
@@ -21,7 +22,7 @@
           <span>
             「奖品」
           </span>
-          {{prize.name}}
+          {{prize.name}}&nbsp;X&nbsp;{{prize.metadata.num}}
         </div>
         <!-- 中间提示 -->
         <div class="goldBean">
@@ -140,7 +141,7 @@
       <div class="content" @tap.stop="">
         <img src="../../../static/img/group.png" mode='widthFix'>
         <div class='title'>
-          <span v-if='state==1'>下 注</span>
+          <span v-if='state <= 3'>下 注</span>
           <span v-else>幸运号</span>
         </div>
         <div>
@@ -204,9 +205,6 @@
         </div>
       </div>
     </div>
-
-    <signIn :signInCB = "signInCB"/>
-
   </div>
 </div>
 </div>
@@ -244,7 +242,11 @@
             url: ''
           }]
         },
-        prize: {},
+        prize: {
+          metadata: {
+            num: 0
+          }
+        },
         participants: {
           tickets: []
         },
@@ -291,6 +293,7 @@
           if (res.code === 0) {
             this.score = res.data.score
             this.participateBet = parseInt(this.score / parseInt(this.activitie.metadata.price))
+            this.isShow = false
           }
         })
       },
@@ -375,7 +378,6 @@
             }
           }
         })
-
         // 查询活动总参与人数
         ParticipantsService.get({
           activityId
@@ -392,6 +394,13 @@
             this.participantTotal = res.total
           }
         })
+      },
+      isLoad () {
+        if (this.$getStorageSync('activitieId') !== this.id || this.isShow) {
+          const _this = this
+          _this.isShow = true
+          _this.$setStorageSync('activitieId', this.id)
+        }
       },
       bets (e) { // 下注 参与活动
         const {
@@ -438,8 +447,9 @@
         getMeScores.start(this)
       }
     },
-    onLoad (a) {
-      this.id = a.id
+    onLoad (options) {
+      // console.log('options', options)
+      this.id = options.id
       const userInfo = getUserInfo()
       this.userInfo = userInfo
       this.state = 0
@@ -452,24 +462,17 @@
       getMeScores.end()
     },
     onShow () {
-      if (this.$getStorageSync('activitieId') !== this.id || this.isShow) {
-        const _this = this
-        _this.isShow = true
-        _this.$setStorageSync('activitieId', this.id)
-        setTimeout(() => {
-          _this.isShow = false
-        }, 1000)
-      }
       const userInfo = getUserInfo()
       if (userInfo.id) {
         this.signInCB()
       }
+      this.isLoad()
     },
     onShareAppMessage () {
       const introductionImageUrl = this.activitie.media.filter(media => media.layout === 'INTRODUCTION')[0]
       const _this = this
       return {
-        title: this.activitie.name,
+        title: this.activitie.description || this.activitie.name,
         path: `pages/activitiesDetails/index?id=${this.activitie.id}`,
         imageUrl: introductionImageUrl && introductionImageUrl.url,
         success (res) {

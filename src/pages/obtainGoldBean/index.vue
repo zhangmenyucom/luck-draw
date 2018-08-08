@@ -1,5 +1,6 @@
 <template>
   <div class="list">
+    <top :hideIcone='true' title='赚金豆' />
     <div>
       <div class="left icon">
         <i class="icon iconfont icon-fenxiang" :style="{color:'RGBA(107, 200, 50, 1)'}"></i>
@@ -36,7 +37,7 @@
         +{{rule.mobile}} <img src="/static/img/goldBean.png" alt="">
       </div>
       <div class="right">
-        <a v-if="!userInfo.phone" href="/pages/mobile/index">
+        <a v-if="!userInfo.contactNumber" href="/pages/mobile/index">
           去绑定
         </a>
         <div v-else class='complete'>
@@ -57,7 +58,7 @@
         +{{rule.total}} <img src="/static/img/goldBean.png" alt="">
       </div>
       <div class="right">
-        <a v-if="!(userInfo.phone && userInfo.location && userInfo.birthday)" href="/pages/editInfo/index">
+        <a v-if="!(userInfo.contactNumber && userInfo.location && userInfo.birthday)" href="/pages/editInfo/index">
           去完善
         </a>
         <div v-else class='complete'>
@@ -72,10 +73,12 @@
 
 <script>
   import signIn from '@/components/signIn'
-  import {getUserInfo} from '@/utils'
+  import top from '@/components/top'
+  import {getUserInfo, check} from '@/utils'
   import DailyFootprintsService from '@/services/dailyFootprintsService'
   import ScoreRulesService from '@/services/scoreRulesService'
   import share from '@/common/js/share.js'
+
   export default {
     data () {
       return {
@@ -87,14 +90,27 @@
       }
     },
     components: {
-      signIn
+      signIn,
+      top
     },
     methods: {
       getScoreRules () {
         ScoreRulesService.getList().then(res => {
           if (res.code === 0) {
+            const map = {
+              area: 'location',
+              mobile: 'contactNumber',
+              birthday: 'birthday',
+              gender: 'gender'
+            }
             const rule = JSON.parse(res.data.filter(data => data.type === 4)[0] ? res.data.filter(data => data.type === 4)[0].rule : {})
-            rule.total = Object.values(rule).reduce((total, num) => parseInt(total, 10) + parseInt(num, 10))
+            rule.total = Object.entries(rule).reduce((total, num) => {
+              if (Array.isArray(total)) {
+                total = (!this.userInfo[map[total[0]]] ? parseInt(total[1], 10) : 0)
+              }
+              return parseInt(total, 10) + (!this.userInfo[map[num[0]]] ? parseInt(num[1], 10) : 0)
+            })
+
             const shareRule = JSON.parse(res.data.filter(data => data.type === 3)[0] ? res.data.filter(data => data.type === 3)[0].rule : {})
             this.rule = rule
             this.shareRule = shareRule
@@ -117,7 +133,15 @@
           type: 'SHARE'
         }).then((res) => {
           if (res.code === 0) {
-            this.shareNumber = res.data[0].number
+            const scoreCounters = res.data[0]
+            const lastSignInTime = scoreCounters.lastOperationTime
+            if (lastSignInTime) {
+              const newDate = new Date()
+              const date = parseInt(newDate.getFullYear() + '' + check(newDate.getMonth() + 1) + check(newDate.getDate()), 10)
+              if (date <= parseInt(lastSignInTime)) {
+                this.shareNumber = res.data[0].number
+              }
+            }
           }
         })
       }
@@ -175,7 +199,8 @@
         color: #fff;
         font-size: 14*@2;
         line-height: 32*@2;
-        border-radius: 2*@2
+        border-radius: 2*@2;
+        padding:0 7*@2;
       }
       .number{
         text-align: center;

@@ -1,5 +1,6 @@
 <template>
  <div class="edit_container">
+  <top title="我的资料" />
   <div class="editList">
    <ul>
     <li class="bd">
@@ -37,10 +38,10 @@
   &nbsp;&nbsp;<i v-if="!rule.birthday" class="arrow icon iconfont icon-huise"></i>
 </div>
 </li>
-<a v-if="userInfo.phone" class="bd">
+<a v-if="userInfo.contactNumber" class="bd">
   <div class="list_l">手机号</div>
   <div class="list_r">
-    {{userInfo.phone}}
+    {{userInfo.contactNumber}}
   </div>
 </a>
 <a v-else href="/pages/mobile/index" class="bd">
@@ -66,6 +67,7 @@
   import userService from '@/services/userService'
   import ScoreRulesService from '@/services/scoreRulesService'
   import share from '@/common/js/share.js'
+  import top from '@/components/top'
   export default {
     data () {
       return {
@@ -77,6 +79,9 @@
         userInfo: {},
         rule: {}
       }
+    },
+    components: {
+      top
     },
     methods: {
       getToday () {

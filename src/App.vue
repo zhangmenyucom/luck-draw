@@ -5,6 +5,10 @@
 </template>
 <script>
   export default {
+    onShow (options) {
+      console.log('options', options)
+      this.$setStorageSync('scene', options.scene)
+    }
   }
 </script>
 <style>

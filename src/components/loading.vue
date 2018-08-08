@@ -70,7 +70,6 @@
     .bean{
       animation: bean 1s ease-in infinite;
       z-index: 3;
-
     }
     .shadow{
       top:112*@2;

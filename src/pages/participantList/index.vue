@@ -1,5 +1,6 @@
 <template>
   <div class="participantsList">
+  <top title='参与者用户' />
     <span class="c">---</span>
     <div class="border">
       <div>
@@ -15,6 +16,7 @@
 <script>
   import ParticipantsService from '@/services/participantsService'
   import participantsList from '@/components/participantsList'
+  import top from '@/components/top'
   import share from '@/common/js/share.js'
   export default {
     data () {
@@ -35,7 +37,8 @@
       this.getParticipantsList(this.pageNum)
     },
     components: {
-      participantsList
+      participantsList,
+      top
     },
     methods: {
       // getParticipantsList ({activityId:this.id}) {

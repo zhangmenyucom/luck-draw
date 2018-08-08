@@ -1,11 +1,11 @@
 import wxLogin from './wxLogin'
 import ext from '../ext/ext'
-import formatDate from './formatDate'
+import {check, formatDate} from './formatDate'
+
 function formatNumber (n) {
   const str = n.toString()
   return str[1] ? str : `0${str}`
 }
-
 function formatTime (date) {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
@@ -29,7 +29,8 @@ export {
   operatingEnvironment,
   formatTime,
   getUserInfo,
-  formatDate
+  formatDate,
+  check
 }
 
 export default {
@@ -38,5 +39,6 @@ export default {
   operatingEnvironment,
   wxLogin,
   getUserInfo,
-  formatDate
+  formatDate,
+  check
 }

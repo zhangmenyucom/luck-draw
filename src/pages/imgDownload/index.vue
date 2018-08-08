@@ -1,16 +1,21 @@
 <template>
   <div class="imgDownload">
+    <top title='炫耀一下' />
     <img mode="widthFix" :src="url">
     <button class="saveFile" @tap='saveFile'>保存图片</button>
   </div>
 </template>
 <script>
 import share from '@/common/js/share.js'
+import top from '@/components/top'
 export default {
   data () {
     return {
       url: ''
     }
+  },
+  components: {
+    top
   },
   methods: {
     saveFile () {

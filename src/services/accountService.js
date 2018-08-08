@@ -5,7 +5,7 @@ class AccountService extends ServiceBase {
     return request.post(`${this.url}/captcha`, data)
   }
   changePhone (data) {
-    return request.put(`${this.url}/account/change-phone`, data)
+    return request.put(`${this.url}/account/change-contact-number`, data)
   }
 }
 export default new AccountService('/uc/v1')

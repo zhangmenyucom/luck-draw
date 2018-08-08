@@ -1,5 +1,6 @@
 <template>
   <div class="drawList">
+    <top title='中奖名单' />
     <span class="c">---</span>
     <div class="border">
       <div>
@@ -65,6 +66,7 @@
   import drawList from '@/components/drawList'
   import ActivitiesService from '@/services/activitiesService'
   import share from '@/common/js/share.js'
+  import top from '@/components/top'
   export default {
     data () {
       return {
@@ -72,7 +74,8 @@
       }
     },
     components: {
-      drawList
+      drawList,
+      top
     },
     methods: {
       getActivitie (id) { // 获取活动详情

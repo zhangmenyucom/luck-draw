@@ -1,7 +1,7 @@
 module.exports = [{
   path: 'pages/index/index',
   config: {
-    navigationBarTitleText: '首页',
+    navigationBarTitleText: '公共抽奖',
     enablePullDownRefresh: true
   }
 }, {

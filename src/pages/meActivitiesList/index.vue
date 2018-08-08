@@ -1,5 +1,6 @@
 <template>
   <div class="list">
+    <top :title='type === "lucky" ? "中奖记录" : "抽奖记录"' />
     <meActivitieList :list="participantList" />
   </div>
 </template>
@@ -9,6 +10,8 @@
   import ParticipantsService from '@/services/participantsService'
   import { getUserInfo, formatDate } from '@/utils'
   import share from '@/common/js/share.js'
+  import top from '@/components/top'
+
   export default {
     data () {
       return {
@@ -16,14 +19,16 @@
         pageNum: 1,
         participantList: [],
         onPullDownRefresh: false,
-        complete: false
+        complete: false,
+        type: 'lucky'
       }
     },
     onPullDownRefresh () {
       this.pullDownRefresh()
     },
     components: {
-      meActivitieList
+      meActivitieList,
+      top
     },
     onReachBottom () {
       this.getParticipants(this.type, this.pageNum)

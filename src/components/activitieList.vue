@@ -7,7 +7,7 @@
       <div  class='state' v-else>
         即将开始
       </div>
-      <img mode='center' :src='item.media[0].url'>
+      <img mode='aspectFit' :src='item.media[0].url'>
       <div class="prompt antialiased">
         <div class="left">
         剩余<span>{{0+item.metadata.ticketsNum-item.betNum}}</span> 注

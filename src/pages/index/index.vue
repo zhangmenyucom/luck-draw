@@ -1,7 +1,7 @@
 <template>
   <div class='index'>
     <!-- <load :isshow="isloadShow" /> -->
-    <top title="首页" />
+    <top :hideIcone='true' title="首页" />
     <div class="head">
       <img src="/static/img/bitmap.png" alt="">
       <div>
@@ -186,7 +186,6 @@
         } else {
           this.getMeScores()
         }
-
         this.scoreCounters = data.scoreCounters || this.$getStorageSync('scoreCounters') // 获取连续签到天数
         this.getScoreRules()
         getMeScores.start(this)

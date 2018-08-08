@@ -72,6 +72,12 @@ export default class ext {
     }
   }
 
+  static removeStorage (key) {
+    if (this.isWx) {
+      return wx.removeStorage({key})
+    }
+  }
+
   static downloadFile (url) {
     if (this.isWx) {
       return new Promise((resolve, reject) => {
@@ -152,5 +158,6 @@ export default class ext {
     Vue.prototype.$createWorker = this.createWorker.bind(this)
     Vue.prototype.$downloadFile = this.downloadFile.bind(this)
     Vue.prototype.$saveImageToPhotosAlbum = this.saveImageToPhotosAlbum.bind(this)
+    Vue.prototype.$removeStorage = this.removeStorage.bind(this)
   }
 }

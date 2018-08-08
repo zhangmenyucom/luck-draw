@@ -1,5 +1,6 @@
 <template>
   <div>
+    <top title="我的金豆" />
     <meIntegral :score='score' />
     <div class="list">
       <lists :list="scoreChanges" />
@@ -13,6 +14,7 @@
   import { formatTime } from '@/utils'
   import getMeScores from '@/common/js/getMeScores.js'
   import share from '@/common/js/share.js'
+  import top from '@/components/top'
   export default {
     data () {
       return {
@@ -26,7 +28,8 @@
     },
     components: {
       lists,
-      meIntegral
+      meIntegral,
+      top
     },
     onPullDownRefresh () {
       this.pullDownRefresh()
@@ -46,7 +49,8 @@
         this.isGet = true
         MeScoresService.getScoreChanges({
           pageNum,
-          pageSize
+          pageSize,
+          scoreNe: 0
         }).then((res) => {
           this.$stopPullDownRefresh()
           this.isGet = false
@@ -66,7 +70,6 @@
       }
     },
     onUnload () {
-      console.log('=====')
       getMeScores.end()
     },
     onLoad () {

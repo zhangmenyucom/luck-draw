@@ -2,7 +2,7 @@
   <div>
     <a class="list"  v-for='(item, index) in list ' :href="'/pages/activitiesDetails/index?id=' + item.id">
       <!-- <img mode='center' :src='item.media[0].url' alt=""> -->
-      <div>
+      <div class="info">
         <span class='title'>
           {{item.name}}
         </span>
@@ -13,16 +13,17 @@
           <br />
           <span>
             <span>「参与时间」</span>{{item.time}}
-            <span class="state">
-             {{item.tickets.length}}/{{status[item.status]}}
-            </span>
           </span>
         </div>
-
       </div>
-    </a>
+      <div class="state">
+       {{status[item.status]}}
+       <div> </div>
+       <div>已下{{item.tickets.length}}注</div>
+     </div>
+   </a>
 
-  </div>
+ </div>
 </template>
 
 <script>
@@ -63,7 +64,7 @@
       margin-right: 16*@2;
       background: #eee;
     }
-    >div{
+    >div.info{
       flex:1;
       position: relative;
       .title{
@@ -94,15 +95,20 @@
             color: #FE4C52;
           }*/
         }
-        .state{
-          color: RGBA(153, 153, 153, 1);
-          float: right;
-          font-size: 12*@2;
-          line-height: 18*@2;
-          color: RGBA(254, 76, 82, 1)
-        }
       }
+    }
+    .state{
+      color: RGBA(153, 153, 153, 1);
+      text-align: center;
+      float: right;
+      font-size: 14*@2!important;
+      line-height: 18*@2;
+      color: RGBA(254, 76, 82, 1)!important;
+      > div{
 
+        color: RGBA(153, 153, 153, 1);
+        font-size: 10*@2;
+      }
     }
   }
 </style>

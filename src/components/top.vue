@@ -1,24 +1,39 @@
 <template>
  <div>
-  <!--  <div class="top">
-    <div></div><div class="title">{{title}}</div><div></div>
+   <div class="top" :style="{'background': background || '#08090F', height:'64px', paddingTop: '22px'}">
+     <div v-if='!hideIcone'>
+      <div v-if = 'isHome' :style="{fontSize:'20px'}" class='icon iconfont icon-navbar-home' @tap='goHome'></div>
+      <div v-else :style="{fontSize:'20px'}" class='icon iconfont icon-navbar-back' @tap='back'></div>
+    </div>
+    <div v-else />
+    <div class="title" :style="{lineHeight: '42px', fontSize: '16px'}">{{title}}</div>
+    <div></div>
   </div>
-  <div class="heightTop">
-
-  </div> -->
+  <div class="heightTop" :style="{height: '64px'}">
+  </div>
 </div>
 </template>
-
 <script>
   export default {
-    props: [`title`],
+    props: [`title`, `background`, `hideIcone`],
     data () {
       return {
-        isModel: false
+        isHome: false
+      }
+    },
+    methods: {
+      back () {
+        this.$navigateBack()
+      },
+      goHome () {
+        this.$switchTab('/pages/index/index')
       }
     },
     onLoad () {
-      console.log('ddd')
+      const isHome = new Set([1008, 1014, 1007, '1007', 1011, '1011'])
+      const scene = this.$getStorageSync('scene')
+      this.isHome = scene && isHome.has(scene)
+      this.$removeStorage('scene')
     }
   }
 </script>
@@ -32,20 +47,26 @@
     width: 100%;
     z-index: 99999999999999;
     display: flex;
-    padding-top:22*@2;
-    background: RGBA(8, 9, 15, 1);
+    /*padding-top:22*@2;*/
+    background: #08090F;
     color: #fff;
+    /*height: 64*@2;*/
     > div{
       min-width: 100*@2;
+    }
+    .icon{
+      /*font-size: 20*@2;*/
+      padding-top: 11*@2;
+      padding-left: 16*@2;
     }
     .title{
       text-align: center;
       flex:1;
-      font-size: 16*@2;
-      line-height: 42*@2;
+      /*font-size: 16*@2;*/
+      /*line-height: 42*@2;*/
     }
   }
   .heightTop{
-    height: 64*@2;
+    /*height: 64*@2;*/
   }
 </style>

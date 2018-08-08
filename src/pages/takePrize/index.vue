@@ -1,5 +1,6 @@
 <template>
   <div class="takePrize ">
+    <top title='奖品' />
     <!-- 地址展示 -->
     <div class='address'>
       <span class='title antialiased'>
@@ -26,15 +27,15 @@
           {{userInfo.nickName}}
         </text>
         <br />
-        <span class="luckyNumber">
+        <!-- <span class="luckyNumber">
           幸运号：{{participant.tickets[0]}}
-        </span>
+        </span> -->
       </div>
       <div class="content">
         <text class="expression">
-          {{participant.activity.name}}
+          <text>「奖品」</text>{{participant.activity.items[0].name}}
         </text>
-        <img :src="participant.activity.media[0].url">
+        <img mode='aspectFit' :src="participant.activity.items[0].metadata.image" >
       </div>
       <div class="tips antialiased">
         友情提示：完善收货信息后我们会及时与您联系
@@ -48,6 +49,7 @@
 </template>
 <script>
   import ParticipantsService from '@/services/participantsService'
+  import top from '@/components/top'
   import share from '@/common/js/share.js'
   import {
     getUserInfo
@@ -56,10 +58,20 @@
     data () {
       return {
         userInfo: {},
-        participant: {},
+        participant: {
+          activity: {
+            name: '',
+            items: [{
+              media: [{}]
+            }]
+          }
+        },
         address: {},
         isTakePrize: true
       }
+    },
+    components: {
+      top
     },
     methods: {
       getParticipants (activityId) {
@@ -70,6 +82,8 @@
         }).then((res) => {
           if (res.code === 0 && res.data.length > 0) {
             this.participant = res.data[0]
+            console.log('this.participant.activity', this.participant.activity)
+            console.log('activity.items[0].name', this.participant.activity.items[0].name)
             if (res.data[0].metadata.address) {
               this.address = JSON.parse(res.data[0].metadata.address)
               this.isTakePrize = false

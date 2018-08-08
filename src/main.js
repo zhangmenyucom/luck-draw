@@ -32,7 +32,8 @@ export default {
     pages: ['^pages/index/index'],
     window: {
       backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#000'
+      navigationBarBackgroundColor: '#000',
+      navigationStyle: 'custom'
     },
     workers: 'workers',
     tabBar: {
@@ -43,7 +44,7 @@ export default {
         'iconPath': 'static/img/index-normal.png',
         'selectedIconPath': 'static/img/index.png',
         'pagePath': 'pages/index/index',
-        'text': '首页'
+        'text': '抽奖'
       }, {
         'iconPath': 'static/img/obtain-normal.png',
         'selectedIconPath': 'static/img/obtain.png',
