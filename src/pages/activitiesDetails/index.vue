@@ -1,10 +1,10 @@
 <template>
   <div>
     <top title="抽奖" />
-    <load :isshow="isShow" />
-    <signIn :signInCB = "signInCB"/>
+    <load :isshow="isShow" :isanimation="isAnimation"/>
+    <signIn :isanimation.sync='isAnimation'  :signInCB = "signInCB"/>
     <div v-if='!isShow'>
-      <meIntegral :score='score' />
+      <meIntegral :score='score'/>
       <div class="activitiesDetails">
         <img mode='aspectFit' :src="activitie.media[0].url">
         <div class="prompt antialiased">
@@ -40,7 +40,7 @@
 
     <div class="hint" v-if="state >= 0 && state < 5">
       <div class="c"></div>
-      <div class="bets" v-if="state >= 2 && state < 5">
+      <div class="bets" v-if="(state >= 2 && state < 5) && participants.id">
         <span>
           已下注
         </span>
@@ -151,7 +151,7 @@
               <div class="number">
                 <img src="/static/img/number.png" alt="" />
                 <div>
-                  {{index}}
+                  {{index+1}}
                 </div>
               </div>
               <text>
@@ -263,6 +263,7 @@
             image: ''
           }
         },
+        isAnimation: false,
         state: 0
         // 0 NotInvolved 未参与
         // 1 Bets 下注
@@ -462,6 +463,7 @@
       getMeScores.end()
     },
     onShow () {
+      this.isAnimation = false
       const userInfo = getUserInfo()
       if (userInfo.id) {
         this.signInCB()

@@ -41,7 +41,9 @@
           'REWARD_FAILED': '开奖失败',
           'GROUP_BUY_SUCCESS': '拼团成功',
           'GROUP_BUY_FAIL': '拼团失败',
-          'GROUP_COUPON_FAIL': '拼团砍价失败'
+          'GROUP_COUPON_FAIL': '拼团砍价失败',
+          'LUCKY': '待领取',
+          'ADDRES': '已领取'
         }
       }
     }

@@ -1,6 +1,6 @@
 <template>
  <div>
-   <div class="top" :style="{'background': background || '#08090F', height:'64px', paddingTop: '22px'}">
+   <div class="top" :style="{'background': background || '#08090F', height: isIPhoneX ? '86px':'64px', paddingTop: isIPhoneX ? '44px':'22px'}">
      <div v-if='!hideIcone'>
       <div v-if = 'isHome' :style="{fontSize:'20px'}" class='icon iconfont icon-navbar-home' @tap='goHome'></div>
       <div v-else :style="{fontSize:'20px'}" class='icon iconfont icon-navbar-back' @tap='back'></div>
@@ -9,7 +9,7 @@
     <div class="title" :style="{lineHeight: '42px', fontSize: '16px'}">{{title}}</div>
     <div></div>
   </div>
-  <div class="heightTop" :style="{height: '64px'}">
+  <div class="heightTop" :style="{height: isIPhoneX ? '86px':'64px'}">
   </div>
 </div>
 </template>
@@ -18,7 +18,8 @@
     props: [`title`, `background`, `hideIcone`],
     data () {
       return {
-        isHome: false
+        isHome: false,
+        isIPhoneX: false
       }
     },
     methods: {
@@ -31,6 +32,10 @@
     },
     onLoad () {
       const isHome = new Set([1008, 1014, 1007, '1007', 1011, '1011'])
+      const systemInfo = this.$getSystemInfoSync()
+      console.log('systemInfo', systemInfo)
+      this.isIPhoneX = systemInfo.model.indexOf('iPhone X') > -1
+      console.log('systemInfo', systemInfo)
       const scene = this.$getStorageSync('scene')
       this.isHome = scene && isHome.has(scene)
       this.$removeStorage('scene')

@@ -24,7 +24,7 @@
   import { getUserInfo } from '@/utils'
   export default {
     name: 'signIn',
-    props: [`signInCB`, `showModel`],
+    props: [`signInCB`, `showModel`, `isanimation`],
     data () {
       return {
         isModel: false,
@@ -120,11 +120,13 @@
       // 判断是否登录过
       if (!userInfo.id) {
         this.isModel = true
+        this.$emit('update:isanimation', true)
       } else {
         // 判断今天是否签到过
         this.isSignIn().then(res => {
           if (!res) {
             this.isModel = true
+            this.$emit('update:isanimation', true)
           } else {
             this.isModel = false
             this.signIn = true

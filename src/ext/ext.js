@@ -142,6 +142,12 @@ export default class ext {
     }
   }
 
+  static getSystemInfoSync () {
+    if (this.isWx) {
+      return wx.getSystemInfoSync()
+    }
+  }
+
   static install (Vue, options) {
     Vue.prototype.$getStorageSync = this.getStorageSync.bind(this)
     Vue.prototype.$setStorageSync = this.setStorageSync.bind(this)
@@ -159,5 +165,6 @@ export default class ext {
     Vue.prototype.$downloadFile = this.downloadFile.bind(this)
     Vue.prototype.$saveImageToPhotosAlbum = this.saveImageToPhotosAlbum.bind(this)
     Vue.prototype.$removeStorage = this.removeStorage.bind(this)
+    Vue.prototype.$getSystemInfoSync = this.getSystemInfoSync.bind(this)
   }
 }

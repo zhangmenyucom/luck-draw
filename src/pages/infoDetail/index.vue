@@ -83,10 +83,10 @@
       </ul>
     </div>
   </div>
-  <div class="infoQue">
+  <!-- <div class="infoQue">
     <div>常见问题</div>
     <div class="arrow"></div>
-  </div>
+  </div> -->
 </div>
 <signIn :signInCB = "signInCB" :showModel = "!isModel"/>
 </div>
@@ -150,7 +150,8 @@
       getParticipants (userInfo) {
         // 查询用户一共参与多少活动
         ParticipantsService.get({
-          userId: userInfo.id
+          userId: userInfo.id,
+          activityType: 'PLATFORM_LUCKY_DRAW'
         }).then((res) => {
           if (res.code === 0 && res.data.length > 0) {
             this.activitieTotal = res.total
@@ -159,6 +160,7 @@
         // 查询中奖活动
         ParticipantsService.get({
           userId: userInfo.id,
+          activityType: 'PLATFORM_LUCKY_DRAW',
           lucky: true
         }).then((res) => {
           if (res.code === 0) {

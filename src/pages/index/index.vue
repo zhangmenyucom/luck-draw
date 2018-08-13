@@ -1,7 +1,7 @@
 <template>
   <div class='index'>
     <!-- <load :isshow="isloadShow" /> -->
-    <top :hideIcone='true' title="首页" />
+    <top :hideIcone='true' title="公共抽奖" />
     <div class="head">
       <img src="/static/img/bitmap.png" alt="">
       <div>
@@ -20,14 +20,11 @@
         </div>
         <div class="record">
           <div v-for='i in 7' :class="{opacity:(i +1 ) > scoreCounters.number}">
-            <div>
+            <div class="icon">
               {{goldBean[i]}}
             </div>
             <img src="/static/img/goldBean.png" alt="" />
-            <br />
-            <text>
-              第{{i + 1 + number}}天
-            </text>
+            <text>第{{i + 1 + number}}天</text>
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import common from './common'
 export default {
   ...common,
-  'baseURL': `http://vinci-api.qianbaocard.com/`
+  'baseURL': `https://vinci-api.qianbaocard.com/`,
+  'appId': `wxfb7be0751102cf64`
 }

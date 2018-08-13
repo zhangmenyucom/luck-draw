@@ -27,8 +27,9 @@
       text-align: center;
       max-width: 33.333333%;
       min-width: 33.3333333%;
+      width: 33.3333333%;
       margin-bottom:24*@2;
-      flex:1;
+      /*flex:1;*/
       img{
         width: 40*@2;
         height: 40*@2;

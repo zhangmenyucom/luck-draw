@@ -1,20 +1,19 @@
 <template>
   <div :class="{loading: true, isShow: !isshow }">
-    <div class="animation">
+    <div class="animation" v-if='!isanimation'>
       <img class="bean" src="/static/img/bean.png" />
       <img class="shadow" src="/static/img/shadow.png" />
       <div class="light">
         <img v-for='(item, i) in  6' :class="'imglight' + (item+1)" src="/static/img/lighta.png">
       </div>
     </div>
-
   </div>
 </template>
 
 <script>
   export default {
     name: 'loading',
-    props: ['isshow'],
+    props: ['isshow', 'isanimation'],
     data () {
       return {
         isShow: true

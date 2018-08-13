@@ -15,7 +15,7 @@
   export default {
     data () {
       return {
-        activitieList: [1],
+        activitieList: [],
         pageNum: 1,
         participantList: [],
         onPullDownRefresh: false,
@@ -47,7 +47,8 @@
           userId: userInfo.id,
           pageNum,
           pageSize,
-          append: 'ACTIVITY'
+          append: 'ACTIVITY',
+          activityType: 'PLATFORM_LUCKY_DRAW'
         }
         if (type === `lucky`) getData.lucky = true
         this.isGet = true
@@ -58,6 +59,9 @@
               participant.activity.time = formatDate(new Date(participant.createdTime), 'yy/mm/dd HH:mm:ss')
               participant.activity.prize = participant.activity.items[0]
               participant.activity.tickets = participant.tickets
+              if (type === `lucky`) {
+                participant.activity.status = participant.metadata.address ? 'ADDRES' : 'LUCKY'
+              }
               return participant.activity
             })
             if (this.onPullDownRefresh) {
@@ -73,6 +77,7 @@
       }
     },
     onLoad (data) {
+      this.participantList = []
       this.type = data.type
       this.pullDownRefresh()
     },

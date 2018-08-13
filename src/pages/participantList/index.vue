@@ -66,10 +66,11 @@
           this.isGet = false
           if (res.code === 0) {
             if (this.participantsList.length >= res.total) this.complete = true
-            const oldparticipantsList = !this.onPullDownRefresh ? this.participantsList : []
+            const oldparticipantsList = this.onPullDownRefresh ? this.participantsList : []
             // 获取到activitie数据，对数据处理。
             this.participantTotal = res.total
-            this.participantsList = [...res.data, ...oldparticipantsList]
+
+            this.participantsList = [ ...oldparticipantsList, ...res.data ]
             this.pageNum++
           }
         })
@@ -79,6 +80,7 @@
       // 调用应用实例的方法获取全局数据
       this.id = data.id
       this.pullDownRefresh()
+      this.participantsList = []
     },
     onShareAppMessage: share()
   }
@@ -94,7 +96,6 @@
     }
     min-height: 100vh;
     background:#fff;
-
     .border {
       height: 11*@2;
       border-bottom: 1*@1 dotted RGBA(151, 151, 151, 0.22);

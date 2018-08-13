@@ -97,19 +97,8 @@
       getScoreRules () {
         ScoreRulesService.getList().then(res => {
           if (res.code === 0) {
-            const map = {
-              area: 'location',
-              mobile: 'contactNumber',
-              birthday: 'birthday',
-              gender: 'gender'
-            }
             const rule = JSON.parse(res.data.filter(data => data.type === 4)[0] ? res.data.filter(data => data.type === 4)[0].rule : {})
-            rule.total = Object.entries(rule).reduce((total, num) => {
-              if (Array.isArray(total)) {
-                total = (!this.userInfo[map[total[0]]] ? parseInt(total[1], 10) : 0)
-              }
-              return parseInt(total, 10) + (!this.userInfo[map[num[0]]] ? parseInt(num[1], 10) : 0)
-            })
+            rule.total = Object.values(rule).reduce((total, num) => parseInt(total, 10) + parseInt(num, 10))
 
             const shareRule = JSON.parse(res.data.filter(data => data.type === 3)[0] ? res.data.filter(data => data.type === 3)[0].rule : {})
             this.rule = rule
