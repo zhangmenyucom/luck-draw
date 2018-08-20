@@ -7,7 +7,6 @@
         {{ item.luckyGuy.nickName ? item.luckyGuy.nickName : '' }}
       </span>
     </a>
-
   </div>
 </template>
 
@@ -29,6 +28,8 @@
       max-width: 25%;
       min-width: 25%;
       margin-bottom:24*@2;
+      width: 25%;
+      float: left;
       flex:1;
       img{
         width: 40*@2;

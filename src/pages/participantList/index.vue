@@ -41,20 +41,13 @@
       top
     },
     methods: {
-      // getParticipantsList ({activityId:this.id}) {
-      //   ParticipantsService.get({
-      //     activityId
-      //   }).then((res) => {
-
-      //   })
-      // },
       pullDownRefresh () {
         this.pageNum = 1
         this.onPullDownRefresh = true
         this.complete = false
         this.getParticipantsList()
       },
-      getParticipantsList (pageNum = 1, pageSize = 50) {
+      getParticipantsList (pageNum = 1, pageSize = 51) {
         if (this.complete || this.isGet) return false
         this.isGet = true
         ParticipantsService.getList({
@@ -66,10 +59,12 @@
           this.isGet = false
           if (res.code === 0) {
             if (this.participantsList.length >= res.total) this.complete = true
-            const oldparticipantsList = this.onPullDownRefresh ? this.participantsList : []
+            console.log('this.onPullDownRefresh', this.onPullDownRefresh)
+            const oldparticipantsList = this.onPullDownRefresh ? [] : this.participantsList
+            console.log('oldparticipantsList', oldparticipantsList)
             // 获取到activitie数据，对数据处理。
             this.participantTotal = res.total
-
+            this.onPullDownRefresh = false
             this.participantsList = [ ...oldparticipantsList, ...res.data ]
             this.pageNum++
           }

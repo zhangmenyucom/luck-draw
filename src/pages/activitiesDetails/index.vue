@@ -19,10 +19,7 @@
           </div>
         </div>
         <div class="name antialiased">
-          <span>
-            「奖品」
-          </span>
-          {{prize.name}}&nbsp;X&nbsp;{{prize.metadata.num}}
+          <span>「奖品」</span>{{prize.name}}&nbsp;<span>X&nbsp;{{prize.metadata.num}}</span>
         </div>
         <!-- 中间提示 -->
         <div class="goldBean">
@@ -33,11 +30,42 @@
       <!-- <span>
         ¥{{prize.price}}
       </span> -->
-      <div>
+      <!-- <div>
         <i />中奖规则 {{state}}
+      </div> -->
+    </div>
+    <div v-if="prize.name == '定制真爱马克杯'">
+      <div class='hei' />
+      <div class="productsInfo">
+        <div class='title'>
+          <span>商品信息</span>
+        </div>
+        <div class="info">
+          幸福浪漫一“杯”子，可自定义上传照，撰写真爱宣言
+          <img mode="widthFix" src="https://oss.qianbaocard.org/20180818/ecccc76ccb24407eae7d7b333e4734f9.jpg" alt="" />
+        </div>
+      </div>
+      <div class="hei" />
+      <div class="prizeq antialiased">
+        <span class="title">
+          <img src='/static/img/prizeq_l.png' />兑奖方式<img src='/static/img/prizeq_r.png' />
+        </span>
+        <div><div class="index"> 1 </div>开奖后，收到钱包抽奖助手的服务通知，点击查看；<br/></div>
+        <div><div class="index"> 2 </div>如中奖，填写中奖者信息；<br/></div>
+        <div><div class="index"> 3 </div>添加合作方客服微信号，并发送手机号进行兑奖；<br/></div>
+
+        <div class="explain">
+          复制微信号，添加官方微信关注抽奖动态
+        </div>
+        <div class="rectangle">
+          {{miniappId}}
+        </div>
+        <div class="button" @tap="setClipboardData">
+          复制微信号
+        </div>
+        <sapn class='explainq'>最终服务与责任由合作方承担，本次活动最终解释权归钱包生活所有。</sapn>
       </div>
     </div>
-
     <div class="hint" v-if="state >= 0 && state < 5">
       <div class="c"></div>
       <div class="bets" v-if="(state >= 2 && state < 5) && participants.id">
@@ -47,7 +75,7 @@
         <div>
           {{participants.tickets ? participants.tickets.length : 0}}<span>注</span>
         </div>
-        <text data-state="4" @tap="modifyState">
+        <text @tap="() => {this.isLookAtTheLuckyNumber = true}">
           查看幸运号
         </text>
         <i></i>
@@ -98,7 +126,7 @@
     <!-- 中奖结束 -->
 
     <!-- 抽奖按钮 -->
-    <div class="prize" v-if ="state >= 0 && state <= 3">
+    <div class="prize" v-if ="state >= 0 && state <= 3 ">
       <div>
         <div class='bold antialiased'>
           <form :data-state="state + 1" @submit.stop = "modifyState">
@@ -125,6 +153,7 @@
       </a>
     </div>
     <!-- 中奖名单结束 -->
+
     <!-- 参加列表 -->
     <div class="participant" v-if="participantTotal>0">
       <span class='antialiased'>
@@ -134,20 +163,21 @@
     </div>
     <!-- 参加列表结束 -->
     <button class="bottom button" open-type="share" v-if="state <= 3">
-      分享领金币
+      分享领金豆
     </button>
+
     <!-- 弹出层 -->
-    <div class="modal" @tap="hideModal" v-if="isModal && (state === 1 || state === 3 || state === 4)">
+    <div class="modal" @tap="hideModal" v-if="isModal && (state === 1 || state === 3 || state === 4 || isLookAtTheLuckyNumber)">
       <div class="content" @tap.stop="">
         <img src="../../../static/img/group.png" mode='widthFix'>
         <div class='title'>
-          <span v-if='state <= 3'>下 注</span>
+          <span v-if='!isLookAtTheLuckyNumber'>下 注</span>
           <span v-else>幸运号</span>
         </div>
         <div>
           <div>
             <!-- 幸运号列表 -->
-            <div class="luckyList" v-if="state === 4" v-for='(item, index) in participants.tickets'>
+            <div class="luckyList" v-if="isLookAtTheLuckyNumber" v-for='(item, index) in participants.tickets'>
               <div class="number">
                 <img src="/static/img/number.png" alt="" />
                 <div>
@@ -175,8 +205,7 @@
               </div>
               <span class="record antialiased">
                 你有{{score}}金豆<br />
-                本次还可以下注 {{participateBet}} 次
-
+                <!-- 本次还可以下注 {{participateBet}} 次 -->
               </span>
               <form report-submit @submit.stop = "bets">
                 <button class="button" form-type = "submit">
@@ -264,13 +293,14 @@
           }
         },
         isAnimation: false,
+        isLookAtTheLuckyNumber: false,
+        miniappId: 'qianbaocard_mkt',
         state: 0
         // 0 NotInvolved 未参与
         // 1 Bets 下注
         // 2 ParticipateIn 参与过
         // 3 重新下注
         // 3.1 已经满注
-        // 4 LookAtTheLuckyNumber 查看幸运号
         // 5 NotWinningThePrize 未中奖
         // 6 已中奖
         // 7 已添加地址
@@ -298,6 +328,9 @@
           }
         })
       },
+      setClipboardData () {
+        this.$setClipboardData(this.miniappId)
+      },
       getActivitie (id) { // 获取活动详情
         const userInfo = getUserInfo()
         ActivitiesService.get({
@@ -315,17 +348,18 @@
             if (res.data.metadata.ticketsNum === res.data.betNum) {
               this.modifyState(3.1)
             }
-            if (res.data.metadata.luckyItems) { // 活动已结束
+
+            if (res.data.status === 'REWARDED') { // 活动已结束
+              this.modifyState(5)
               // 处理中奖信息
               const luckyItems = JSON.parse(res.data.metadata.luckyItems)
+              console.log('luckyItems', luckyItems)
               this.luckyItemTotal = luckyItems.length
               this.luckyItems = luckyItems.slice(0, 3)
               const melucky = luckyItems.filter(luckyItem => luckyItem.luckyGuy.eid === userInfo.id)
               if (melucky.length > 0) {
                 this.melucky = melucky[0]
                 this.modifyState(6)
-              } else {
-                this.modifyState(5)
               }
             }
             this.participateBet = parseInt(this.score / parseInt(this.activitie.metadata.price))
@@ -353,7 +387,7 @@
         // 下注或重新下注前查看 积分是否够用
         if (state === 1 || state === 3) {
           if (this.activitie.metadata.price > this.score) {
-            this.$showToast('积分不足')
+            this.$showToast('金豆不足')
             return false
           }
         }
@@ -374,6 +408,8 @@
             this.participants = res.data[0]
             if (res.data[0].metadata.address) { // 判断是否添加过地址
               this.modifyState(7)
+            } else if (res.data[0].metadata.lucky && res.data[0].metadata.lucky === 'true') {
+              this.modifyState(6)
             } else {
               this.modifyState(2)
             }
@@ -404,6 +440,7 @@
         }
       },
       bets (e) { // 下注 参与活动
+        this.$showLoading()
         const {
           activitie
         } = this
@@ -418,6 +455,8 @@
             formId: e.mp.detail.formId
           }
         }).then(res => {
+          this.$hideLoading()
+
           if (res.code === 0) {
             this.participants = res.data
             // 下注后
@@ -425,10 +464,17 @@
             this.ticketsNum = 1
             getMeScores.end()
             this.signInCB()
+          } else if (res.code === 202800002) {
+            this.$clearStorageSync()
+            this.$switchTab('/pages/index/index')
           }
         })
       },
       hideModal () {
+        if (this.isLookAtTheLuckyNumber) {
+          this.isLookAtTheLuckyNumber = false
+          return false
+        }
         if (this.oldState || this.oldState === 0) {
           this.state = this.oldState
         }
@@ -476,7 +522,7 @@
       return {
         title: this.activitie.description || this.activitie.name,
         path: `pages/activitiesDetails/index?id=${this.activitie.id}`,
-        imageUrl: introductionImageUrl && introductionImageUrl.url,
+        imageUrl: introductionImageUrl && `${introductionImageUrl.url}?x-oss-process=image/resize,w_200,limit_0,m_fill`,
         success (res) {
           console.log('res', res)
           if (res) {

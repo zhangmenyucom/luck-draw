@@ -31,7 +31,7 @@
     methods: {
       captcha () {
         if (this.countDown !== 0) return
-        const myreg = /^[1][3,4,5,7,8][0-9]{9}$/
+        const myreg = /^[1][0-9]{10}$/
         if (!(this.mobile && myreg.test(this.mobile))) {
           this.$showToast('请填写正确的手机号！')
           return false
@@ -53,11 +53,13 @@
         })
       },
       changePhone () {
-        const mobileReg = /^[1][3,4,5,7,8][0-9]{9}$/
+        const mobileReg = /^[1][0-9]{10}$/
+        console.log('this.mobile', this.mobile)
         if (!(this.mobile && mobileReg.test(this.mobile))) {
           this.$showToast('请填写正确的手机号！')
           return false
         }
+
         const reg = /^\d{6}\b/
         if (!(this.c && reg.test(this.c))) {
           this.$showToast('请填写正确格式的验证码！')

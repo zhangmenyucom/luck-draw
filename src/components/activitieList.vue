@@ -8,6 +8,7 @@
         即将开始
       </div>
       <img mode='aspectFit' :src='item.media[0].url'>
+      <!-- <img mode='aspectFit' src='https://oss.qianbaocard.org/20180816/4802d958a0a54dbb8f0928d1e7f19141.jpg'> -->
       <div class="prompt antialiased">
         <div class="left">
         剩余<span>{{0+item.metadata.ticketsNum-item.betNum}}</span> 注

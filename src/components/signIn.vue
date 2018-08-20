@@ -36,6 +36,10 @@
     methods: {
       bindgetuserinfo (e) {
         const userInfo = getUserInfo()
+        if (!e.mp.detail.encryptedData) {
+          this.$showToast('请允许授权')
+          return false
+        }
         AuthService.wxLogin(e.mp.detail).then((res) => {
           if (res.code === 0) {
             if (!userInfo.id) { // 判断之前是否 执行过 this.isSignIn
