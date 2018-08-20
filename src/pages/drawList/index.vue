@@ -86,6 +86,7 @@
             // 处理中奖信息
             if (res.data.metadata.luckyItems) {
               const luckyItems = JSON.parse(res.data.metadata.luckyItems)
+              console.log('luckyItems', luckyItems)
               this.luckyItems = luckyItems
             }
           }

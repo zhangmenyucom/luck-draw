@@ -148,6 +148,12 @@ export default class ext {
     }
   }
 
+  static setClipboardData (data) {
+    if (this.isWx) {
+      return wx.setClipboardData({data})
+    }
+  }
+
   static install (Vue, options) {
     Vue.prototype.$getStorageSync = this.getStorageSync.bind(this)
     Vue.prototype.$setStorageSync = this.setStorageSync.bind(this)
@@ -166,5 +172,6 @@ export default class ext {
     Vue.prototype.$saveImageToPhotosAlbum = this.saveImageToPhotosAlbum.bind(this)
     Vue.prototype.$removeStorage = this.removeStorage.bind(this)
     Vue.prototype.$getSystemInfoSync = this.getSystemInfoSync.bind(this)
+    Vue.prototype.$setClipboardData = this.setClipboardData.bind(this)
   }
 }

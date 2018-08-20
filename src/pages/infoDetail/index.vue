@@ -57,7 +57,7 @@
                  一次/{{shareRule.base}}<img src="/static/img/goldBean.png" />
                </span>
                <button open-type="share">
-                立即领取
+                {{shareNumber < shareRule.maxStep ? '立即领取':'立即分享'}}
               </button>
             </div>
           </li>
@@ -87,6 +87,10 @@
     <div>常见问题</div>
     <div class="arrow"></div>
   </div> -->
+    <button class="infoQue contact" open-type="contact">
+      <div>联系客服</div>
+      <div class="icon iconfont icon-huise"></div>
+    </button>
 </div>
 <signIn :signInCB = "signInCB" :showModel = "!isModel"/>
 </div>

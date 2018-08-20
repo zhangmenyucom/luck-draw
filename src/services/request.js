@@ -29,6 +29,7 @@ fly.interceptors.response.use(
       return response.data
     } else {
       ext.showToast(response.data.message)
+      return response.data
     }
   },
   (err) => {

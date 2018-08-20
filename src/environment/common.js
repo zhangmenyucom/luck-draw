@@ -10,6 +10,6 @@ export default {
   share: {
     title: `福利来了`,
     path: `pages/index/index`,
-    imageUrl: `/static/img/share.png`
+    imageUrl: `/static/img/share.jpg`
   }
 }
