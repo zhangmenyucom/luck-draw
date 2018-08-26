@@ -30,7 +30,8 @@
         isModel: false,
         userInfo: {},
         scoreCounters: {},
-        signIn: false
+        signIn: false, // 是否签到过 此处 命名错误 是根据后台命名统一 后来后台改了 后面要更新
+        isSignInService: false
       }
     },
     methods: {
@@ -39,6 +40,11 @@
         if (!e.mp.detail.encryptedData) {
           this.$showToast('请允许授权')
           return false
+        }
+        if (this.isSignInService) {
+           return false
+        }else {
+          this.isSignInService = true
         }
         AuthService.wxLogin(e.mp.detail).then((res) => {
           if (res.code === 0) {
@@ -72,6 +78,7 @@
               scoreCounters: this.scoreCounters,
               score: res.data.score
             })
+            this.isSignInService = false
           }
         })
       },
@@ -119,7 +126,6 @@
       }
     },
     onLoad () {
-      console.log('signIn')
       const userInfo = getUserInfo()
       // 判断是否登录过
       if (!userInfo.id) {

@@ -1,6 +1,7 @@
 // const consfig = requestConfig
 import config from 'config'
 import ext from '../ext/ext'
+// import enumeMap from '@/common/js/enumeMap'
 
 // import authService from './authService'
 var Fly = require(`flyio/dist/npm/wx`)
@@ -35,7 +36,6 @@ fly.interceptors.response.use(
   (err) => {
     // ext.hideLoading()
     // 发生网络错误后会走到这里
-    console.log('err', err)
     if (err.status === 401) {
       if (err.request.url !== `/uc/v1/auth/refresh-token`) {
         return refreshToken().then((res) => {
@@ -49,7 +49,7 @@ fly.interceptors.response.use(
         ext.switchTab('/pages/index/index')
       }
     } else {
-      ext.showToast('当前服务不可用，请稍后在试！')
+      ext.showToast('当前服务不可用，请稍后再试！')
     }
   }
 )
