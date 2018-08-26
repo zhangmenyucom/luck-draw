@@ -59,9 +59,7 @@
           this.isGet = false
           if (res.code === 0) {
             if (this.participantsList.length >= res.total) this.complete = true
-            console.log('this.onPullDownRefresh', this.onPullDownRefresh)
             const oldparticipantsList = this.onPullDownRefresh ? [] : this.participantsList
-            console.log('oldparticipantsList', oldparticipantsList)
             // 获取到activitie数据，对数据处理。
             this.participantTotal = res.total
             this.onPullDownRefresh = false

@@ -524,7 +524,6 @@
         path: `pages/activitiesDetails/index?id=${this.activitie.id}`,
         imageUrl: introductionImageUrl && `${introductionImageUrl.url}?x-oss-process=image/resize,w_200,limit_0,m_fill`,
         success (res) {
-          console.log('res', res)
           if (res) {
             FootprintsActivities.add({
               type: 'SHARE',

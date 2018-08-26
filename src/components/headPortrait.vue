@@ -2,7 +2,7 @@
   <div>
     <div>
       <img :style="{width:size+'px', height:size+'px'}" v-for="(item, index) in list" :src="rangeKey?item[rangeKey]:item">
-      <div :href="url" class="more" v-if="list.length >= 8">
+      <div class="more" v-if="list.length >= 8">
         ...
       </div>
     </div>
@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  props: ['list', 'rangeKey', 'size', 'url']
+  props: ['list', 'rangeKey', 'size']
 }
 </script>
 

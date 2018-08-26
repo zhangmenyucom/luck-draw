@@ -76,15 +76,16 @@
 
 <script>
   // import load from '@/components/loading'
-  import activitieList from '@/components/activitieList'
-  import signIn from '@/components/signIn'
-  import top from '@/components/top'
-  import ActivitiesService from '@/services/activitiesService'
-  import { getUserInfo } from '@/utils'
-  import ScoreRulesService from '@/services/scoreRulesService'
-  import getMeScores from '@/common/js/getMeScores.js'
-  import share from '@/common/js/share.js'
-  import MeScoresService from '@/services/meScoresService.js'
+import activitieList from '@/components/activitieList'
+import signIn from '@/components/signIn'
+import top from '@/components/top'
+import ActivitiesService from '@/services/activitiesService'
+import { getUserInfo } from '@/utils'
+import ScoreRulesService from '@/services/scoreRulesService'
+import getMeScores from '@/common/js/getMeScores.js'
+import share from '@/common/js/share.js'
+import MeScoresService from '@/services/meScoresService.js'
+const mta = require('@/common/js/mta_analysis.js')
   export default {
     data () {
       return {
@@ -189,6 +190,7 @@
       }
     },
     onLoad () {
+      mta.Page.init()
       this.$setStorageSync('signIn', false)
     },
     onHide () {

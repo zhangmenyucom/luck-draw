@@ -4,6 +4,7 @@ import ext from '@/ext/ext'
 export default (cb) => () => ({
   ...config.share,
   success (res) {
+    console.log('res', res)
     if (!res) return
     FootprintsActivities.add({
       type: 'SHARE'

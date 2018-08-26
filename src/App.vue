@@ -4,10 +4,17 @@
   </div>
 </template>
 <script>
+  const mta = require('@/common/js/mta_analysis.js')
   export default {
     onShow (options) {
-      console.log('options', options)
       this.$setStorageSync('scene', options.scene)
+      mta.App.init({
+        'appID': '500633711',
+        'eventID': '500633717',
+        'statPullDownFresh': true,
+        'statShareApp': true,
+        'statReachBottom': true
+      })
     }
   }
 </script>

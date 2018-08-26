@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "npm run standard && DISABLE_ESLINT=no node build/dev-server.js",
     "start": "npm run standard && node build/dev-server.js",
-    "start_pro": "npm run standard &&  NODE_ENV=pro node build/dev-server.js",
+    "start:pro": "npm run standard &&  NODE_ENV=pro node build/dev-server.js",
     "standard": "standard --fix && standard --fix --plugin html '**/*.vue'",
     "build": "node build/build.js",
     "lint": "eslint --ext .js,.vue src",
@@ -84,7 +84,8 @@
   "standard": {
     "ignore": [
       "/build/",
-      "/src/ext/"
+      "/src/ext/",
+      "/src/common/js"
     ],
     "globals": [
       "wx",
