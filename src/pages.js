@@ -76,4 +76,10 @@ module.exports = [{
     disableScroll: true,
     backgroundColor: '#00000000'
   }
+}, {
+  path: 'pages/createActivities/createActivities',
+  config: {
+    navigationBarTitleText: '发起抽奖',
+    enablePullDownRefresh: true
+  }
 }]

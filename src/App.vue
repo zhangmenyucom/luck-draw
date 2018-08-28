@@ -21,6 +21,7 @@
 <style>
   @import (less) '../static/iconFont/iconfont.css';
   @import './common/less/util.less';
+  @import (less) '../static/weui/weui.css';
   .container {
     height: 100%;
     display: flex;
