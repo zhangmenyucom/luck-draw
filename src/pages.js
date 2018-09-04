@@ -82,4 +82,10 @@ module.exports = [{
     navigationBarTitleText: '发起抽奖',
     enablePullDownRefresh: true
   }
+}, {
+  path: 'pages/myActivityDetail/myActivityDetail',
+  config: {
+    navigationBarTitleText: '详情',
+    enablePullDownRefresh: true
+  }
 }]

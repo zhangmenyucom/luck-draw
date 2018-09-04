@@ -29,7 +29,7 @@ export default {
   // 这个字段走 app.json
   config: {
     // 页面前带有 ^ 符号的，会被编译成首页，其他页面可以选填，我们会自动把 webpack entry 里面的入口页面加进去
-    pages: ['^pages/createActivities/createActivities'],
+    pages: ['^pages/index/index'],
     window: {
       backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#000',
@@ -50,6 +50,11 @@ export default {
         'selectedIconPath': 'static/img/obtain.png',
         'pagePath': 'pages/createActivities/createActivities',
         'text': '发起抽奖'
+      }, {
+        'iconPath': 'static/img/obtain-normal.png',
+        'selectedIconPath': 'static/img/obtain.png',
+        'pagePath': 'pages/obtainGoldBean/index',
+        'text': '赚金豆'
       }, {
         'iconPath': 'static/img/user-normal.png',
         'selectedIconPath': 'static/img/user.png',

@@ -2,7 +2,7 @@
   <div class='index'>
     <!-- <load :isshow="isloadShow" /> -->
     <top :hideIcone='true' title="公共抽奖" />
-    <div class="head">
+    <!-- <div class="head">
       <img src="/static/img/bitmap.png" alt="">
       <div>
         <span class='left'>
@@ -28,10 +28,10 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- 活动列表 -->
     <div class="activitieList">
-      <activitieList :list="activitieList" />
+      <activitieList :onDraw="onLuckyDraw" :wilDraw="willLuckDraw" />
     </div>
     <!-- 活动列表结束 -->
     <signIn :signInCB = "signInCB" :showModel="!isModel"/>
@@ -101,7 +101,9 @@ const mta = require('@/common/js/mta_analysis.js')
         isModel: true,
         score: 0,
         scoreCounters: {},
-        number: 0
+        number: 0,
+        onLuckyDraw: [],
+        willLuckDraw: []
       }
     },
     onPullDownRefresh () {
@@ -149,7 +151,7 @@ const mta = require('@/common/js/mta_analysis.js')
           type: 'PLATFORM_LUCKY_DRAW',
           status: 'CREATED',
           append: 'BET_NUM',
-          startTimeLt: new Date().getTime(),
+          // startTimeLt: new Date().getTime(),
           pageNum,
           pageSize
         }).then((res) => {
@@ -161,12 +163,21 @@ const mta = require('@/common/js/mta_analysis.js')
             // 获取到activitie数据，对数据处理。
             res.data.forEach((activitie) => {
               activitie.url = date > activitie.startTime && `/pages/activitiesDetails/index?id=${activitie.id}`
+              // activitie.url = `/pages/activitiesDetails/index?id=${activitie.id}`
               activitie.isOpen = date > activitie.startTime
             })
             if (this.onPullDownRefresh) {
               this.onPullDownRefresh = false
             }
             this.activitieList = [...oldActivitieList, ...res.data]
+            this.activitieList.forEach((activitieData) => {
+              if (date > activitieData.startTime) {
+                this.onLuckyDraw.push(activitieData)
+                console.log(this.onLuckyDraw)
+              } else {
+                this.willLuckDraw.push(activitieData)
+              }
+            })
             this.pageNum++
             if (this.activitieList.length >= res.total) this.complete = true
           }
