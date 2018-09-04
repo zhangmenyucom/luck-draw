@@ -1,7 +1,7 @@
 <template>
   <div>
     <top title="我的金豆" />
-    <meIntegral :score='score' />
+    <meIntegral :score='score' :getBean='getBean'/>
     <div class="list">
       <lists :list="scoreChanges" />
     </div>
@@ -11,6 +11,7 @@
   import lists from '@/components/list'
   import meIntegral from '@/components/meIntegral'
   import MeScoresService from '@/services/meScoresService'
+  import PersonalActivity from '@/services/createPersonalActivity'
   import { formatTime } from '@/utils'
   import getMeScores from '@/common/js/getMeScores.js'
   import share from '@/common/js/share.js'
@@ -43,6 +44,7 @@
         this.onPullDownRefresh = true
         this.complete = false
         this.getScoreChanges()
+        this.getActivity()
       },
       getScoreChanges (pageNum = 1, pageSize = 20) {
         if (this.complete || this.isGet) return false
@@ -66,6 +68,11 @@
               this.onPullDownRefresh = false
             }
           }
+        })
+      },
+      getActivity (type = 'PERSONAL_LUCKY_DRAW') {
+        PersonalActivity.getAcitivity(type).then((res) => {
+          console.log(res)
         })
       }
     },

@@ -6,30 +6,24 @@
       <div class="infoHeader">
         <div class="infoImg">
           <img :src='userInfo.wx.avatar' />
-          <text>{{userInfo.wx.nickName}}</text>
-        </div>
-        <div class="info_r">
-          <div class="editInfo">
-            <a href="/pages/editInfo/index" class="antialiased">
-              <span v-if="rule.total">完善资料&nbsp;&nbsp;</span>
-              <span v-else>查看资料&nbsp;&nbsp;</span>
-              <span v-if="rule.total">+{{rule.total}}</span>&nbsp;
-              <img v-if="rule.total" src="/static/img/goldBean.png">
-            </a>
+          <div class="infoText">
+            <text>{{userInfo.wx.nickName}}</text><br/>
+            <img src="/static/img/goldBean.png" alt=""/>
+            <text style="vertical-align:middle">{{score + ''}}</text>
           </div>
         </div>
       </div >
       <div class="info_content">
         <div class="content_detail">
           <div class="infoDetail clearfix">
-            <a href="/pages/meIntegral/index" class="" style="flex:1">
-              <div class="detailNum">{{score + ''}}</div>
-              <div class="detailContent">我的金豆</div>
-              <div class="interval"></div>
-            </a>
             <a href="/pages/meActivitiesList/index?type=all" style="flex:1">
               <div  class="detailNum">{{activitieTotal}}</div>
               <div  class="detailContent">全部抽奖</div>
+              <div class="interval"></div>
+            </a>
+            <a href="/pages/meIntegral/index" class="" style="flex:1">
+              <div class="detailNum">1</div>
+              <div class="detailContent">我发起的</div>
               <div class="interval"></div>
             </a>
             <a href="/pages/meActivitiesList/index?type=lucky" style="flex:1">
@@ -37,60 +31,35 @@
               <div class="detailContent">中奖记录</div>
             </a>
           </div>
-        </div>
-        <div class="makeJob">
-         <h5 class="antialiased">做任务 赚金豆</h5>
-         <div class="jobDetail">
-           <ul>
-            <li>
-              <div>
-                <div>
-                  <span>分享</span>
-                  <div class="right">
-                    <span>
-                      {{shareRule.base * (shareNumber > shareRule.maxStep ? shareRule.maxStep : shareNumber )}}
-                    </span>
-                    /{{shareRule.maxStep * shareRule.base}}
-                  </div>
-                </div>
-                <span>
-                 一次/{{shareRule.base}}<img src="/static/img/goldBean.png" />
-               </span>
-               <button open-type="share">
-                {{shareNumber < shareRule.maxStep ? '立即领取':'立即分享'}}
-              </button>
+          <div class="weui-cell" @click="doTask">
+            <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
+                <image src="/static/img/me.png" style="width: 120px; height: 50px; display: block"/>
             </div>
-          </li>
-          <a :href="!userInfo.contactNumber? '/pages/mobile/index' : ''">
-            <div>
-              <div>
-                <span>绑定手机号</span>
-                <div class="right">
-                  <span>
-                    {{userInfo.contactNumber ? rule.mobile : 0}}
-                  </span>
-                  /{{rule.mobile}}
-                </div>
-              </div>
-              <span>
-               可得：{{rule.mobile}}<img src="/static/img/goldBean.png" />
-             </span>
-             <button :class="{disableButton:userInfo.contactNumber}">
-              {{userInfo.contactNumber ? '已领取' : '去领取'}}
-            </button>
+            <div class="weui-cell__bd">
+                <div style="font-size: 14px">做任务&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#F3B913">赚金豆</span></div>
+                <div><span style="color:#F3B913">100</span>金豆待领取</div>
+            </div>
+            <div class="weui-cell__ft weui-cell__ft_in-access"></div>
           </div>
-        </a>
-      </ul>
-    </div>
-  </div>
-  <!-- <div class="infoQue">
-    <div>常见问题</div>
-    <div class="arrow"></div>
-  </div> -->
-    <button class="infoQue contact" open-type="contact">
-      <div>联系客服</div>
-      <div class="icon iconfont icon-huise"></div>
-    </button>
+          <div class="weui-cell weui-cell_access">
+              <div class="weui-cell__bd">
+                  <div style="display: inline-block; vertical-align: middle">我的朋友</div>
+              </div>
+              <div class="weui-cell__ft weui-cell__ft_in-access"></div>
+          </div>
+          <div class="weui-cell weui-cell_access">
+              <div class="weui-cell__bd">
+                  <div style="display: inline-block; vertical-align: middle">常见问题</div>
+              </div>
+              <div class="weui-cell__ft weui-cell__ft_in-access"></div>
+          </div>
+          <button class="weui-cell weui-cell_access myBtn" open-type="contact">
+              <div class="weui-cell__bd">
+                  <div style="display: inline-block; vertical-align: middle">联系客服</div>
+              </div>
+              <div class="weui-cell__ft weui-cell__ft_in-access"></div>
+          </button>
+        </div>
 </div>
 <signIn :signInCB = "signInCB" :showModel = "!isModel"/>
 </div>
@@ -111,6 +80,7 @@
   import getMeScores from '@/common/js/getMeScores.js'
   import share from '@/common/js/share.js'
   import DailyFootprintsService from '@/services/dailyFootprintsService'
+  const mta = require('@/common/js/mta_analysis.js')
   export default {
     data () {
       return ({
@@ -150,6 +120,17 @@
         }
         this.getDailyFootprintsShare()
         getMeScores.start(this)
+      },
+      shareWx () {
+        if (!this.shareNumber < this.shareRule.maxStep) {
+          mta.Event.stat('share', {'method': '我的-立即分享'})
+        }
+      },
+      bindPhone () {
+        mta.Event.stat('bind_phone', {'from': '我的页面'})
+      },
+      doTask () {
+        this.$switchTab('../obtainGoldBean/index')
       },
       getParticipants (userInfo) {
         // 查询用户一共参与多少活动
@@ -227,6 +208,7 @@
       }
     },
     onLoad () {
+      mta.Page.init()
       this.$setStorageSync('signIn', false)
     },
     onHide () {

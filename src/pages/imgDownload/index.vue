@@ -1,6 +1,6 @@
 <template>
   <div class="imgDownload">
-    <top title='炫耀一下' />
+    <top :title='title' />
     <img mode="widthFix" :src="url">
     <button class="saveFile" @tap='saveFile'>保存图片</button>
   </div>
@@ -11,7 +11,8 @@ import top from '@/components/top'
 export default {
   data () {
     return {
-      url: ''
+      url: '',
+      title: ''
     }
   },
   components: {
@@ -27,6 +28,7 @@ export default {
     }
   },
   onLoad (data) {
+    this.title = data.title
     this.url = data.url
   },
   onShareAppMessage: share()

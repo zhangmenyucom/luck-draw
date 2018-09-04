@@ -8,7 +8,7 @@
         <span class='left'>
           我的金豆：{{score+''}}
         </span>
-        <a class='right' open-type="switchTab" href="/pages/obtainGoldBean/index" >
+        <a class='right' open-type="switchTab" href="/pages/obtainGoldBean/index" @click="getBean">
           赚金豆&nbsp;>
         </a>
         <div class="c"></div>
@@ -134,6 +134,9 @@ const mta = require('@/common/js/mta_analysis.js')
           }
         })
       },
+      getBean () {
+        this.$setStorageSync('getBeanMethod', '首页-赚金豆')
+      },
       getMeScores () {
         MeScoresService.getList().then(res => {
           if (res.code === 0) {
@@ -141,7 +144,6 @@ const mta = require('@/common/js/mta_analysis.js')
           }
         })
       },
-
       getActivitieList (pageNum = 1, pageSize = 20) {
         if (this.complete || this.isGet) return false
         this.isGet = true
@@ -160,7 +162,7 @@ const mta = require('@/common/js/mta_analysis.js')
             const oldActivitieList = !this.onPullDownRefresh ? this.activitieList : []
             // 获取到activitie数据，对数据处理。
             res.data.forEach((activitie) => {
-              activitie.url = date > activitie.startTime && `/pages/activitiesDetails/index?id=${activitie.id}`
+              activitie.url = date > activitie.startTime && `/pages/activitiesDetails/index?id=${activitie.id}&method='首页'&name=${activitie.name}`
               activitie.isOpen = date > activitie.startTime
             })
             if (this.onPullDownRefresh) {

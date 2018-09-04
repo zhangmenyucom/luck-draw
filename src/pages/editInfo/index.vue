@@ -161,6 +161,7 @@
             }
           })
         })
+        console.log(this.userInfo.location.address)
       }
     },
     onShow () {

@@ -4,7 +4,7 @@
     <load :isshow="isShow" :isanimation="isAnimation"/>
     <signIn :isanimation.sync='isAnimation'  :signInCB = "signInCB"/>
     <div v-if='!isShow'>
-      <meIntegral :score='score'/>
+      <meIntegral :score='score' :getBean='getBean'/>
       <div class="activitiesDetails">
         <img mode='aspectFit' :src="activitie.media[0].url">
         <div class="prompt antialiased">
@@ -119,7 +119,7 @@
       </div>
       <div class="divButton">
         <button class="butotn-o" @tap="chooseAddress">{{state === 6 ? '去领奖' : '信息已填写'}}</button>
-        <a :href="'/pages/imgDownload/index?url=' + melucky.metadata.image" class="button" >炫耀一下</a>
+        <a :href="'/pages/imgDownload/index?url=' + melucky.metadata.image +'&'+ 'title=炫耀一下'" class="button">炫耀一下</a>
       </div>
       <span></span>
     </div>
@@ -162,7 +162,7 @@
       <headPortrait :list="participantList" rangeKey="img" />
     </div>
     <!-- 参加列表结束 -->
-    <button class="bottom button" open-type="share" v-if="state <= 3">
+    <button class="bottom button" open-type="share" v-if="state <= 3" @click="share">
       分享领金豆
     </button>
 
@@ -252,7 +252,7 @@
   import { getUserInfo } from '@/utils'
   import MeScoresService from '@/services/meScoresService.js'
   import getMeScores from '@/common/js/getMeScores.js'
-
+  const mta = require('@/common/js/mta_analysis.js')
   export default {
     data () {
       return {
@@ -319,6 +319,12 @@
       meIntegral
     },
     methods: {
+      share () {
+        mta.Event.stat('share', {'method': '抽奖详情页分享'})
+      },
+      getBean () {
+        this.$setStorageSync('getBeanMethod', '抽奖详情-赚金豆')
+      },
       getMeScores () {
         MeScoresService.getList().then(res => {
           if (res.code === 0) {
@@ -353,7 +359,7 @@
               this.modifyState(5)
               // 处理中奖信息
               const luckyItems = JSON.parse(res.data.metadata.luckyItems)
-              console.log('luckyItems', luckyItems)
+              // console.log('luckyItems', luckyItems)
               this.luckyItemTotal = luckyItems.length
               this.luckyItems = luckyItems.slice(0, 3)
               const melucky = luckyItems.filter(luckyItem => luckyItem.luckyGuy.eid === userInfo.id)
@@ -495,12 +501,23 @@
       }
     },
     onLoad (options) {
-      // console.log('options', options)
       this.id = options.id
       const userInfo = getUserInfo()
       this.userInfo = userInfo
       this.state = 0
       this.ticketsNum = 1
+      mta.Page.init()
+      mta.Event.stat('lucky_draw', {'activityname': options.name})
+      if (options.method === '全部抽奖') {
+        mta.Event.stat('lucky_draw', {'from': '全部抽奖'})
+      } else if (options.method === '首页') {
+        mta.Event.stat('lucky_draw', {'from': '首页'})
+      }
+      if (this.$getStorageSync('scene') === 1014) {
+        mta.Event.stat('lucky_draw', {'from': '模板消息'})
+      } else if (this.$getStorageSync('scene') === 1007 || this.$getStorageSync('scene') === 1008) {
+        mta.Event.stat('lucky_draw', {'from': '好友分享'})
+      }
     },
     onHide () {
       getMeScores.end()

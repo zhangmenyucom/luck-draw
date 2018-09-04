@@ -38,7 +38,7 @@
       console.log('systemInfo', systemInfo)
       const scene = this.$getStorageSync('scene')
       this.isHome = scene && isHome.has(scene)
-      this.$removeStorage('scene')
+      // this.$removeStorage('scene')
     }
   }
 </script>

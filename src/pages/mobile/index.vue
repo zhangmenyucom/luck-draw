@@ -16,6 +16,7 @@
   import AccountService from '@/services/accountService'
   import share from '@/common/js/share.js'
   import top from '@/components/top'
+  const mta = require('@/common/js/mta_analysis.js')
   export default{
     data () {
       return {
@@ -27,6 +28,9 @@
     },
     components: {
       top
+    },
+    onLoad () {
+      mta.Page.init()
     },
     methods: {
       captcha () {

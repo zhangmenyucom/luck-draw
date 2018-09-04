@@ -3,7 +3,7 @@
     <span>
       我的金豆：{{score}}
     </span>
-    <a open-type="switchTab" href="/pages/obtainGoldBean/index" class='right'>
+    <a open-type="switchTab" href="/pages/obtainGoldBean/index" class='right' @click="getBean">
       赚金豆>
     </a>
   </div>
@@ -11,7 +11,7 @@
 
 <script>
   export default {
-    props: ['score']
+    props: ['score', 'getBean']
   }
 </script>
 

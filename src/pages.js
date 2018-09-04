@@ -76,4 +76,11 @@ module.exports = [{
     disableScroll: true,
     backgroundColor: '#00000000'
   }
+}, {
+  path: 'pages/makePicture/index',
+  config: {
+    navigationBarTitleText: '生成分享图',
+    disableScroll: true,
+    backgroundColor: '#00000000'
+  }
 }]

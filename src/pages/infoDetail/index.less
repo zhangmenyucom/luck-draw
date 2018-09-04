@@ -11,9 +11,9 @@
 	background: #fff;
 	min-height: 100vh;
 	position: relative;
+	font-family:DINAlternate PingFangSC-Regular;
 	.infoHeader {
-		padding: 53*@2 0 67*@2 39*@2;
-		background: #333;
+		padding: 53*@2 0 30*@2 39*@2;
 		jobDetail color: #fff;
 		display: flex;
 		justify-content: space-between;
@@ -26,11 +26,21 @@
 			margin-right: 16*@2;
 		}
 		.infoImg {
-			color: #fff;
-			width: 168*@2;
 			text-overflow: ellipsis;
 			white-space: nowrap;
 			overflow: hidden;
+			.infoText{
+				display: inline-block;
+				vertical-align: middle;
+				font-size: 16*@2;
+				img{
+					width:20*@2;
+					height: 20*@2;
+					border-radius: 0;
+					background: none;
+					margin-right: 8*@2;
+				}
+			}
 		}
 		.info_r {
 			height: 56*@2;
@@ -55,6 +65,7 @@
 					height: 9*@2;
 					margin-left: 2*@2;
 					margin-right: 10*@2;
+					float: left;
 				}
 			}
 		}
@@ -76,28 +87,13 @@
 				box-shadow: 0*@2 2*@2 16*@2 0*@2 rgba(25, 25, 25, 0.05);
 				margin-top: -16*@2;
 				width: 100%;
-				position: absolute;
 				.detailContent {
 					font-size: 12*@2;
 					color: #434343;
 				}
 				.detailNum {
 					font-size: 22*@2;
-					color: #F3B913;
-				}
-				.interval {
-					position: absolute;
-					right: 0;
-					width: 1*@2;
-					background: #DDDDDD;
-					height: 24*@2;
-					top: 15*@2;
-				}
-				>div {
-					position: relative;
-				}
-				>a {
-					position: relative;
+					color: #FE4C52;
 				}
 			}
 			.clearfix:after {
@@ -110,95 +106,6 @@
 			}
 			.clearfix {
 				zoom: 1;
-			}
-		}
-		.makeJob {
-			overflow: hidden;
-			padding-top: 100*@2;
-			h5 {
-				color: #434343;
-				font-size: 16*@2;
-				font-weight: 500;
-			}
-			.jobDetail {
-				height: 142*@2;
-				ul {
-					display: flex;
-					padding: 8*@2;
-					margin-top: 8*@2;
-					position: absolute;
-					left: 0;
-					width: 100%;
-					li,
-					a {
-						padding: 0 8*@2;
-						flex: 1;
-						>div {
-							padding: 16*@2;
-							box-shadow: 0*@2 2*@2 16*@2 0*@2 rgba(25, 25, 25, 0.05);
-							>div {
-
-								color: #434343;
-								font-size: 14*@2;
-								line-height: 20*@2;
-								>span {
-									font-weight: 500;
-									-webkit-font-smoothing: antialiased;
-									color: #434343
-								}
-								>div {
-									>span {
-										font-size: 22*@2;
-										color: #F3B913;
-										font-family: DINAlternate;
-									}
-								}
-							}
-							>span {
-								margin-top: 8*@2;
-								font-size: 12*@2;
-								line-height: 16*@2;
-								>img {
-									width: 9*@2;
-									height: 9*@2;
-								}
-							}
-							>button {
-								width: 132*@2;
-								height: 32*@2;
-								line-height: 32*@2;
-								background: #FE4C52;
-								box-shadow: 0 2*@2 4*@2 0*@2 rgba(254, 76, 82, 0.3);
-								margin-top: 16*@2;
-								font-size: 14*@2;
-								color: #fff;
-								border-radius: 2*@2;
-							}
-						}
-					}
-					.btn {
-						display: flex;
-						margin-top: 16*@2;
-						div {
-							background: #FE4C52;
-							width: 132*@2;
-							padding: 6*@2 0;
-							background: rgba(254, 76, 82, 1);
-							box-shadow: 0 2*@2 4*@2 0*@2 rgba(254, 76, 82, 0.3);
-							border-radius: 2*@2;
-							text-align: center;
-							font-size: 14*@2 !important;
-							position: relative;
-							color: #fff;
-							img {
-								width: 11*@2;
-								height: 11*@2;
-								position: absolute;
-								left: 8*@2;
-							}
-						}
-					}
-				}
 			}
 		}
 		.infoQue {
@@ -216,4 +123,18 @@
 		}
 	}
 
+}
+.weui-cell {
+	font-size: 14*@2;
+}
+.font-16 {
+	font-size: 14*@2;
+}
+.myBtn {
+	text-align: left;
+	background: none;
+	line-height: 1.5;
+}
+.myBtn::after {
+	border: none;
 }

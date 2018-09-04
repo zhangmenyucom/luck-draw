@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a class="list"  v-for='(item, index) in list ' :href="'/pages/activitiesDetails/index?id=' + item.id">
+    <a class="list"  v-for='(item, index) in list ' :href="'/pages/activitiesDetails/index?id=' + item.id + '&' + 'method=' + '全部抽奖'">
       <!-- <img mode='center' :src='item.media[0].url' alt=""> -->
       <div class="info">
         <span class='title'>
@@ -17,7 +17,7 @@
         </div>
       </div>
       <div class="state">
-       {{status[item.status]}}
+       {{status[item.status]}}{{status[item.status]}}
        <div> </div>
        <div>已下{{item.tickets.length}}注</div>
      </div>

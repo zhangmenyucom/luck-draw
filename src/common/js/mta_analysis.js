@@ -127,7 +127,7 @@ function getExtentInfo() {
 var MTA = {
   App: {
     init: function(a) {
-      console.log('a', a)
+      // console.log('a', a)
       'appID' in a && (MTA_CONFIG.app_id = a.appID);
       'eventID' in a && (MTA_CONFIG.event_id = a.eventID);
       'statShareApp' in a && (MTA_CONFIG.stat_share_app = a.statShareApp);

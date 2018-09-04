@@ -1,6 +1,6 @@
 <template>
   <div>
-    <a v-if='list.length > 0' class="list" v-for="(item , i) in list" :href="item.url">
+    <a v-if='list.length > 0' class="list" v-for="(item , i) in list" :href='item.url'>
       <div class='state' v-if='item.isOpen'>
         正在抽奖 <i class="icon iconfont icon-Fillx"></i>
       </div>
@@ -51,7 +51,10 @@
 <script>
   export default {
     name: 'activitieList',
-    props: ['list']
+    props: ['list'],
+    onload () {
+      console.log('111', this.list)
+    }
   }
 </script>
 
