@@ -83,4 +83,18 @@ module.exports = [{
     disableScroll: true,
     backgroundColor: '#00000000'
   }
+}, {
+  path: 'pages/meCreate/index',
+  config: {
+    navigationBarTitleText: '我发起的',
+    disableScroll: true,
+    backgroundColor: '#00000000'
+  }
+}, {
+  path: 'pages/commonQuestion/index',
+  config: {
+    navigationBarTitleText: '常见问题',
+    disableScroll: true,
+    backgroundColor: '#00000000'
+  }
 }]

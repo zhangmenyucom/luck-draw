@@ -18,11 +18,11 @@
           <div class="infoDetail clearfix">
             <a href="/pages/meActivitiesList/index?type=all" style="flex:1">
               <div  class="detailNum">{{activitieTotal}}</div>
-              <div  class="detailContent">全部抽奖</div>
+              <div  class="detailContent">我的抽奖</div>
               <div class="interval"></div>
             </a>
-            <a href="/pages/meIntegral/index" class="" style="flex:1">
-              <div class="detailNum">1</div>
+            <a href="/pages/meCreate/index" class="" style="flex:1">
+              <div class="detailNum">{{meCreateNum}}</div>
               <div class="detailContent">我发起的</div>
               <div class="interval"></div>
             </a>
@@ -33,7 +33,7 @@
           </div>
           <div class="weui-cell" @click="doTask">
             <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
-                <image src="/static/img/me.png" style="width: 120px; height: 50px; display: block"/>
+                <image src="/static/img/me.png" style="width: 143px; height: 67px; display: block"/>
             </div>
             <div class="weui-cell__bd">
                 <div style="font-size: 14px">做任务&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#F3B913">赚金豆</span></div>
@@ -41,13 +41,13 @@
             </div>
             <div class="weui-cell__ft weui-cell__ft_in-access"></div>
           </div>
-          <div class="weui-cell weui-cell_access">
+          <!-- <div class="weui-cell weui-cell_access">
               <div class="weui-cell__bd">
                   <div style="display: inline-block; vertical-align: middle">我的朋友</div>
               </div>
               <div class="weui-cell__ft weui-cell__ft_in-access"></div>
-          </div>
-          <div class="weui-cell weui-cell_access">
+          </div> -->
+          <div class="weui-cell weui-cell_access" @click="commonQuestion">
               <div class="weui-cell__bd">
                   <div style="display: inline-block; vertical-align: middle">常见问题</div>
               </div>
@@ -77,6 +77,7 @@
   import ParticipantsService from '@/services/participantsService'
   import MeScoresService from '@/services/meScoresService.js'
   import ScoreRulesService from '@/services/scoreRulesService'
+  import PersonalActivity from '@/services/createPersonalActivity'
   import getMeScores from '@/common/js/getMeScores.js'
   import share from '@/common/js/share.js'
   import DailyFootprintsService from '@/services/dailyFootprintsService'
@@ -94,7 +95,8 @@
         rule: {},
         shareRule: {},
         shareNumber: 0,
-        isShow: true
+        isShow: true,
+        meCreateNum: 0
       })
     },
     components: {
@@ -112,6 +114,7 @@
         this.userInfo = userInfo
         this.getParticipants(userInfo)
         this.getScoreRules()
+        this.getActivity()
         if (data.score) {
           // 签到后 直接获取积分数
           this.score = data.score
@@ -131,6 +134,16 @@
       },
       doTask () {
         this.$switchTab('../obtainGoldBean/index')
+      },
+      commonQuestion () {
+        this.$navigateTo('../commonQuestion/index')
+      },
+      getActivity (type = 'PERSONAL_LUCKY_DRAW') {
+        PersonalActivity.getAcitivity(type).then((res) => {
+          if (res.code === 0) {
+            this.meCreateNum = res.data.length
+          }
+        })
       },
       getParticipants (userInfo) {
         // 查询用户一共参与多少活动

@@ -72,6 +72,7 @@
             this.isGet = false
             this.participantList = [...oldParticipantList, ...participantList]
             if (this.participantList.length >= res.total) this.complete = true
+            console.log(this.participantList)
           }
         })
       }

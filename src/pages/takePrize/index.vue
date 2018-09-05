@@ -1,7 +1,10 @@
 <template>
   <div class="takePrize ">
-    <top title='奖品' />
+    <top title='领奖' />
     <!-- 地址展示 -->
+    <div class="top">
+      请在xxx(开奖七天后)填写之前填写，超时后不能
+    </div>
     <div class='address'>
       <span class='title antialiased'>
         奖品配送至
@@ -31,12 +34,12 @@
           幸运号：{{participant.tickets[0]}}
         </span> -->
       </div>
-      <div class="content">
+      <!-- <div class="content">
         <text class="expression">
           <text>「奖品」</text>{{participant.activity.items[0].name}}
         </text>
         <img mode='aspectFit' :src="participant.activity.items[0].metadata.image" >
-      </div>
+      </div> -->
       <div class="tips antialiased">
         友情提示：完善收货信息后我们会及时与您联系
       </div>

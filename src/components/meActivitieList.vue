@@ -7,9 +7,9 @@
           {{item.name}}
         </span>
         <div class="info">
-          <span>
+          <!-- <span>
             <span>「奖&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;品」</span>{{item.prize.name}}
-          </span>
+          </span> -->
           <br />
           <span>
             <span>「参与时间」</span>{{item.time}}
@@ -17,9 +17,9 @@
         </div>
       </div>
       <div class="state">
-       {{status[item.status]}}{{status[item.status]}}
+       {{status[item.status]}}
        <div> </div>
-       <div>已下{{item.tickets.length}}注</div>
+       <!-- <div>已下{{item.tickets.length}}注</div> -->
      </div>
    </a>
 
