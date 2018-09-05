@@ -17,7 +17,7 @@
       <div class="name antialiased">
         [ 奖品 ]&nbsp;&nbsp;{{item.name}}
       </div>
-      <div v-if="activitie.metadata.drawRule === 'full'" style="margin-top: 5rpx;">
+      <div v-if="item.metadata.drawRule === 'full'" style="margin-top: 5rpx;">
         <span class="goldBean">
           <!-- <img src='/static/img/goldBean.png'>
           <text class='bold'>
@@ -33,14 +33,14 @@
           <img src='/static/img/goldBean.png' style="width:10px;height:10px;" />/注
         </div>
       </div>
-      <div v-if="activitie.metadata.drawRule === 'timed'" style="margin-top: 5rpx;">
+      <div v-if="item.metadata.drawRule === 'timed'" style="margin-top: 5rpx;">
           <span class="goldBean">
-            <span style="color:red">{{activitie.endTime}}</span>开奖
+            <span style="color:red">{{item.endTime}}</span>开奖
           </span>
       </div>
-      <div v-if="activitie.metadata.drawRule === 'fullParticipant'" style="margin-top: 5rpx;">
+      <div v-if="item.metadata.drawRule === 'fullParticipant'" style="margin-top: 5rpx;">
             <span class="goldBean">
-              满<span style="color:red">{{activitie.metadata.participantsNum}}</span>人开奖
+              满<span style="color:red">{{item.metadata.participantsNum}}</span>人开奖
             </span>
       </div>
     </a>

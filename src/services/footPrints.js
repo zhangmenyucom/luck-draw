@@ -1,15 +1,14 @@
 import ServiceBase from './serviceBase'
 import request from './request'
 import { getUserInfo } from '@/utils'
-import config from 'config'
 class Footprints extends ServiceBase {
-  add () {
+  add (appid) {
     let data = {}
     const userInfo = getUserInfo()
     if (!data.target) {
       data.target = {
         type: 'VINCI_CC_FOOTPRINT',
-        id: config.appId,
+        id: appid,
         name: userInfo.nickName
       }
       data.type = 'VIEW_AD'
