@@ -47,7 +47,7 @@
               </div>
               <div class="weui-cell__ft weui-cell__ft_in-access"></div>
           </div> -->
-          <div class="weui-cell weui-cell_access" @click="commonQuestion">
+          <div class="weui-cell weui-cell_access myweui-cell" @click="commonQuestion">
               <div class="weui-cell__bd">
                   <div style="display: inline-block; vertical-align: middle">常见问题</div>
               </div>

@@ -1,8 +1,7 @@
 <template>
 <div>
-  <div class="list">
-    <top :hideIcone='true' title='任务中心' />
-    <div class="head">
+  <div class="head">
+      <top :hideIcone='true' title='任务中心' />
       <div>
         <span class='left'>
           每日签到
@@ -12,7 +11,7 @@
         </span>
         <div class="c"></div>
         <div class="record">
-          <div v-for='i in 7' :class="{opacity:(i +1 ) > scoreCounters.number}">
+          <div v-for='i in 7' :class="{opacity:(i +1 ) > scoreCounters.number}" :key="i">
             <div class="icon">
               {{goldBean[i]}}
             </div>
@@ -22,6 +21,7 @@
         </div>
       </div>
     </div>
+  <div class="list">
     <div class="classify">
       新手任务
     </div>
@@ -36,7 +36,7 @@
         <br />
         {{rule.mobile}} <img src="/static/img/goldBean.png" alt=""> <text>/&nbsp;次</text> &nbsp;&nbsp;
       </div>
-      <div class="right" @click="bindPhone" style="padding:10px 0 auto 0">
+      <div class="right" @click="bindPhone" style="padding:10px 0 10px 0">
         <a v-if="!userInfo.contactNumber" href="/pages/mobile/index">
           去绑定
         </a>
@@ -57,7 +57,7 @@
         <br />
         {{rule.total}} <img src="/static/img/goldBean.png" alt=""><text>/&nbsp;次</text> &nbsp;&nbsp;
       </div>
-      <div class="right" style="padding:10px 0 auto 0">
+      <div class="right" tyle="padding:10px 0 10px 0">
         <a v-if="!(userInfo.contactNumber && userInfo.location && userInfo.birthday)" href="/pages/editInfo/index" @click="complete">
           去完善
         </a>
@@ -91,18 +91,18 @@
       </div>
       <div class="c"></div>
     </div>
-    <div>
+    <div v-for="(item, index) in advertiseRule" :key="index">
       <div class="left icon">
         <i class="icon iconfont icon-kanguanggao" :style="{color:'#1296db'}"></i>
       </div>
       <div class="left" style="padding:10px 0 10px 0">
         <span class='title'>
-          看广告
+          {{item.title}}
         </span>
         <br />
-        {{shareRule.base}}<img src="/static/img/goldBean.png" alt=""><text>/&nbsp;次</text> &nbsp;&nbsp;
+        {{item.score}}<img src="/static/img/goldBean.png" alt=""><text>/&nbsp;次</text> &nbsp;&nbsp;
       </div>
-      <navigator  class="right" @click="toXcx" style="padding:10px 0 10px 0" target="miniProgram" open-type="navigate" :app-id="appId">
+      <navigator :key="index"  class="right" target="miniProgram" open-type="navigate" :app-id="item.appId" path='' @tap="() => toXcx(item.appId)" style="padding:10px 0 10px 0">
         <button v-if="shareRule.maxStep > shareNumber">
           领取
         </button>
@@ -146,7 +146,8 @@
         score: 0,
         scoreCounters: {},
         number: 0,
-        appId: ''
+        appId: '',
+        advertiseRule: []
       }
     },
     components: {
@@ -161,6 +162,9 @@
             rule.total = Object.values(rule).reduce((total, num) => parseInt(total, 10) + parseInt(num, 10))
 
             const shareRule = JSON.parse(res.data.filter(data => data.type === 3)[0] ? res.data.filter(data => data.type === 3)[0].rule : {})
+            const advertiseRule = JSON.parse(res.data.filter(data => data.type === 6)[0] ? res.data.filter(data => data.type === 6)[0].rule : {})
+            this.advertiseRule = advertiseRule
+            console.log(advertiseRule)
             this.rule = rule
             this.shareRule = shareRule
             const number = this.scoreCounters.number > 7 ? this.scoreCounters.number - 7 : 0 // 需要展示的第一天
@@ -196,12 +200,18 @@
       changeDisplay () {
         this.display = !this.display
       },
-      toXcx () {
-        DailyFootprintsService.getList({
-          userId: this.userInfo.id,
-          type: 'VIEW_AD'
-        }).then((res) => {
-          console.log(res)
+      toXcx (id) {
+        console.log(id)
+        Footprints.add(id).then((res) => {
+          if (res.code === 0) {
+            this.appId = res.data.target.id
+          }
+          return DailyFootprintsService.getList({
+                  userId: this.userInfo.id,
+                  type: 'VIEW_AD'
+                }).then((res) => {
+                    console.log(res)
+                })
         })
       },
       getMeScores () {
@@ -235,11 +245,11 @@
     onLoad () {
       mta.Page.init()
       this.$setStorageSync('signIn', false)
-      Footprints.add().then((res) => {
-        if (res.code === 0) {
-          this.appId = res.data.target.id
-        }
-      })
+      // Footprints.add().then((res) => {
+      //   if (res.code === 0) {
+      //     this.appId = res.data.target.id
+      //   }
+      // })
     },
     onShow () {
       const userInfo = getUserInfo()
