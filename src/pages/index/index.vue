@@ -1,6 +1,5 @@
 <template>
   <div class='index'>
-    <!-- <load :isshow="isloadShow" /> -->
     <top :hideIcone='true' title="公共抽奖" />
     <div class="head-line">
       <div>
@@ -46,57 +45,24 @@
     </div>
     <!-- 活动列表结束 -->
     <signIn :signInCB = "signInCB" :showModel="!isModel"/>
-    <!-- 登录各种样式 勿删 防止变回来 -->
-   <!--  <div class="model" v-if='isModel'>
-      <div class="welfare">
-        <img src="/static/img/welfare.png" alt="" />
-        <div>
-          <div>
-            <div>
-              新人专属
-            </div>
-            <span>
-              新人专属
-            </span>
-          </div>
-          <span>
-            首次登录送XX金豆
-          </span>
-          <button open-type='getUserInfo' @getuserinfo="bindgetuserinfo">
-            登录领取
-          </button>
-        </div>
-      </div>
-    </div> -->
-   <!--  <div :class ="{model:true, showModel : isModel }">
-      <div :class="{signIn:true, showModel : isModel}" >
-        <img :class="{ transform: isModel }" src="/static/img/light.png" />
-        <div class="sign">
-          <img src="/static/img/signIn.png" />
-          <div class="goldBean">
-            <img src="/static/img/goldBean.png" />
-          </div>
-          <button class="signButton" open-type='getUserInfo' @getuserinfo="bindgetuserinfo">
-            签到领金豆
-          </button>
-        </div>
-      </div>
-    </div> -->
+
   </div>
 </template>
 
 <script>
   // import load from '@/components/loading'
-import activitieList from '@/components/activitieList'
-import signIn from '@/components/signIn'
-import top from '@/components/top'
-import ActivitiesService from '@/services/activitiesService'
-import { getUserInfo } from '@/utils'
-import ScoreRulesService from '@/services/scoreRulesService'
-import getMeScores from '@/common/js/getMeScores.js'
-import share from '@/common/js/share.js'
-import MeScoresService from '@/services/meScoresService.js'
-const mta = require('@/common/js/mta_analysis.js')
+  import activitieList from '@/components/activitieList'
+  import signIn from '@/components/signIn'
+  import top from '@/components/top'
+  import ActivitiesService from '@/services/activitiesService'
+  import {
+    getUserInfo
+  } from '@/utils'
+  import ScoreRulesService from '@/services/scoreRulesService'
+  import getMeScores from '@/common/js/getMeScores.js'
+  import share from '@/common/js/share.js'
+  import MeScoresService from '@/services/meScoresService.js'
+  const mta = require('@/common/js/mta_analysis.js')
   export default {
     data () {
       return {
@@ -159,40 +125,42 @@ const mta = require('@/common/js/mta_analysis.js')
       },
       getActivitieList (pageNum = 1, pageSize = 20) {
         if (this.complete || this.isGet) return false
+        const date = new Date().getTime()
         this.isGet = true
-        this.onLuckyDraw = []
-        this.willLuckDraw = []
         ActivitiesService.getList({
           type: 'PLATFORM_LUCKY_DRAW',
           status: 'CREATED',
           append: 'BET_NUM',
-          // startTimeLt: new Date().getTime(),
+          // startTimeLt: date, // 过滤未到时间活动
           pageNum,
           pageSize
         }).then((res) => {
           this.$stopPullDownRefresh()
           this.isGet = false
           if (res.code === 0) {
-            const date = new Date().getTime()
-            const oldActivitieList = !this.onPullDownRefresh ? this.activitieList : []
+            // 如果是下拉刷新数据清空
+            const oldOnLuckyDraw = !this.onPullDownRefresh ? this.onLuckyDraw : []
+            const oldWillLuckDraw = !this.onPullDownRefresh ? this.willLuckDraw : []
+
             // 获取到activitie数据，对数据处理。
+            const onLuckyDraw = []
+            const willLuckDraw = []
             res.data.forEach((activitie) => {
-              activitie.url = date > activitie.startTime && `/pages/activitiesDetails/index?id=${activitie.id}&method='首页'&name=${activitie.name}`
-              activitie.isOpen = date > activitie.startTime
-            })
-            if (this.onPullDownRefresh) {
-              this.onPullDownRefresh = false
-            }
-            this.activitieList = [...oldActivitieList, ...res.data]
-            this.activitieList.forEach((activitieData) => {
-              if (date > activitieData.startTime) {
-                this.onLuckyDraw.push(activitieData)
+              activitie.url = `/pages/activitiesDetails/index?id=${activitie.id}&method='首页'&name=${activitie.name}`
+              // 现在多余 留待后用
+              if (date > activitie.startTime) {
+                onLuckyDraw.push(activitie)
               } else {
-                this.willLuckDraw.push(activitieData)
+                willLuckDraw.push(activitie)
               }
             })
+
+            // 赋值 修改页面
+            this.willLuckDraw = [...oldWillLuckDraw, ...willLuckDraw]
+            this.onLuckyDraw = [...oldOnLuckyDraw, ...res.data]
             this.pageNum++
-            if (this.activitieList.length >= res.total) this.complete = true
+            this.onPullDownRefresh = false
+            if ((this.willLuckDraw.length + this.onLuckyDraw.length) >= res.total) this.complete = true
           }
         })
       },

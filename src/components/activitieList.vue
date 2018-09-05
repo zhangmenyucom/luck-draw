@@ -17,20 +17,21 @@
       <div class="name antialiased">
         [ 奖品 ]&nbsp;&nbsp;{{item.name}}
       </div>
+
       <div v-if="item.metadata.drawRule === 'full'">
         <span class="goldBean">
           <!-- <img src='/static/img/goldBean.png'>
           <text class='bold'>
             &nbsp;&nbsp;{{item.metadata.price}} 金豆 1 注
           </text> -->
-          满<span style="color:red;">{{item.metadata.ticketsNum}}</span>注开奖
+          满<span style="color:red;">{{item.metadata.ticketsNum * item.metadata.price}}</span>金豆开奖
           <!-- <span>
             ¥8799
           </span> -->
         </span>
         <div class="fullGoldBean">
           {{item.metadata.price}}
-          <img src='/static/img/goldBean.png' style="width:15px;height:14px;position:relative;top:2px;margin-top:8px;" />/注
+          <img src='/static/img/goldBean.png' style="width:15px;height:14px;position:relative;top:2px;margin-top:8px;" />参与
         </div>
       </div>
       <div v-if="item.metadata.drawRule === 'timed'" style="margin-top: 5rpx;">
@@ -140,7 +141,7 @@ img {
   color:rgba(102,102,102,1);
   font-family: PingFangSC-Regular;
   font-size: 14*@2;
-  font-weight:400;
+  /*font-weight:400;*/
   /* span{
     text-decoration:line-through;
     font-size:14*@2;
