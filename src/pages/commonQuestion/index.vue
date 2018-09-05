@@ -47,18 +47,18 @@
 </template>
 <script>
  
-  import top from '@/components/top'
-  export default {
-    data () {
-      return {
-      }
-    },
-    components: {
-      top
-    },
-    methods: {
-    }
-  }
+import top from '@/components/top'
+ export default {
+   data () {
+     return {
+     }
+   },
+   components: {
+     top
+   },
+   methods: {
+   }
+ }
 </script>
 
 <style scoped>

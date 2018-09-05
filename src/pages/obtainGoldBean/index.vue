@@ -236,9 +236,9 @@
       mta.Page.init()
       this.$setStorageSync('signIn', false)
       Footprints.add().then((res) => {
-          if (res.code === 0) {
-            this.appId = res.data.target.id
-          }
+        if (res.code === 0) {
+          this.appId = res.data.target.id
+        }
       })
     },
     onShow () {

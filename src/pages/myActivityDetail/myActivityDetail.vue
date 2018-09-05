@@ -31,20 +31,20 @@
 <script>
     import top from '@/components/top'
     export default {
-        data () {
-            return {
-                isJoiner: true,
-                isShare: false
-            }
-        },
-        components: {
-            top
-        },
-        methods: {
-            sharePrize () {
-                this.isShare = true
-            }
+      data () {
+        return {
+          isJoiner: true,
+          isShare: false
         }
+      },
+      components: {
+        top
+      },
+      methods: {
+        sharePrize () {
+          this.isShare = true
+        }
+      }
     }
 </script>
 

@@ -14,43 +14,43 @@ import share from '@/common/js/share.js'
 import top from '@/components/top'
 
 export default {
-data () {
+  data () {
     return {
-    activitieList: [],
-    pageNum: 1,
-    participantList: [],
-    onPullDownRefresh: false,
-    complete: false,
-    type: 'lucky'
+      activitieList: [],
+      pageNum: 1,
+      participantList: [],
+      onPullDownRefresh: false,
+      complete: false,
+      type: 'lucky'
     }
-},
-onPullDownRefresh () {
+  },
+  onPullDownRefresh () {
     this.pullDownRefresh()
-},
-components: {
+  },
+  components: {
     meActivitieList,
     top
-},
-methods: {
+  },
+  methods: {
     pullDownRefresh () {
-    this.pageNum = 1
-    this.onPullDownRefresh = true
-    this.complete = false
-    this.getActivity()
+      this.pageNum = 1
+      this.onPullDownRefresh = true
+      this.complete = false
+      this.getActivity()
     },
     getActivity (type = 'PERSONAL_LUCKY_DRAW') {
-        PersonalActivity.getAcitivity(type).then((res) => {
-            this.participantList = res.data
-            console.log(this.participantList)
-        })
+      PersonalActivity.getAcitivity(type).then((res) => {
+        this.participantList = res.data
+        console.log(this.participantList)
+      })
     }
-},
-onLoad (data) {
+  },
+  onLoad (data) {
     this.participantList = []
     this.type = data.type
     this.pullDownRefresh()
-},
-onShareAppMessage: share()
+  },
+  onShareAppMessage: share()
 }
 </script>
 

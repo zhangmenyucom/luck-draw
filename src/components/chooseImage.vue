@@ -20,19 +20,19 @@ export default {
   props: ['showImage', 'picIndex', 'picIndexSrc'],
   data () {
     return {
-        imageSrc: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1535632840778&di=62f69c4ea48467a23e329575053443f5&imgtype=0&src=http%3A%2F%2Fpic-cdn.35pic.com%2F58pic%2F19%2F55%2F11%2F91j58PICIyv_1024.jpg',
-        width: 300,
-        height: 150,
-        olddistance: 0,
-        newdistance: 0,
-        diffdistance: '',
-        Scale: 1,
-        baseHeight: '',
-        baseWidth: '',
-        x: '',
-        y: '',
-        imgx: '',
-        imgy: ''
+      imageSrc: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1535632840778&di=62f69c4ea48467a23e329575053443f5&imgtype=0&src=http%3A%2F%2Fpic-cdn.35pic.com%2F58pic%2F19%2F55%2F11%2F91j58PICIyv_1024.jpg',
+      width: 300,
+      height: 150,
+      olddistance: 0,
+      newdistance: 0,
+      diffdistance: '',
+      Scale: 1,
+      baseHeight: '',
+      baseWidth: '',
+      x: '',
+      y: '',
+      imgx: '',
+      imgy: ''
     }
   },
   methods: {
@@ -73,47 +73,47 @@ export default {
       })
     },
     scroll (e) {
-        if (e.mp.touches.length === 2) {
-            let xMove = e.mp.touches[1].clientX - e.mp.touches[0].clientX
-            let yMove = e.mp.touches[1].clientY - e.mp.touches[0].clientY
-            let distance = Math.sqrt(xMove * xMove + yMove * yMove)
-            if (this.olddistance === 0) {
-                this.olddistance = distance
-            } else {
-                this.newdistance = distance
-                this.diffdistance = this.newdistance - this.olddistance
-                this.olddistance = this.newdistance
-                this.Scale = this.Scale + 0.005 * this.diffdistance
-                console.log(this.Scale)
-                if (this.Scale > 2.5) {
-                    return
-                } else if (this.Scale < 1) {
-                    return
-                }
-                this.height = 150 * this.Scale
-                this.width = 300 * this.Scale
-            }
+      if (e.mp.touches.length === 2) {
+        let xMove = e.mp.touches[1].clientX - e.mp.touches[0].clientX
+        let yMove = e.mp.touches[1].clientY - e.mp.touches[0].clientY
+        let distance = Math.sqrt(xMove * xMove + yMove * yMove)
+        if (this.olddistance === 0) {
+          this.olddistance = distance
+        } else {
+          this.newdistance = distance
+          this.diffdistance = this.newdistance - this.olddistance
+          this.olddistance = this.newdistance
+          this.Scale = this.Scale + 0.005 * this.diffdistance
+          console.log(this.Scale)
+          if (this.Scale > 2.5) {
+            return
+          } else if (this.Scale < 1) {
+            return
+          }
+          this.height = 150 * this.Scale
+          this.width = 300 * this.Scale
         }
+      }
     },
     endTou (e) {
-        this.olddistance = 0
-        this.getRect()
+      this.olddistance = 0
+      this.getRect()
     },
     getRect () {
-        let _this = this
-        this.$createSelectorQuery().select('.FilePath').boundingClientRect(function (rect) {
-            _this.x = Math.abs(rect.left)
-            _this.y = Math.abs(rect.top)
-        }).exec()
-        this.$createSelectorQuery().select('.imgPath').boundingClientRect(function (rect) {
-            _this.imgx = Math.abs(rect.left)
-            _this.imgy = Math.abs(rect.top)
-        }).exec()
+      let _this = this
+      this.$createSelectorQuery().select('.FilePath').boundingClientRect(function (rect) {
+        _this.x = Math.abs(rect.left)
+        _this.y = Math.abs(rect.top)
+      }).exec()
+      this.$createSelectorQuery().select('.imgPath').boundingClientRect(function (rect) {
+        _this.imgx = Math.abs(rect.left)
+        _this.imgy = Math.abs(rect.top)
+      }).exec()
     }
   },
   onReady () {
     if (this.picIndexSrc) {
-        this.imageSrc = this.picIndexSrc
+      this.imageSrc = this.picIndexSrc
     }
     this.loadImage()
   }

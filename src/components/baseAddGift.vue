@@ -20,8 +20,8 @@
 <script>
 export default {
   props: ['addGiftPic', 'showCanvas', 'giftImgSrc',
-          'index', 'deleteGiftList', 'itemNameChange',
-          'itemNumChange', 'itemName', 'itemNum']
+    'index', 'deleteGiftList', 'itemNameChange',
+    'itemNumChange', 'itemName', 'itemNum']
 }
 </script>
 
