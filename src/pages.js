@@ -21,7 +21,6 @@ module.exports = [{
   config: {
     navigationBarTitleText: '赚金豆',
     enablePullDownRefresh: false,
-    disableScroll: true
   }
 }, {
   path: 'pages/meIntegral/index',
