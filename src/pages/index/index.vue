@@ -2,7 +2,18 @@
   <div class='index'>
     <!-- <load :isshow="isloadShow" /> -->
     <top :hideIcone='true' title="公共抽奖" />
-    <div class="head">
+    <div class="head-line">
+      <div>
+        <span class='left'>
+          我的金豆：{{score+''}}
+        </span>
+        <a class='right' open-type="switchTab" href="/pages/obtainGoldBean/index" >
+          赚金豆&nbsp;>
+        </a>
+        <div class="c"></div>
+      </div>
+    </div>
+    <!-- <div class="head">
       <img src="/static/img/bitmap.png" alt="">
       <div>
         <span class='left'>
@@ -28,10 +39,10 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
     <!-- 活动列表 -->
     <div class="activitieList">
-      <activitieList :list="activitieList" />
+      <activitieList :onDraw="onLuckyDraw" :willDraw="willLuckDraw" />
     </div>
     <!-- 活动列表结束 -->
     <signIn :signInCB = "signInCB" :showModel="!isModel"/>
@@ -101,7 +112,9 @@ const mta = require('@/common/js/mta_analysis.js')
         isModel: true,
         score: 0,
         scoreCounters: {},
-        number: 0
+        number: 0,
+        onLuckyDraw: [],
+        willLuckDraw: []
       }
     },
     onPullDownRefresh () {
@@ -147,11 +160,13 @@ const mta = require('@/common/js/mta_analysis.js')
       getActivitieList (pageNum = 1, pageSize = 20) {
         if (this.complete || this.isGet) return false
         this.isGet = true
+        this.onLuckyDraw = []
+        this.willLuckDraw = []
         ActivitiesService.getList({
           type: 'PLATFORM_LUCKY_DRAW',
           status: 'CREATED',
           append: 'BET_NUM',
-          startTimeLt: new Date().getTime(),
+          // startTimeLt: new Date().getTime(),
           pageNum,
           pageSize
         }).then((res) => {
@@ -169,6 +184,13 @@ const mta = require('@/common/js/mta_analysis.js')
               this.onPullDownRefresh = false
             }
             this.activitieList = [...oldActivitieList, ...res.data]
+            this.activitieList.forEach((activitieData) => {
+              if (date > activitieData.startTime) {
+                this.onLuckyDraw.push(activitieData)
+              } else {
+                this.willLuckDraw.push(activitieData)
+              }
+            })
             this.pageNum++
             if (this.activitieList.length >= res.total) this.complete = true
           }

@@ -1,44 +1,50 @@
 <template>
   <div>
-    <a v-if='list.length > 0' class="list" v-for="(item , i) in list" :href='item.url'>
-      <div class='state' v-if='item.isOpen'>
-        正在抽奖 <i class="icon iconfont icon-Fillx"></i>
-      </div>
-      <div  class='state' v-else>
-        即将开始
-      </div>
+    <div class='state'>
+      正在抽奖<i class="icon iconfont icon-Fillx"></i>
+    </div>
+    <a v-if='onDraw.length > 0' class="list" v-for="(item , i) in onDraw" :href="item.url" :key="i">
       <img mode='aspectFit' :src='item.media[0].url'>
       <!-- <img mode='aspectFit' src='https://oss.qianbaocard.org/20180816/4802d958a0a54dbb8f0928d1e7f19141.jpg'> -->
-      <div class="prompt antialiased">
+      <!-- <div class="prompt antialiased">
         <div class="left">
         剩余<span>{{0+item.metadata.ticketsNum-item.betNum}}</span> 注
         </div>
         <div class="right">
           |  满{{item.metadata.ticketsNum}}注开奖
         </div>
-      </div>
+      </div> -->
       <div class="name antialiased">
-        {{item.name}}
+        [ 奖品 ]&nbsp;&nbsp;{{item.name}}
       </div>
-      <div class="goldBean">
-        <img src='/static/img/goldBean.png'>
-        <text class='bold'>
-          &nbsp;&nbsp;{{item.metadata.price}} 金豆 1 注
-        </text>
-        <!-- <span>
-          ¥8799
-        </span> -->
-      </div>
-      <div class="button">
-        <button v-if='item.isOpen'>
-          去抽奖
-        </button>
-        <div v-else>
-          马上预约
+      <div v-if="activitie.metadata.drawRule === 'full'" style="margin-top: 5rpx;">
+        <span class="goldBean">
+          <!-- <img src='/static/img/goldBean.png'>
+          <text class='bold'>
+            &nbsp;&nbsp;{{item.metadata.price}} 金豆 1 注
+          </text> -->
+          满<span style="color:red">{{item.metadata.ticketsNum}}</span>注开奖
+          <!-- <span>
+            ¥8799
+          </span> -->
+        </span>
+        <div class="fullGoldBean">
+          {{item.metadata.price}}
+          <img src='/static/img/goldBean.png' style="width:10px;height:10px;" />/注
         </div>
       </div>
+      <div v-if="activitie.metadata.drawRule === 'timed'" style="margin-top: 5rpx;">
+          <span class="goldBean">
+            <span style="color:red">{{activitie.endTime}}</span>开奖
+          </span>
+      </div>
+      <div v-if="activitie.metadata.drawRule === 'fullParticipant'" style="margin-top: 5rpx;">
+            <span class="goldBean">
+              满<span style="color:red">{{activitie.metadata.participantsNum}}</span>人开奖
+            </span>
+      </div>
     </a>
-    <div class="v" v-if='list.length === 0'>
+    <div class="v" v-if='onDraw.length === 0'>
       <img mode='widthFix' src="/static/img/v.png" />
       <br />
       <text>
@@ -51,10 +57,7 @@
 <script>
   export default {
     name: 'activitieList',
-    props: ['list'],
-    onload () {
-      console.log('111', this.list)
-    }
+    props: ['onDraw', 'willDraw']
   }
 </script>
 
@@ -91,19 +94,26 @@
 .list{
   padding: 30*@1 15*@2 0;
   background: #FFFFFF;
-  margin-bottom: 10*@2;
 }
 .state{
-  padding-top:18rpx;
-  font-size: 40rpx;
+  font-size: 32rpx;
   line-height: 48rpx;
   font-weight: bold;
+  padding-top: 40*@2;
+  padding-left: 10*@2;
+  background-color: white;
   display: flex;
   i{
     color: #FE4C52;
-    margin-left: 4*@1
+    margin-left: 10*@1;
+    font-size: 28rpx;
   }
 
+}
+.fullGoldBean {
+  font-size: 12*@2;
+  float: right;
+  color: #F3B913;
 }
 img {
   width: 345*@2;
@@ -112,7 +122,7 @@ img {
 }
 .name{
   color: #434343;
-  font-size: 16*@2;
+  font-size: 14*@2;
   line-height: 20*@2;
   margin-top: 10*@2;
   font-weight: bold;
@@ -121,8 +131,8 @@ img {
   overflow:hidden;
 }
 .goldBean{
-  display: flex;
-  margin-top: 10*@2;
+  color: #888888;
+  font-size: 12*@2;
   img{
     width: 15*@2;
     height: 14*@2;
@@ -133,15 +143,14 @@ img {
     font-size: 14*@2;
     line-height: 18*@2
   }
-  span{
+  /* span{
     text-decoration:line-through;
     font-size:14*@2;
     line-height: 17*@2;
     color: #434343;
     flex:1;
     text-align:right;
-
-  }
+  } */
 }
 .button{
   padding:24*@2;

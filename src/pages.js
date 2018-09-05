@@ -84,17 +84,40 @@ module.exports = [{
     backgroundColor: '#00000000'
   }
 }, {
-  path: 'pages/meCreate/index',
+  path: 'pages/createActivities/createActivities',
   config: {
-    navigationBarTitleText: '我发起的',
-    disableScroll: true,
-    backgroundColor: '#00000000'
+    navigationBarTitleText: '发起抽奖',
+    enablePullDownRefresh: true
   }
 }, {
-  path: 'pages/commonQuestion/index',
+  path: 'pages/myActivityDetail/myActivityDetail',
+  config: {
+    navigationBarTitleText: '详情',
+    enablePullDownRefresh: true
+  }
+}, {
+  path: 'pages/baseCreateActivity/createActivities',
+  config: {
+    navigationBarTitleText: '发起抽奖',
+    enablePullDownRefresh: true
+  }
+}, {
+  path: '/pages/myActivitiesDetails/index',
+  config: {
+    navigationBarTitleText: '详情',
+    enablePullDownRefresh: true
+  }
+}, {
+  path: '/pages/commonQuestion/index',
   config: {
     navigationBarTitleText: '常见问题',
-    disableScroll: true,
-    backgroundColor: '#00000000'
+    enablePullDownRefresh: true
   }
-}]
+}, {
+  path: '/pages/meCreate/index',
+  config: {
+    navigationBarTitleText: '常见问题',
+    enablePullDownRefresh: true
+  }
+}
+]

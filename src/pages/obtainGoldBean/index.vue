@@ -83,7 +83,7 @@
       </div>
       <div class="right" @click="shareWx" style="padding:10px 0 10px 0">
         <button v-if="shareRule.maxStep > shareNumber" open-type="share">
-          领取 {{shareNumber}} /{{(shareRule.maxStep - shareNumber)<0?0:(shareRule.maxStep - shareNumber)}}
+          领取 {{shareNumber}} /{{(shareRule.maxStep - shareNumber)<0?0:(shareRule.maxStep)}}
         </button>
         <div v-else class='complete'>
           今日已领完

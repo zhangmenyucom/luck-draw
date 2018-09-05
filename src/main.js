@@ -46,6 +46,11 @@ export default {
         'pagePath': 'pages/index/index',
         'text': '抽奖'
       }, {
+        'iconPath': 'static/img/createDraw.png',
+        'selectedIconPath': 'static/img/createDraw1.png',
+        'pagePath': 'pages/baseCreateActivity/createActivities',
+        'text': '发起抽奖'
+      }, {
         'iconPath': 'static/img/obtain-normal.png',
         'selectedIconPath': 'static/img/obtain.png',
         'pagePath': 'pages/obtainGoldBean/index',
