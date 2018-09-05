@@ -17,30 +17,30 @@
       <div class="name antialiased">
         [ 奖品 ]&nbsp;&nbsp;{{item.name}}
       </div>
-      <div v-if="activitie.metadata.drawRule === 'full'" style="margin-top: 5rpx;">
+      <div v-if="item.metadata.drawRule === 'full'">
         <span class="goldBean">
           <!-- <img src='/static/img/goldBean.png'>
           <text class='bold'>
             &nbsp;&nbsp;{{item.metadata.price}} 金豆 1 注
           </text> -->
-          满<span style="color:red">{{item.metadata.ticketsNum}}</span>注开奖
+          满<span style="color:red;">{{item.metadata.ticketsNum}}</span>注开奖
           <!-- <span>
             ¥8799
           </span> -->
         </span>
         <div class="fullGoldBean">
           {{item.metadata.price}}
-          <img src='/static/img/goldBean.png' style="width:10px;height:10px;" />/注
+          <img src='/static/img/goldBean.png' style="width:15px;height:14px;position:relative;top:2px;margin-top:8px;" />/注
         </div>
       </div>
-      <div v-if="activitie.metadata.drawRule === 'timed'" style="margin-top: 5rpx;">
+      <div v-if="item.metadata.drawRule === 'timed'" style="margin-top: 5rpx;">
           <span class="goldBean">
-            <span style="color:red">{{activitie.endTime}}</span>开奖
+            <span style="color:red">{{item.endTime}}</span>开奖
           </span>
       </div>
-      <div v-if="activitie.metadata.drawRule === 'fullParticipant'" style="margin-top: 5rpx;">
+      <div v-if="item.metadata.drawRule === 'fullParticipant'" style="margin-top: 5rpx;">
             <span class="goldBean">
-              满<span style="color:red">{{activitie.metadata.participantsNum}}</span>人开奖
+              满<span style="color:red">{{item.metadata.participantsNum}}</span>人开奖
             </span>
       </div>
     </a>
@@ -92,28 +92,33 @@
   }
 }
 .list{
-  padding: 30*@1 15*@2 0;
+  padding: 32*@1 15*@2 0;
   background: #FFFFFF;
+  margin-bottom: 18*@1;
 }
 .state{
-  font-size: 32rpx;
+  font-size: 40rpx;
   line-height: 48rpx;
-  font-weight: bold;
-  padding-top: 40*@2;
+  font-family: PingFangSC-Semibold;
+  font-weight:600;
+  color:rgba(67,67,67,1);
+  padding-top: 46*@2;
   padding-left: 10*@2;
   background-color: white;
   display: flex;
   i{
     color: #FE4C52;
-    margin-left: 10*@1;
+    margin-left: 16*@1;
     font-size: 28rpx;
   }
 
 }
 .fullGoldBean {
-  font-size: 12*@2;
+  font-size: 14*@2;
+  font-family: PingFangSC-Semibold;
   float: right;
-  color: #F3B913;
+  font-weight:600;
+  color:rgba(243,185,19,1);
 }
 img {
   width: 345*@2;
@@ -121,28 +126,21 @@ img {
   margin-top: 15*@2;
 }
 .name{
-  color: #434343;
-  font-size: 14*@2;
+  font-size: 16*@2;
   line-height: 20*@2;
-  margin-top: 10*@2;
-  font-weight: bold;
+  margin-top: 16*@2;
+  font-family:PingFangSC-Semibold;
+  font-weight:600;
+  color:rgba(67,67,67,1);
   text-overflow:ellipsis;
   white-space:nowrap;
   overflow:hidden;
 }
 .goldBean{
-  color: #888888;
-  font-size: 12*@2;
-  img{
-    width: 15*@2;
-    height: 14*@2;
-    margin-top: 2*@2;
-  }
-  text {
-    color: #F3B913;
-    font-size: 14*@2;
-    line-height: 18*@2
-  }
+  color:rgba(102,102,102,1);
+  font-family: PingFangSC-Regular;
+  font-size: 14*@2;
+  font-weight:400;
   /* span{
     text-decoration:line-through;
     font-size:14*@2;

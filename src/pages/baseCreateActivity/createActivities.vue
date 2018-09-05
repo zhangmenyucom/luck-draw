@@ -9,13 +9,13 @@
                 :itemNameChange="itemNameChange" :itemNumChange="itemNumChange"
                 :itemName="itemName" :itemNum="itemNum" />
             </div>
-            <div class="weui-cells weui-cells_after-title" style="margin-top: 10px;">
+            <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
                 <div class="weui-cell weui-cell_access border-middle">
                     <div class="weui-cell__bd">开奖方式</div>
                     <div class="weui-cell__ft">
                       <radio-group class="radio-group" @change="radioChange">
-                          <radio style="transform:scale(0.6);position:relative;left:5px;bottom:2px" value="timed" color="red" checked="true"/>到时间
-                          <radio style="transform:scale(0.6);position:relative;left:5px;bottom:2px" value="fullParticipant" color="red" />满人数
+                          <radio style="transform:scale(0.7);position:relative;left:5px;bottom:2px" value="timed" color="red" checked="true"/>到时间
+                          <radio style="transform:scale(0.7);position:relative;left:5px;bottom:2px" value="fullParticipant" color="red" />满人数
                       </radio-group>
                     </div>
                 </div>
@@ -29,17 +29,17 @@
                 <div v-if="drawRule === 'fullParticipant'" class="weui-cell weui-cell_access">
                     <div class="weui-cell__bd">开奖人数 <span style="color: red">*</span></div>
                     <input type="number" placeholder="数量" @input="fullParticipantNum" class="weui-cell__ft" style="color:black;display: inline;vertical-align: middle;" />
-                    <span class="weui-cell__ft" style="color:black;margin-left:5px;vertical-align: middle;">人</span>
+                    <span class="weui-cell__ft" style="margin-left:5px;vertical-align: middle;">人</span>
                 </div>
             </div>
-            <div class="weui-cells weui-cells_after-title" style="margin-top: 10px;">
-                <div class="weui-cell weui-cell_access" style="padding:5px 0;">
+            <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
+                <div class="weui-cell weui-cell_access" style="padding:5px 0">
                     <div class="weui-cell__bd">允许参与者分享</div>
-                    <switch class="weui-cell__ft" checked @change="switchChange" style="transform:scale(0.6);position:relative;left:15px" />
+                    <switch class="weui-cell__ft" checked @change="switchChange" style="transform:scale(0.8);position:relative;left:10px" />
                 </div>
             </div>
-            <div class="uperAddActivity" @click="navToUper"><span>使用高级版&nbsp;&nbsp;></span></div>
-            <div class="createButton">
+            <div class="uperAddActivity" @click="navToUper"><span>使用高级版&nbsp;></span></div>
+            <div class="weui-cells weui-cells_after-title" style="margin-top: 48px;padding:8px 15px;">
                 <div class="createActivities" @click="createActivity">发起抽奖</div>
             </div>
         </div>
