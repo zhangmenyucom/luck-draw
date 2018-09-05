@@ -14,41 +14,40 @@
                     <div>+添加奖项</div>
                 </div>
             </div>
-            <div class="weui-cells weui-cells_after-title" style="margin-top: 10px;">
+            <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
                 <div class="weui-cell weui-cell_access border-middle">
                     <div class="weui-cell__bd">抽奖说明</div>
-                    <span class="weui-cell__ft" style="color:black;">{{prizeTextLength}}/100</span>
+                    <span class="weui-cell__ft" style="font-size:12px;font-family:PingFangSC-Regular;font-weight:400;color:rgba(153,153,153,1);">{{prizeTextLength}}/100</span>
                 </div>
                 <div class="weui-cell weui-cell_access">
                     <textarea class="weui-cell__bd" placeholder="请输入" maxlength="100" auto-height="true" @input="prizeExplain"></textarea>
                 </div>
             </div>
-            <div class="weui-cells weui-cells_after-title" style="margin-top: 10px;">
+            <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
                 <div class="weui-cell weui-cell_access border-middle">
                     <div class="weui-cell__bd">奖品介绍</div>
-                    <span class="weui-cell__ft" style="color:black;">{{giftTextLength}}/100</span>
+                    <span class="weui-cell__ft" style="font-size:12px;font-family:PingFangSC-Regular;font-weight:400;color:rgba(153,153,153,1);">{{giftTextLength}}/100</span>
                 </div>
-                <div class="weui-cell weui-cell_access turnLine">
-                    <div class="addPicture" @click="addPicture">
-                      <img src="../../../static/img/pictureIcon.png" class="addPicIcon" />
-                      <span class="addPicText">添加图片</span>
-                    </div>
+                <div class="turnLine">
+                    <img src="../../../static/img/addPrizePic.png" class="addPicture" @click="addPicture" />
                     <div v-if="showGiftPictures" v-for="(item, index) in giftPictures" :key="index" class="showPicDiv">
-                      <img :src="item" style="width:100px;height:50px;vertical-align:top;">
-                      <img src="../../../static/img/delete.png" class="deleteIcon" @click="deleteGiftPic(index)" />
+                      <img :src="item" style="width:110px;height:55px;vertical-align:top;">
+                      <div class="deleteIconDiv" @click="deleteGiftPic(index)">
+                        <img src="../../../static/img/delete.png" class="deleteIcon" />
+                      </div>
                     </div>
                 </div>
                 <div class="weui-cell weui-cell_access">
                     <textarea class="weui-cell__bd" placeholder="请输入" maxlength="100" auto-height="true" @input="giftExplain"></textarea>
                 </div>
             </div>
-            <div class="weui-cells weui-cells_after-title" style="margin-top: 10px;">
+            <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
                 <div class="weui-cell weui-cell_access border-middle">
                     <div class="weui-cell__bd">开奖方式</div>
                     <div class="weui-cell__ft">
                       <radio-group class="radio-group" @change="radioChange">
-                          <radio style="transform:scale(0.6);position:relative;left:5px;bottom:2px" value="timed" color="red" checked="true"/>到时间
-                          <radio style="transform:scale(0.6);position:relative;left:5px;bottom:2px" value="fullParticipant" color="red" />满人数
+                          <radio style="transform:scale(0.7);position:relative;left:5px;bottom:2px" value="timed" color="red" checked="true"/>到时间
+                          <radio style="transform:scale(0.7);position:relative;left:5px;bottom:2px" value="fullParticipant" color="red" />满人数
                       </radio-group>
                     </div>
                 </div>
@@ -62,16 +61,17 @@
                 <div v-if="drawRule === 'fullParticipant'" class="weui-cell weui-cell_access">
                     <div class="weui-cell__bd">开奖人数 <span style="color: red">*</span></div>
                     <input type="number" placeholder="数量" @input="fullParticipantNum" class="weui-cell__ft" style="color:black;display: inline;vertical-align: middle;" />
-                    <span class="weui-cell__ft" style="color:black;margin-left:5px;vertical-align: middle;">人</span>
+                    <span class="weui-cell__ft" style="margin-left:5px;vertical-align: middle;">人</span>
                 </div>
             </div>
-            <div class="weui-cells weui-cells_after-title" style="margin-top: 10px;">
+            <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
                 <div class="weui-cell weui-cell_access" style="padding:5px 0">
                     <div class="weui-cell__bd">允许参与者分享</div>
-                    <switch class="weui-cell__ft" checked @change="switchChange" style="transform:scale(0.6);position:relative;left:15px" />
+                    <switch class="weui-cell__ft" checked @change="switchChange" style="transform:scale(0.8);position:relative;left:10px" />
                 </div>
             </div>
-            <div class="weui-cells weui-cells_after-title" style="margin-top: 50px;padding:5px 25px;">
+            <div class="uperAddActivity" @click="navToUper"><span>使用基本版&nbsp;></span></div>
+            <div class="weui-cells weui-cells_after-title" style="margin-top: 48px;padding:8px 15px;">
                 <div class="createActivities" @click="createActivity">发起抽奖</div>
             </div>
         </div>
@@ -322,7 +322,12 @@
           this.jsonString = JSON.stringify(jsonArr)
           console.log(this.jsonString)
         },
+        navToUper () {
+          this.$switchTab('/pages/baseCreateActivity/createActivities')
+        },
         createActivity () {
+          const query = this.$createSelectorQuery()
+          console.log(query.select('#GiftName'))
           this.dataHandle()
           CreatePersonalActivity.createActivity({
             sellerId: 'system',
@@ -338,7 +343,7 @@
               isShare: this.isShare
             }
           }).then(res => {
-            console.log(res)
+            this.$navigateTo(`/pages/myActivitiesDetails/index?id=${res.data.id}`)
           })
         }
       },

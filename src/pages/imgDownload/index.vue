@@ -28,6 +28,7 @@ export default {
     }
   },
   onLoad (data) {
+    console.log(data)
     this.title = data.title
     this.url = data.url
   },
