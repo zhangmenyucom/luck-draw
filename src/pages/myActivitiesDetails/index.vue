@@ -7,25 +7,13 @@
       <!-- <meIntegral :score='score'/> -->
       <div class="activitiesDetails">
         <img mode='aspectFit' :src="activitie.media[0].url">
-        <div class="prompt antialiased">
-          <div class="left" v-if='(0+activitie.metadata.ticketsNum-betNum) != 0'>
-            剩余<span>{{0+activitie.metadata.ticketsNum-betNum}}</span> 注
-          </div>
-          <div class="left" v-else>
-            <span>已满注</span>
-          </div>
-          <div class="right">
-            |  满<span>{{activitie.metadata.ticketsNum}}</span>&nbsp;注开奖
-          </div>
-        </div>
         <div class="name antialiased">
-          <span>「奖品」</span>{{prize.name}}&nbsp;<span>X&nbsp;{{prize.metadata.num}}</span>
+          <span>[奖品]&nbsp;{{prize.name}}</span>
         </div>
         <!-- 中间提示 -->
-        <div class="goldBean">
-          <img src='/static/img/goldBean.png'>
+        <div v-if="activitie.metadata.drawRule === 'timed'" class="goldBean">
           <text class='bold'>
-            {{activitie.metadata.price}} 金豆 1 注
+            <span style="color:red">{{activitie.endTime}}</span>开奖
           </text>
       <!-- <span>
         ¥{{prize.price}}
@@ -33,6 +21,21 @@
       <!-- <div>
         <i />中奖规则 {{state}}
       </div> -->
+    </div>
+    <div v-if="activitie.metadata.drawRule === 'fullTicket'" class="goldBean">
+          <text class='bold'>
+            满{{activitie.metadata.ticketsNum}}注自动开奖，剩余{{activitie.metadata.ticketsNum-activitie.betNum}}注
+          </text>
+          <!-- <img src='/static/img/goldBean.png'>
+          <text class='bold'>
+            {{activitie.metadata.price}} 金豆 1 注
+          </text> -->
+    </div>
+    <div v-if="activitie.metadata.drawRule === 'fullParticipant'" class="goldBean">
+          <img src='/static/img/goldBean.png'>
+          <text class='bold'>
+            {{activitie.metadata.price}} 金豆 1 注
+          </text>
     </div>
     <div v-if="prize.name == '定制真爱马克杯'">
       <div class='hei' />
@@ -247,7 +250,7 @@
   import signIn from '@/components/signIn'
   import top from '@/components/top'
   import FootprintsActivities from '@/services/footprintsActivities'
-  import ActivitiesService from '@/services/activitiesService'
+  import ActivitiesService from '@/services/getMyActivityDetail'
   import ParticipantsService from '@/services/participantsService'
   import { getUserInfo } from '@/utils'
   import MeScoresService from '@/services/meScoresService.js'
@@ -334,8 +337,7 @@
       getActivitie (id) { // 获取活动详情
         const userInfo = getUserInfo()
         ActivitiesService.get({
-          id,
-          append: 'BET_NUM'
+          id
         }).then((res) => {
           if (res.code === 0) {
             if (res.data.metadata.ticketsNum) {

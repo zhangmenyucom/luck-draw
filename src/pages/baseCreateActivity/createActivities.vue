@@ -9,39 +9,6 @@
                 :itemNameChange="itemNameChange" :itemNumChange="itemNumChange"
                 :itemName="itemName" :itemNum="itemNum" />
             </div>
-            <div class="addGift_div">
-                <div class="add_gift" @click="addGift">
-                    <div>+添加奖项</div>
-                </div>
-            </div>
-            <div class="weui-cells weui-cells_after-title" style="margin-top: 10px;">
-                <div class="weui-cell weui-cell_access border-middle">
-                    <div class="weui-cell__bd">抽奖说明</div>
-                    <span class="weui-cell__ft" style="color:black;">{{prizeTextLength}}/100</span>
-                </div>
-                <div class="weui-cell weui-cell_access">
-                    <textarea class="weui-cell__bd" placeholder="请输入" maxlength="100" auto-height="true" @input="prizeExplain"></textarea>
-                </div>
-            </div>
-            <div class="weui-cells weui-cells_after-title" style="margin-top: 10px;">
-                <div class="weui-cell weui-cell_access border-middle">
-                    <div class="weui-cell__bd">奖品介绍</div>
-                    <span class="weui-cell__ft" style="color:black;">{{giftTextLength}}/100</span>
-                </div>
-                <div class="weui-cell weui-cell_access turnLine">
-                    <div class="addPicture" @click="addPicture">
-                      <img src="../../../static/img/pictureIcon.png" class="addPicIcon" />
-                      <span class="addPicText">添加图片</span>
-                    </div>
-                    <div v-if="showGiftPictures" v-for="(item, index) in giftPictures" :key="index" class="showPicDiv">
-                      <img :src="item" style="width:100px;height:50px;vertical-align:top;">
-                      <img src="../../../static/img/delete.png" class="deleteIcon" @click="deleteGiftPic(index)" />
-                    </div>
-                </div>
-                <div class="weui-cell weui-cell_access">
-                    <textarea class="weui-cell__bd" placeholder="请输入" maxlength="100" auto-height="true" @input="giftExplain"></textarea>
-                </div>
-            </div>
             <div class="weui-cells weui-cells_after-title" style="margin-top: 10px;">
                 <div class="weui-cell weui-cell_access border-middle">
                     <div class="weui-cell__bd">开奖方式</div>
@@ -66,12 +33,13 @@
                 </div>
             </div>
             <div class="weui-cells weui-cells_after-title" style="margin-top: 10px;">
-                <div class="weui-cell weui-cell_access" style="padding:5px 0">
+                <div class="weui-cell weui-cell_access" style="padding:5px 0;">
                     <div class="weui-cell__bd">允许参与者分享</div>
                     <switch class="weui-cell__ft" checked @change="switchChange" style="transform:scale(0.6);position:relative;left:15px" />
                 </div>
             </div>
-            <div class="weui-cells weui-cells_after-title" style="margin-top: 50px;padding:5px 25px;">
+            <div class="uperAddActivity" @click="navToUper"><span>使用高级版&nbsp;&nbsp;></span></div>
+            <div class="createButton">
                 <div class="createActivities" @click="createActivity">发起抽奖</div>
             </div>
         </div>
@@ -83,7 +51,7 @@
 
 <script>
     import top from '@/components/top'
-    import addGiftComp from '@/components/addGift'
+    import addGiftComp from '@/components/baseAddGift'
     import chooseImage from '@/components/chooseImage'
     import CreatePersonalActivity from '@/services/createPersonalActivity'
 
@@ -128,13 +96,6 @@
         chooseImage
       },
       methods: {
-        addGift () {
-          let gl = this.giftList
-          gl.push(true)
-          this.giftList = gl
-          this.giftItems.push({id: 'system', name: '', metadata: {url: '', num: 0}})
-          this.giftImgSrc.push('/static/img/defaultPic.jpg')
-        },
         addGiftPic (index, picIndexSrc) {
           this.addPic = !this.addPic
           this.picIndex = index
@@ -150,21 +111,6 @@
           this.itemNum[itemNumIndex] = e.mp.detail.value
           this.giftItems[itemNumIndex].metadata.num = e.mp.detail.value
         },
-        deleteGiftList (index) {
-          this.giftList.splice(index, 1)
-          if (this.giftImgSrc[index]) {
-            this.giftImgSrc.splice(index, 1)
-          }
-          if (this.itemName[index]) {
-            this.itemName.splice(index, 1)
-          }
-          if (this.itemNum[index]) {
-            this.itemNum.splice(index, 1)
-          }
-          if (this.giftItems[index]) {
-            this.giftItems.splice(index, 1)
-          }
-        },
         showImage (src, index) {
           this.addPic = !this.addPic
           if (this.giftList[index]) {
@@ -172,22 +118,6 @@
           }
           this.giftImgSrc[index] = src
           this.giftItems[index].metadata.url = src
-        },
-        prizeExplain (e) {
-          this.prizeTextLength = e.mp.detail.value.length
-        },
-        giftExplain (e) {
-          this.giftTextLength = e.mp.detail.value.length
-          this.prizeDescription = e.mp.detail.value
-        },
-        addPicture () {
-          this.$chooseImage().then(res => {
-            this.giftPictures.push(res.tempFilePaths[0])
-            this.showGiftPictures = true
-          })
-        },
-        deleteGiftPic (index) {
-          this.giftPictures.splice(index, 1)
         },
         radioChange (e) {
           this.drawRule = e.mp.detail.value
@@ -312,6 +242,9 @@
         switchChange (e) {
           this.isShare = e.mp.detail.value
         },
+        navToUper () {
+          this.$navigateTo('/pages/createActivities/createActivities')
+        },
         dataHandle () {
           this.prizeEndTime = new Date(this.dateTime).getTime()
           let jsonArr = []
@@ -338,7 +271,7 @@
               isShare: this.isShare
             }
           }).then(res => {
-            console.log(res)
+            this.$navigateTo(`/pages/myActivitiesDetails/index?id=${res.data.id}`)
           })
         }
       },
