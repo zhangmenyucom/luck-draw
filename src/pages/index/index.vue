@@ -8,7 +8,7 @@
           我的金豆：{{score+''}}
         </span>
         <a class='right' open-type="switchTab" href="/pages/obtainGoldBean/index" >
-          赚金豆&nbsp;>
+          赚金豆&nbsp;&nbsp;>
         </a>
         <div class="c"></div>
       </div>

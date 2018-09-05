@@ -1,9 +1,10 @@
 <template>
     <div>
         <div class="vip-card">
-            <img @click="addGiftPic(index, giftImgSrc)" :src="giftImgSrc" style="width:660rpx;height:330rpx;" />
+            <img :src="giftImgSrc" style="width:690rpx;height:345rpx;" />
+            <div @click="addGiftPic(index, giftImgSrc)" class="changeGiftPic">更换奖品图片</div>
         </div>
-        <div class="weui-cells weui-cells_after-title" style="margin-top: 10px;">
+        <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
             <div class="weui-cell weui-cell_access border-middle">
                 <img src="../../static/img/delete.png" class="deleteListIcon" @click="deleteGiftList(index)" />
                 <div class="weui-cell__bd">奖品名称 <span style="color: red;">*</span></div>
