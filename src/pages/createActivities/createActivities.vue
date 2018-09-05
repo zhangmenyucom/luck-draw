@@ -1,6 +1,6 @@
 <template>
     <div class="page">
-        <top :hideIcone='true' title="新建抽奖" />
+        <top title="新建抽奖" />
         <div v-if="!addPic">
             <div v-for="(item,index) in giftList" :key="index">
                 <addGiftComp :addGiftPic="addGiftPic"
