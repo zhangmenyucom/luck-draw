@@ -18,6 +18,10 @@
         [ 奖品 ]&nbsp;&nbsp;{{item.name}}
       </div>
       <div v-if="item.metadata.drawRule === 'full'">
+        <span class="joined" v-if="item.metadata.participated">
+          <img style="width:23rpx;height:23rpx;margin-right:3px;" src="/static/img/Combined Shape.png" />
+          已参与 <span style="margin-left:8px;">|</span>
+        </span>
         <span class="goldBean">
           <!-- <img src='/static/img/goldBean.png'>
           <text class='bold'>
@@ -34,11 +38,19 @@
         </div>
       </div>
       <div v-if="item.metadata.drawRule === 'timed'" style="margin-top: 5rpx;">
+          <span class="joined" v-if="item.metadata.participated">
+            <img style="width:23rpx;height:23rpx;margin-right:3px;" src="/static/img/Combined Shape.png" />
+            已参与 <span style="margin-left:8px;">|</span>
+          </span>
           <span class="goldBean">
             <span style="color:red">{{item.endTime}}</span>开奖
           </span>
       </div>
       <div v-if="item.metadata.drawRule === 'fullParticipant'" style="margin-top: 5rpx;">
+            <span class="joined" v-if="item.metadata.participated">
+              <img style="width:23rpx;height:23rpx;margin-right:3px;" src="/static/img/Combined Shape.png" />
+              已参与 <span style="margin-left:8px;">|</span>
+            </span>
             <span class="goldBean">
               满<span style="color:red">{{item.metadata.participantsNum}}</span>人开奖
             </span>
@@ -149,6 +161,13 @@ img {
     flex:1;
     text-align:right;
   } */
+}
+.joined {
+  font-size:28rpx;
+  font-family:PingFangSC-Semibold;
+  font-weight:600;
+  color:rgba(253,183,0,1);
+  margin-right: 8px;
 }
 .button{
   padding:24*@2;

@@ -3,7 +3,7 @@ import request from './request'
 
 class CreatePersonalActivity extends ServiceBase {
   createActivity (data) {
-    return request.get(`${this.url}/${data.id}`, data)
+    return request.get(`${this.url}/${data.id}`)
   }
 }
 
