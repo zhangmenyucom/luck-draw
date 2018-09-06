@@ -104,7 +104,7 @@
           <br />
           {{item.score}}<img src="/static/img/goldBean.png" alt=""><text>/&nbsp;次</text> &nbsp;&nbsp;
         </div>
-        <navigator target='miniProgram' :app-id="{{item.appId}}" path='' @error='fail' @success="() => toXcx(item.appId)">{{shareRule.maxStep > shareNumber ? '领取' : '今日已领完'}}</navigator>
+        <navigator target='miniProgram' :app-id="item.appId" @error='fail' @success="() => toXcx(item.appId)">{{shareRule.maxStep > shareNumber ? '领取' : '今日已领完'}}</navigator>
         <div class="c"></div>
       </div>
     </div>
@@ -252,7 +252,7 @@
       mta.Page.init()
       this.$setStorageSync('signIn', false)
       // wx.navigateToMiniProgram({
-      //   appId: `wxe919ef1e5a100724`,
+      //   appId: `wxfb7be0751102cf64`,
       //   fail (err) {
       //     console.log('err', err)
       //   }
