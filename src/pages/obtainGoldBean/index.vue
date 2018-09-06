@@ -104,10 +104,11 @@
           <br />
           {{item.score}}<img src="/static/img/goldBean.png" alt=""><text>/&nbsp;次</text> &nbsp;&nbsp;
         </div>
-        <a href='/pages/infoDetail/index' target='miniProgram' open-type="navigate" :app-id="item.appId" path='' @success="() => toXcx(item.appId)">{{shareRule.maxStep > shareNumber ? '领取' : '今日已领完'}}</a>
+        <navigator target='miniProgram' :app-id="{{item.appId}}" path='' @error='fail' @success="() => toXcx(item.appId)">{{shareRule.maxStep > shareNumber ? '领取' : '今日已领完'}}</navigator>
         <div class="c"></div>
       </div>
     </div>
+
     <signIn :signInCB = "signInCB" :showModel = "!isModel"/>
   </div>
 </template>
@@ -115,7 +116,10 @@
 <script>
   import signIn from '@/components/signIn'
   import top from '@/components/top'
-  import {getUserInfo, check} from '@/utils'
+  import {
+    getUserInfo,
+    check
+  } from '@/utils'
   import DailyFootprintsService from '@/services/dailyFootprintsService'
   import ScoreRulesService from '@/services/scoreRulesService'
   import share from '@/common/js/share.js'
@@ -150,6 +154,9 @@
       top
     },
     methods: {
+      fail (err) {
+        console.log('err', err)
+      },
       getScoreRules () {
         ScoreRulesService.getList().then(res => {
           if (res.code === 0) {
@@ -169,13 +176,13 @@
             this.goldBean = [...Array(7)].map((v, i) => parseInt(goldBeanRules.base) + ((i + number) > parseInt(goldBeanRules.maxStep) ? parseInt(goldBeanRules.maxStep) : (i + number)) * parseInt(goldBeanRules.stepAdd))
           }
         })
-},
-signInCB (data) {
-  const signIn = this.$getStorageSync('signIn')
-  if (signIn) {
-    this.isModel = false
-  }
-  if (data.score) {
+      },
+      signInCB (data) {
+        const signIn = this.$getStorageSync('signIn')
+        if (signIn) {
+          this.isModel = false
+        }
+        if (data.score) {
           // 签到后 直接获取积分数
           this.score = data.score
         } else {
@@ -187,10 +194,14 @@ signInCB (data) {
         getMeScores.start(this)
       },
       shareWx () {
-        mta.Event.stat('share', {'method': '赚金豆分享'})
+        mta.Event.stat('share', {
+          'method': '赚金豆分享'
+        })
       },
       bindPhone () {
-        mta.Event.stat('bind_phone', {'from': '赚金豆页面'})
+        mta.Event.stat('bind_phone', {
+          'from': '赚金豆页面'
+        })
       },
       changeDisplay () {
         this.display = !this.display
@@ -240,28 +251,38 @@ signInCB (data) {
     onLoad () {
       mta.Page.init()
       this.$setStorageSync('signIn', false)
+      // wx.navigateToMiniProgram({
+      //   appId: `wxe919ef1e5a100724`,
+      //   fail (err) {
+      //     console.log('err', err)
+      //   }
+      // })
       // Footprints.add().then((res) => {
       //   if (res.code === 0) {
       //     this.appId = res.data.target.id
       //   }
       // })
-},
-onShow () {
-  const userInfo = getUserInfo()
-  if (userInfo.id) {
-    this.userInfo = userInfo
-    this.signInCB({})
-  } else {
-    this.isModel = true
+    },
+    onShow () {
+      const userInfo = getUserInfo()
+      if (userInfo.id) {
+        this.userInfo = userInfo
+        this.signInCB({})
+      } else {
+        this.isModel = true
+      }
+      if (!this.$getStorageSync('getBeanMethod')) {
+        mta.Event.stat('get_bean', {
+          'from': 'tab赚金豆'
+        })
+      } else {
+        mta.Event.stat('get_bean', {
+          'from': this.$getStorageSync('getBeanMethod')
+        })
+      }
+    },
+    onShareAppMessage: share()
   }
-  if (!this.$getStorageSync('getBeanMethod')) {
-    mta.Event.stat('get_bean', {'from': 'tab赚金豆'})
-  } else {
-    mta.Event.stat('get_bean', {'from': this.$getStorageSync('getBeanMethod')})
-  }
-},
-onShareAppMessage: share()
-}
 </script>
 
 <style scoped>

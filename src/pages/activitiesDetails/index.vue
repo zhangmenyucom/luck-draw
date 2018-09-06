@@ -196,7 +196,9 @@
   import FootprintsActivities from '@/services/footprintsActivities'
   import ActivitiesService from '@/services/activitiesService'
   import ParticipantsService from '@/services/participantsService'
-  import { getUserInfo } from '@/utils'
+  import {
+    getUserInfo
+  } from '@/utils'
   import MeScoresService from '@/services/meScoresService.js'
   import getMeScores from '@/common/js/getMeScores.js'
   const mta = require('@/common/js/mta_analysis.js')
@@ -267,7 +269,9 @@
     },
     methods: {
       share () {
-        mta.Event.stat('share', {'method': '抽奖详情页分享'})
+        mta.Event.stat('share', {
+          'method': '抽奖详情页分享'
+        })
       },
       getBean () {
         this.$setStorageSync('getBeanMethod', '抽奖详情-赚金豆')
@@ -318,15 +322,15 @@
             this.participateBet = parseInt(this.score / parseInt(this.activitie.metadata.price))
           }
         })
-},
-modifyTicketsNum (e) {
-  const type = e.target.dataset.type
-  let newTicketsNum
-  if (type === 'add') {
-    newTicketsNum = this.ticketsNum + 1
-  } else {
-    newTicketsNum = this.ticketsNum - 1
-  }
+      },
+      modifyTicketsNum (e) {
+        const type = e.target.dataset.type
+        let newTicketsNum
+        if (type === 'add') {
+          newTicketsNum = this.ticketsNum + 1
+        } else {
+          newTicketsNum = this.ticketsNum - 1
+        }
         // 开始判断是否可添加
         const surplusTicketsNum = parseInt(this.activitie.metadata.ticketsNum) - parseInt(this.betNum) // 活动剩余注数
         const price = this.activitie.metadata.price // 每注需要金豆
@@ -454,16 +458,26 @@ modifyTicketsNum (e) {
       this.state = 0
       this.ticketsNum = 1
       mta.Page.init()
-      mta.Event.stat('lucky_draw', {'activityname': options.name})
+      mta.Event.stat('lucky_draw', {
+        'activityname': options.name
+      })
       if (options.method === '全部抽奖') {
-        mta.Event.stat('lucky_draw', {'from': '全部抽奖'})
+        mta.Event.stat('lucky_draw', {
+          'from': '全部抽奖'
+        })
       } else if (options.method === '首页') {
-        mta.Event.stat('lucky_draw', {'from': '首页'})
+        mta.Event.stat('lucky_draw', {
+          'from': '首页'
+        })
       }
       if (this.$getStorageSync('scene') === 1014) {
-        mta.Event.stat('lucky_draw', {'from': '模板消息'})
+        mta.Event.stat('lucky_draw', {
+          'from': '模板消息'
+        })
       } else if (this.$getStorageSync('scene') === 1007 || this.$getStorageSync('scene') === 1008) {
-        mta.Event.stat('lucky_draw', {'from': '好友分享'})
+        mta.Event.stat('lucky_draw', {
+          'from': '好友分享'
+        })
       }
     },
     onHide () {
