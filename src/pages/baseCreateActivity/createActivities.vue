@@ -257,6 +257,9 @@
         },
         createActivity () {
           this.dataHandle()
+          if (this.giftItems[0].metadata.url === '') {
+            this.giftItems[0].metadata.url = this.giftImgSrc[0]
+          }
           CreatePersonalActivity.createActivity({
             sellerId: 'system',
             owner: {id: this.userInfo.id, nickName: this.userInfo.nickName, avatar: this.userInfo.avatar},
@@ -268,7 +271,8 @@
             metadata: {
               drawRule: this.drawRule,
               urls: this.jsonString,
-              isShare: this.isShare
+              isShare: this.isShare,
+              endTimeString: this.pickerDate
             }
           }).then(res => {
             this.$navigateTo(`/pages/myActivitiesDetails/index?id=${res.data.id}`)

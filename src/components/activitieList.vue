@@ -17,28 +17,41 @@
       <div class="name antialiased">
         [ 奖品 ]&nbsp;&nbsp;{{item.name}}
       </div>
+
       <div v-if="item.metadata.drawRule === 'full'">
+        <span class="joined" v-if="item.metadata.participated">
+          <img style="width:23rpx;height:23rpx;margin-right:3px;" src="/static/img/Combined Shape.png" />
+          已参与 <span style="margin-left:8px;">|</span>
+        </span>
         <span class="goldBean">
           <!-- <img src='/static/img/goldBean.png'>
           <text class='bold'>
             &nbsp;&nbsp;{{item.metadata.price}} 金豆 1 注
           </text> -->
-          满<span style="color:red;">{{item.metadata.ticketsNum}}</span>注开奖
+          满<span style="color:red;">{{item.metadata.ticketsNum * item.metadata.price}}</span>金豆开奖
           <!-- <span>
             ¥8799
           </span> -->
         </span>
         <div class="fullGoldBean">
           {{item.metadata.price}}
-          <img src='/static/img/goldBean.png' style="width:15px;height:14px;position:relative;top:2px;margin-top:8px;" />/注
+          <img src='/static/img/goldBean.png' style="width:15px;height:14px;position:relative;top:2px;margin-top:8px;" />参与
         </div>
       </div>
       <div v-if="item.metadata.drawRule === 'timed'" style="margin-top: 5rpx;">
+          <span class="joined" v-if="item.metadata.participated">
+            <img style="width:23rpx;height:23rpx;margin-right:3px;" src="/static/img/Combined Shape.png" />
+            已参与 <span style="margin-left:8px;">|</span>
+          </span>
           <span class="goldBean">
             <span style="color:red">{{item.endTime}}</span>开奖
           </span>
       </div>
       <div v-if="item.metadata.drawRule === 'fullParticipant'" style="margin-top: 5rpx;">
+            <span class="joined" v-if="item.metadata.participated">
+              <img style="width:23rpx;height:23rpx;margin-right:3px;" src="/static/img/Combined Shape.png" />
+              已参与 <span style="margin-left:8px;">|</span>
+            </span>
             <span class="goldBean">
               满<span style="color:red">{{item.metadata.participantsNum}}</span>人开奖
             </span>
@@ -140,7 +153,7 @@ img {
   color:rgba(102,102,102,1);
   font-family: PingFangSC-Regular;
   font-size: 14*@2;
-  font-weight:400;
+  /*font-weight:400;*/
   /* span{
     text-decoration:line-through;
     font-size:14*@2;
@@ -149,6 +162,13 @@ img {
     flex:1;
     text-align:right;
   } */
+}
+.joined {
+  font-size:28rpx;
+  font-family:PingFangSC-Semibold;
+  font-weight:600;
+  color:rgba(253,183,0,1);
+  margin-right: 8px;
 }
 .button{
   padding:24*@2;

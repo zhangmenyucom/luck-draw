@@ -6,36 +6,20 @@
     <div v-if='!isShow'>
       <!-- <meIntegral :score='score'/> -->
       <div class="activitiesDetails">
-        <img mode='aspectFit' :src="activitie.media[0].url">
+        <img mode='aspectFit' :src="prize.metadata.url">
         <div class="name antialiased">
-          <span>[奖品]&nbsp;{{prize.name}}</span>
+          <span>[ 奖品 ]&nbsp;{{prize.name}}</span>
         </div>
         <!-- 中间提示 -->
         <div v-if="activitie.metadata.drawRule === 'timed'" class="goldBean">
-          <text class='bold'>
-            <span style="color:red">{{activitie.endTime}}</span>开奖
-          </text>
-      <!-- <span>
-        ¥{{prize.price}}
-      </span> -->
-      <!-- <div>
-        <i />中奖规则 {{state}}
-      </div> -->
-    </div>
-    <div v-if="activitie.metadata.drawRule === 'fullTicket'" class="goldBean">
-          <text class='bold'>
-            满{{activitie.metadata.ticketsNum}}注自动开奖，剩余{{activitie.metadata.ticketsNum-activitie.betNum}}注
-          </text>
-          <!-- <img src='/static/img/goldBean.png'>
-          <text class='bold'>
-            {{activitie.metadata.price}} 金豆 1 注
-          </text> -->
+          <span class='bold'>
+            <span style="color:red">{{activitie.metadata.endTimeString}}</span>开奖
+          </span>
     </div>
     <div v-if="activitie.metadata.drawRule === 'fullParticipant'" class="goldBean">
-          <img src='/static/img/goldBean.png'>
-          <text class='bold'>
-            {{activitie.metadata.price}} 金豆 1 注
-          </text>
+          <span class='bold'>
+            满<span style="color:red">{{activitie.num}}</span>人开奖
+          </span>
     </div>
     <div v-if="prize.name == '定制真爱马克杯'">
       <div class='hei' />
@@ -69,7 +53,7 @@
         <sapn class='explainq'>最终服务与责任由合作方承担，本次活动最终解释权归钱包生活所有。</sapn>
       </div>
     </div>
-    <div class="hint" v-if="state >= 0 && state < 5">
+    <!-- <div class="hint" v-if="state >= 0 && state < 5">
       <div class="c"></div>
       <div class="bets" v-if="(state >= 2 && state < 5) && participants.id">
         <span>
@@ -84,7 +68,7 @@
         <i></i>
       </div>
       提示：注数越多，获胜几率越大，开奖以幸运号为准。
-    </div>
+    </div> -->
     <!-- 中间提示结束 -->
 
     <!-- 未中奖 -->
@@ -134,7 +118,6 @@
         <div class='bold antialiased'>
           <form :data-state="state + 1" @submit.stop = "modifyState">
             <button v-if="state >= 0 && state <= 1" form-type = "submit">点我抽奖</button>
-            <button v-if="state >= 2 && state <= 4" form-type = "submit">点我加注</button>
           </form>
         </div>
       </div>
@@ -165,6 +148,10 @@
       <headPortrait :list="participantList" rangeKey="img" />
     </div>
     <!-- 参加列表结束 -->
+    <!-- 我发起的可编辑 -->
+    <!-- <div v-if="activitie.owner.id === userId && state <= 3 && participantTotal === 0">
+      <button>编辑</button>
+    </div> -->
     <button class="bottom button" open-type="share" v-if="state <= 3">
       分享领金豆
     </button>
@@ -250,7 +237,7 @@
   import signIn from '@/components/signIn'
   import top from '@/components/top'
   import FootprintsActivities from '@/services/footprintsActivities'
-  import ActivitiesService from '@/services/getMyActivityDetail'
+  import ActivitiesService from '@/services/activitiesService'
   import ParticipantsService from '@/services/participantsService'
   import { getUserInfo } from '@/utils'
   import MeScoresService from '@/services/meScoresService.js'
@@ -276,7 +263,8 @@
         },
         prize: {
           metadata: {
-            num: 0
+            num: 0,
+            url: ''
           }
         },
         participants: {
@@ -298,7 +286,8 @@
         isAnimation: false,
         isLookAtTheLuckyNumber: false,
         miniappId: 'qianbaocard_mkt',
-        state: 0
+        state: 0,
+        userId: ''
         // 0 NotInvolved 未参与
         // 1 Bets 下注
         // 2 ParticipateIn 参与过
@@ -336,23 +325,17 @@
       },
       getActivitie (id) { // 获取活动详情
         const userInfo = getUserInfo()
+        this.userId = userInfo.id
         ActivitiesService.get({
           id
         }).then((res) => {
           if (res.code === 0) {
-            if (res.data.metadata.ticketsNum) {
-              res.data.metadata.ticketsNum = parseInt(res.data.metadata.ticketsNum)
-            }
             this.prize = res.data.items[0]
+            console.log('1', this.prize)
             this.activitie = res.data
-            this.betNum = res.data.betNum
-
-            if (res.data.metadata.ticketsNum === res.data.betNum) {
-              this.modifyState(3.1)
-            }
-
+            this.activitie.endTime = new Date(this.activitie.endTime).toLocaleString()
+            console.log('2', this.activitie)
             if (res.data.status === 'REWARDED') { // 活动已结束
-              this.modifyState(5)
               // 处理中奖信息
               const luckyItems = JSON.parse(res.data.metadata.luckyItems)
               console.log('luckyItems', luckyItems)
@@ -364,7 +347,6 @@
                 this.modifyState(6)
               }
             }
-            this.participateBet = parseInt(this.score / parseInt(this.activitie.metadata.price))
           }
         })
       },

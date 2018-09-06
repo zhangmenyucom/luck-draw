@@ -3,11 +3,7 @@
         <top title="新建抽奖" />
         <div v-if="!addPic">
             <div v-for="(item,index) in giftList" :key="index">
-                <addGiftComp :addGiftPic="addGiftPic"
-                :showCanvas="giftList[index]" :giftImgSrc="giftImgSrc[index]"
-                :index="index" :deleteGiftList="deleteGiftList"
-                :itemNameChange="itemNameChange" :itemNumChange="itemNumChange"
-                :itemName="itemName" :itemNum="itemNum" />
+                <addGiftComp :addGiftPic="addGiftPic" :showCanvas="giftList[index]" :giftImgSrc="giftImgSrc[index]" :index="index" :deleteGiftList="deleteGiftList" :itemNameChange="itemNameChange" :itemNumChange="itemNumChange" :itemName="itemName" :itemNum="itemNum" />
             </div>
             <div class="addGift_div">
                 <div class="add_gift" @click="addGift">

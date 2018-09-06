@@ -206,11 +206,11 @@
             this.appId = res.data.target.id
           }
           return DailyFootprintsService.getList({
-                  userId: this.userInfo.id,
-                  type: 'VIEW_AD'
-                }).then((res) => {
-                    console.log(res)
-                })
+            userId: this.userInfo.id,
+            type: 'VIEW_AD'
+          }).then((res) => {
+            console.log(res)
+          })
         })
       },
       getMeScores () {
