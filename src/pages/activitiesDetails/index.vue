@@ -1,5 +1,6 @@
 <template>
-  <div>
+<div>
+    <div>
     <top title="抽奖" />
     <load :isshow="isShow" :isanimation="isAnimation"/>
     <signIn :isanimation.sync='isAnimation'  :signInCB = "signInCB"/>
@@ -162,10 +163,9 @@
       <headPortrait :list="participantList" rangeKey="img" />
     </div>
     <!-- 参加列表结束 -->
-    <button class="bottom button" open-type="share" v-if="state <= 3" @click="share">
+    <button class="bottom button" v-if="state <= 3" @click="share">
       分享领金豆
     </button>
-
     <!-- 弹出层 -->
     <div class="modal" @tap="hideModal" v-if="isModal && (state === 1 || state === 3 || state === 4 || isLookAtTheLuckyNumber)">
       <div class="content" @tap.stop="">
@@ -177,7 +177,7 @@
         <div>
           <div>
             <!-- 幸运号列表 -->
-            <div class="luckyList" v-if="isLookAtTheLuckyNumber" v-for='(item, index) in participants.tickets'>
+            <div class="luckyList" v-if="isLookAtTheLuckyNumber" v-for='(item, index) in participants.tickets' :key="index">
               <div class="number">
                 <img src="/static/img/number.png" alt="" />
                 <div>
@@ -234,6 +234,14 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+</div>
+<div class="shade" :class="{display:display}" @tap="shadeShow">
+  <div class="foot">
+    <button open-type="share">邀请微信好友</button>
+    <button @tap="toMakeImg">生成分享图</button>
+    <button>取消</button>
   </div>
 </div>
 </div>
@@ -295,7 +303,8 @@
         isAnimation: false,
         isLookAtTheLuckyNumber: false,
         miniappId: 'qianbaocard_mkt',
-        state: 0
+        state: 0,
+        display: true
         // 0 NotInvolved 未参与
         // 1 Bets 下注
         // 2 ParticipateIn 参与过
@@ -321,6 +330,7 @@
     methods: {
       share () {
         mta.Event.stat('share', {'method': '抽奖详情页分享'})
+        this.display = !this.display
       },
       getBean () {
         this.$setStorageSync('getBeanMethod', '抽奖详情-赚金豆')
@@ -336,6 +346,13 @@
       },
       setClipboardData () {
         this.$setClipboardData(this.miniappId)
+      },
+      shadeShow () {
+        this.display = !this.display
+      },
+      toMakeImg () {
+        console.log(this.activitie.media[0].url)
+        this.$navigateTo('../makePicture/index?title=生成分享图&url=' + this.activitie.media[0].url)
       },
       getActivitie (id) { // 获取活动详情
         const userInfo = getUserInfo()
