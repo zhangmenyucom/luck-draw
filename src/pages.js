@@ -119,5 +119,11 @@ module.exports = [{
     navigationBarTitleText: '常见问题',
     enablePullDownRefresh: true
   }
+}, {
+  path: '/pages/winner/index',
+  config: {
+    navigationBarTitleText: '中奖者',
+    enablePullDownRefresh: true
+  }
 }
 ]

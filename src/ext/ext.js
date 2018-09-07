@@ -150,7 +150,7 @@ export default class ext {
 
   static setClipboardData (data) {
     if (this.isWx) {
-      return wx.setClipboardData({data})
+      return wx.setClipboardData(data)
     }
   }
   static chooseImage () {
@@ -226,7 +226,6 @@ export default class ext {
       })
     }
   }
-
   static install (Vue, options) {
     Vue.prototype.$getStorageSync = this.getStorageSync.bind(this)
     Vue.prototype.$setStorageSync = this.setStorageSync.bind(this)

@@ -1,7 +1,7 @@
 <template>
   <div class="list">
     <top :title='type === "lucky" ? "中奖记录" : "抽奖记录"' />
-    <meActivitieList :list="participantList" />
+    <meActivitieList :list="participantList" :Zindex="1" />
   </div>
 </template>
 
@@ -54,6 +54,7 @@
         this.isGet = true
         ParticipantsService.get(getData).then((res) => {
           if (res.code === 0) {
+            console.log(res.data)
             const oldParticipantList = !this.onPullDownRefresh ? this.participantList : []
             const participantList = res.data.map((participant) => {
               participant.activity.time = formatDate(new Date(participant.createdTime), 'yy/mm/dd HH:mm:ss')
@@ -61,6 +62,13 @@
               participant.activity.tickets = participant.tickets
               if (type === `lucky`) {
                 participant.activity.status = participant.metadata.address ? 'ADDRES' : 'LUCKY'
+              }
+              if (participant.activity.status === 'REWARDED') {
+                if (participant.metadata.lucky === 'true') {
+                  participant.activity.status = participant.metadata.address ? 'ADDRES' : 'LUCKY'
+                } else {
+                  participant.activity.status = 'UNLUCK'
+                }
               }
               return participant.activity
             })
@@ -72,7 +80,6 @@
             this.isGet = false
             this.participantList = [...oldParticipantList, ...participantList]
             if (this.participantList.length >= res.total) this.complete = true
-            console.log(this.participantList)
           }
         })
       }
