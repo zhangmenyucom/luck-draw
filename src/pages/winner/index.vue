@@ -53,26 +53,26 @@
 <script>
 import top from '@/components/top'
 export default {
-    data () {
+  data () {
 
-    },
-    components: {
-        top
-    },
-    methods: {
-        copy () {
-            this.$setClipboardData({
-                data: '1234',
-                success: function (res) {
-                    wx.getClipboardData({
-                    success: function (res) {
-                        console.log(res.data) // data
-                    }
-                    })
-                }
-            })
+  },
+  components: {
+    top
+  },
+  methods: {
+    copy () {
+      this.$setClipboardData({
+        data: '1234',
+        success: function (res) {
+          wx.getClipboardData({
+            success: function (res) {
+              console.log(res.data) // data
+            }
+          })
         }
+      })
     }
+  }
 }
 </script>
 

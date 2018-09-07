@@ -41,16 +41,16 @@ export default {
     getActivity (type = 'PERSONAL_LUCKY_DRAW') {
       PersonalActivity.getAcitivity(type).then((res) => {
         if (res.code === 0) {
-            const participantList = res.data.map((participant) => {
-              participant.name = participant.items[0].name
-              participant.url = participant.items[0].metadata.url
-              participant.owner = participant.owner
-              participant.time = formatDate(new Date(participant.createdTime), 'yy/mm/dd HH:mm:ss')
-              participant.rule = participant.num === 0 ? participant.metadata.endTimeString + '开奖' : '满' + participant.num + '开奖'
-              return participant
-            })
-            console.log(participantList)
-            this.participantList = participantList
+          const participantList = res.data.map((participant) => {
+            participant.name = participant.items[0].name
+            participant.url = participant.items[0].metadata.url
+            participant.owner = participant.owner
+            participant.time = formatDate(new Date(participant.createdTime), 'yy/mm/dd HH:mm:ss')
+            participant.rule = participant.num === 0 ? participant.metadata.endTimeString + '开奖' : '满' + participant.num + '开奖'
+            return participant
+          })
+          console.log(participantList)
+          this.participantList = participantList
         }
       })
     }

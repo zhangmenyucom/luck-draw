@@ -9,7 +9,17 @@
           <div class="infoText">
             <text>{{userInfo.wx.nickName}}</text><br/>
             <img src="/static/img/goldBean.png" alt=""/>
-            <text style="vertical-align:middle">{{score + ''}}</text>
+            <text style="vertical-align:middle;font-size:16px">{{score + ''}}</text>
+          </div>
+        </div>
+        <div class="info_r">
+          <div class="editInfo">
+            <a href="/pages/editInfo/index" class="antialiased" style="opacity:1;">
+              <span v-if="rule.total">完善资料&nbsp;&nbsp;</span>
+              <span v-else>查看资料&nbsp;&nbsp;</span>
+              <span v-if="rule.total">+{{rule.total}}</span>&nbsp;
+              <img v-if="rule.total" src="/static/img/goldBean.png">
+            </a>
           </div>
         </div>
       </div >
@@ -47,13 +57,13 @@
               </div>
               <div class="weui-cell__ft weui-cell__ft_in-access"></div>
           </div> -->
-          <div class="weui-cell weui-cell_access myweui-cell" @click="commonQuestion">
+          <div class="weui-cell weui-cell_access myweui-cell bor-b" @click="commonQuestion">
               <div class="weui-cell__bd">
                   <div style="display: inline-block; vertical-align: middle">常见问题</div>
               </div>
               <div class="weui-cell__ft weui-cell__ft_in-access"></div>
           </div>
-          <button class="weui-cell weui-cell_access myBtn" open-type="contact">
+          <button class="weui-cell weui-cell_access myBtn bor-b" open-type="contact">
               <div class="weui-cell__bd">
                   <div style="display: inline-block; vertical-align: middle">联系客服</div>
               </div>
