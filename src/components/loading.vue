@@ -28,7 +28,7 @@
 
 <style scoped>
   @import '../common/less/util.less';
-  .loop( @count )when( @count > 0 ){
+  .loop( @count ) when( @count > 0 ){
     .imglight@{count}{
       width: 27*@2;
       height: 35*@2;

@@ -1,9 +1,9 @@
 <template>
-<div>
-  <div class="head">
-      <top :hideIcone='true' title='任务中心' />
+  <div class="obtainGoldBean">
+    <top :hideIcone='true' title='任务中心' />
+    <div class="head">
       <div>
-        <span class='left'>
+        <span class='left bold'>
           每日签到
         </span>
         <span class='right'>
@@ -21,106 +21,105 @@
         </div>
       </div>
     </div>
-  <div class="list">
+    <div class="headInterval">
+    </div>
     <div class="classify">
       新手任务
     </div>
-    <div>
-      <div class="left icon">
-        <i class="icon iconfont icon-bangdingshoujihao" :style="{color:'RGBA(255, 151, 58, 1)'}"></i>
-      </div>
-      <div class="left" style="padding:10px 0 10px 0">
-        <span class='title'>
-          绑定手机号
-        </span>
-        <br />
-        {{rule.mobile}} <img src="/static/img/goldBean.png" alt=""> <text>/&nbsp;次</text> &nbsp;&nbsp;
-      </div>
-      <div class="right" @click="bindPhone" style="padding:10px 0 10px 0">
-        <a v-if="!userInfo.contactNumber" href="/pages/mobile/index">
-          去绑定
-        </a>
-        <div v-else class='complete'>
-          已完成
+    <div class="list">
+
+      <div>
+        <div class="left icon">
+          <i class="icon iconfont icon-bangdingshoujihao" :style="{color:'RGBA(255, 151, 58, 1)'}"></i>
         </div>
-      </div>
-      <div class="c"></div>
-    </div>
-    <div>
-      <div class="left icon">
-        <i class="icon iconfont icon-wanshanziliao"></i>
-      </div>
-      <div class="left" style="padding:10px 0 10px 0">
-        <span class='title'>
-          完善资料
-        </span>
-        <br />
-        {{rule.total}} <img src="/static/img/goldBean.png" alt=""><text>/&nbsp;次</text> &nbsp;&nbsp;
-      </div>
-      <div class="right" tyle="padding:10px 0 10px 0">
-        <a v-if="!(userInfo.contactNumber && userInfo.location && userInfo.birthday)" href="/pages/editInfo/index" @click="complete">
-          去完善
-        </a>
-        <div v-else class='complete'>
-          已完成
+        <div class="left" style="padding:10px 0 10px 0">
+          <span class='title'>
+            绑定手机号
+          </span>
+          <br />
+          {{rule.mobile}} <img src="/static/img/goldBean.png" alt=""> <text>/&nbsp;次</text> &nbsp;&nbsp;
         </div>
+        <div class="right" @click="bindPhone" style="padding:10px 0 10px 0">
+          <a v-if="!userInfo.contactNumber" href="/pages/mobile/index">
+            去绑定
+          </a>
+          <div v-else class='complete'>
+            已完成
+          </div>
+        </div>
+        <div class="c"></div>
       </div>
-      <div class="c"></div>
+      <div>
+        <div class="left icon">
+          <i class="icon iconfont icon-wanshanziliao"></i>
+        </div>
+        <div class="left" style="padding:10px 0 10px 0">
+          <span class='title'>
+            完善资料
+          </span>
+          <br />
+          {{rule.total}} <img src="/static/img/goldBean.png" alt=""><text>/&nbsp;次</text> &nbsp;&nbsp;
+        </div>
+        <div class="right" tyle="padding:10px 0 10px 0">
+          <a v-if="!(userInfo.contactNumber && userInfo.location && userInfo.birthday)" href="/pages/editInfo/index" @click="complete">
+            去完善
+          </a>
+          <div v-else class='complete'>
+            已完成
+          </div>
+        </div>
+        <div class="c"></div>
+      </div>
     </div>
     <div class="classify">
       日常任务
     </div>
-    <div>
-      <div class="left icon">
-        <i class="icon iconfont icon-fenxiang" :style="{color:'RGBA(107, 200, 50, 1)'}"></i>
-      </div>
-      <div class="left" style="padding:10px 0 10px 0">
-        <span class='title'>
-          分享微信群
-        </span>
-        <br />
-        {{shareRule.base}}<img src="/static/img/goldBean.png" alt=""><text>/&nbsp;次</text> &nbsp;&nbsp;
-      </div>
-      <div class="right" @click="shareWx" style="padding:10px 0 10px 0">
-        <button v-if="shareRule.maxStep > shareNumber" open-type="share">
-          领取 {{shareNumber}} /{{(shareRule.maxStep - shareNumber)<0?0:(shareRule.maxStep)}}
-        </button>
+    <div class="list">
+      <div>
+        <div class="left icon">
+          <i class="icon iconfont icon-fenxiang" :style="{color:'RGBA(107, 200, 50, 1)'}"></i>
+        </div>
+        <div class="left" style="padding:10px 0 10px 0">
+          <span class='title'>
+            分享微信群
+          </span>
+          <br />
+          {{shareRule.base}}<img src="/static/img/goldBean.png" alt=""><text>/&nbsp;次</text> &nbsp;&nbsp;
+        </div>
+
+        <button @tap="shareWx" v-if="shareRule.maxStep > shareNumber" open-type="share">领取 {{shareNumber}}/{{(shareRule.maxStep - shareNumber)<0?0:(shareRule.maxStep)}}</button>
         <div v-else class='complete'>
           今日已领完
         </div>
+        <div class="c"></div>
       </div>
-      <div class="c"></div>
-    </div>
-    <div v-for="(item, index) in advertiseRule" :key="index">
-      <div class="left icon">
-        <i class="icon iconfont icon-kanguanggao" :style="{color:'#1296db'}"></i>
-      </div>
-      <div class="left" style="padding:10px 0 10px 0">
-        <span class='title'>
-          {{item.title}}
-        </span>
-        <br />
-        {{item.score}}<img src="/static/img/goldBean.png" alt=""><text>/&nbsp;次</text> &nbsp;&nbsp;
-      </div>
-      <navigator :key="index"  class="right" target="miniProgram" open-type="navigate" :app-id="item.appId" path='' @tap="() => toXcx(item.appId)" style="padding:10px 0 10px 0">
-        <button v-if="shareRule.maxStep > shareNumber">
-          领取
-        </button>
-        <div v-else class='complete'>
-          今日已领完
+      <div v-for="(item, index) in advertiseRule" :key="index">
+        <div class="left icon">
+          <i class="icon iconfont icon-kanguanggao" :style="{color:'#1296db'}"></i>
         </div>
-      </navigator>
-      <div class="c"></div>
+        <div class="left" style="padding:10px 0 10px 0">
+          <span class='title'>
+            {{item.title}}
+          </span>
+          <br />
+          {{item.score}}<img src="/static/img/goldBean.png" alt=""><text>/&nbsp;次</text> &nbsp;&nbsp;
+        </div>
+        <navigator target='miniProgram' :app-id="item.appId" @error='fail' @success="() => toXcx(item.appId)">{{shareRule.maxStep > shareNumber ? '领取' : '今日已领完'}}</navigator>
+        <div class="c"></div>
+      </div>
     </div>
+
     <signIn :signInCB = "signInCB" :showModel = "!isModel"/>
   </div>
-</div>
 </template>
 
 <script>
   import signIn from '@/components/signIn'
   import top from '@/components/top'
-  import {getUserInfo, check} from '@/utils'
+  import {
+    getUserInfo,
+    check
+  } from '@/utils'
   import DailyFootprintsService from '@/services/dailyFootprintsService'
   import ScoreRulesService from '@/services/scoreRulesService'
   import share from '@/common/js/share.js'
@@ -155,6 +154,9 @@
       top
     },
     methods: {
+      fail (err) {
+        console.log('err', err)
+      },
       getScoreRules () {
         ScoreRulesService.getList().then(res => {
           if (res.code === 0) {
@@ -164,7 +166,7 @@
             const shareRule = JSON.parse(res.data.filter(data => data.type === 3)[0] ? res.data.filter(data => data.type === 3)[0].rule : {})
             const advertiseRule = JSON.parse(res.data.filter(data => data.type === 6)[0] ? res.data.filter(data => data.type === 6)[0].rule : {})
             this.advertiseRule = advertiseRule
-            console.log(advertiseRule)
+            console.log('advertiseRule', advertiseRule)
             this.rule = rule
             this.shareRule = shareRule
             const number = this.scoreCounters.number > 7 ? this.scoreCounters.number - 7 : 0 // 需要展示的第一天
@@ -192,10 +194,14 @@
         getMeScores.start(this)
       },
       shareWx () {
-        mta.Event.stat('share', {'method': '赚金豆分享'})
+        mta.Event.stat('share', {
+          'method': '赚金豆分享'
+        })
       },
       bindPhone () {
-        mta.Event.stat('bind_phone', {'from': '赚金豆页面'})
+        mta.Event.stat('bind_phone', {
+          'from': '赚金豆页面'
+        })
       },
       changeDisplay () {
         this.display = !this.display
@@ -245,6 +251,12 @@
     onLoad () {
       mta.Page.init()
       this.$setStorageSync('signIn', false)
+      // wx.navigateToMiniProgram({
+      //   appId: `wxfb7be0751102cf64`,
+      //   fail (err) {
+      //     console.log('err', err)
+      //   }
+      // })
       // Footprints.add().then((res) => {
       //   if (res.code === 0) {
       //     this.appId = res.data.target.id
@@ -260,9 +272,13 @@
         this.isModel = true
       }
       if (!this.$getStorageSync('getBeanMethod')) {
-        mta.Event.stat('get_bean', {'from': 'tab赚金豆'})
+        mta.Event.stat('get_bean', {
+          'from': 'tab赚金豆'
+        })
       } else {
-        mta.Event.stat('get_bean', {'from': this.$getStorageSync('getBeanMethod')})
+        mta.Event.stat('get_bean', {
+          'from': this.$getStorageSync('getBeanMethod')
+        })
       }
     },
     onShareAppMessage: share()

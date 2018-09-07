@@ -20,8 +20,7 @@ module.exports = [{
   path: 'pages/obtainGoldBean/index',
   config: {
     navigationBarTitleText: '赚金豆',
-    enablePullDownRefresh: false,
-    disableScroll: true
+    enablePullDownRefresh: false
   }
 }, {
   path: 'pages/meIntegral/index',
