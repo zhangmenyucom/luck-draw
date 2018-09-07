@@ -275,7 +275,7 @@
               endTimeString: this.pickerDate
             }
           }).then(res => {
-            this.$navigateTo(`/pages/myActivitiesDetails/index?id=${res.data.id}`)
+            this.$navigateTo(`/pages/activitiesDetails/index?id=${res.data.id}`)
           })
         }
       },

@@ -4,8 +4,9 @@
     <load :isshow="isShow" :isanimation="isAnimation"/>
     <signIn :isanimation.sync='isAnimation'  :signInCB = "signInCB"/>
     <div v-if='!isShow'>
+
       <div class="activitiesDetails">
-        <img mode='aspectFit' :src="activitie.media[0].url">
+        <!-- <img mode='aspectFit' :src="activitie.media[0].url"> -->
         <div class="name antialiased">
           <text>「奖品」</text>{{prize.name}}&nbsp;<span>X&nbsp;{{prize.metadata.num}}</span>
         </div>
@@ -41,13 +42,13 @@
         <!-- 开奖后 -->
         <openingPrizeAfter v-if='state >= 5' :participants="participants" :state="state" :activitie="activitie" />
           <!-- 开奖后 -->
-          <!-- 抽奖按钮 -->
-          <luckDraw :state = 'state' :modifyState= 'modifyState'/>
-          <!-- 抽奖按钮结束 -->
+
           <!-- 中奖名单 -->
           <luckyitems v-if='state >= 5' :list='luckyItemList' :activitie = 'activitie' />
             <!-- 中奖名单结束 -->
-
+            <!-- 抽奖按钮 -->
+            <luckDraw :state = 'state' :modifyState= 'modifyState'/>
+            <!-- 抽奖按钮结束 -->
             <!-- 参加列表 -->
             <div class="participant" v-if="participantTotal>0">
               <span class='antialiased'>
@@ -56,6 +57,7 @@
               <headPortrait :list="participantList" rangeKey="img" />
             </div>
             <!-- 参加列表结束 -->
+            <!-- 底部 -->
             <div class='bottom'>
               <div>
                 <button class="button button-o">
@@ -68,6 +70,7 @@
                 </button>
               </div>
             </div>
+            <!-- 底部结束 -->
             <!-- 弹出层 -->
             <div class="modal" @tap="hideModal" v-if="isModal && (state === 1 || state === 3 || (participants.id && (state === 5 || state === 6)) || isLookAtTheLuckyNumber)">
               <div class="content" @tap.stop="">
@@ -428,6 +431,9 @@ modifyTicketsNum (e) {
       const userInfo = getUserInfo()
       this.userInfo = userInfo
       this.state = 0
+      // setTimeout(() => {
+      //   this.state = 2
+      // }, 1000)
       this.ticketsNum = 1
       mta.Page.init()
 

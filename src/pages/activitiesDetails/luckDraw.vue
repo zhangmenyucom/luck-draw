@@ -161,7 +161,7 @@
 }
 
 .luckDraws{
-  transform: translateX(-72*@2);
+  transform: translateX(-87*@2);
   .prize:nth-child(3),.prize:nth-child(5),.circular:nth-child(2),.circular:nth-child(4){
     opacity: 1;
   }
