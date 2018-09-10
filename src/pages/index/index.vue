@@ -12,40 +12,12 @@
         <div class="c"></div>
       </div>
     </div>
-    <!-- <div class="head">
-      <img src="/static/img/bitmap.png" alt="">
-      <div>
-        <span class='left'>
-          我的金豆：{{score+''}}
-        </span>
-        <a class='right' open-type="switchTab" href="/pages/obtainGoldBean/index" @click="getBean">
-          赚金豆&nbsp;>
-        </a>
-        <div class="c"></div>
-        <div class="calendar">
-          <img src="/static/img/calendar.png" />
-          <div>
-            第<span>{{scoreCounters.number}}</span>天
-          </div>
-        </div>
-        <div class="record">
-          <div v-for='i in 7' :class="{opacity:(i +1 ) > scoreCounters.number}">
-            <div class="icon">
-              {{goldBean[i]}}
-            </div>
-            <img src="/static/img/goldBean.png" alt="" />
-            <text>第{{i + 1 + number}}天</text>
-          </div>
-        </div>
-      </div>
-    </div> -->
     <!-- 活动列表 -->
     <div class="activitieList">
       <activitieList :onDraw="onLuckyDraw" :willDraw="willLuckDraw" />
     </div>
     <!-- 活动列表结束 -->
     <signIn :signInCB = "signInCB" :showModel="!isModel"/>
-
   </div>
 </template>
 
@@ -165,10 +137,6 @@
         })
       },
       signInCB (data) {
-        const signIn = this.$getStorageSync('signIn')
-        if (signIn) {
-          this.isModel = false
-        }
         this.pullDownRefresh()
         if (data.score) {
           // 签到后 直接获取积分数
@@ -183,7 +151,6 @@
     },
     onLoad () {
       mta.Page.init()
-      this.$setStorageSync('signIn', false)
     },
     onHide () {
       getMeScores.end()
@@ -193,7 +160,7 @@
       if (userInfo.id) {
         this.signInCB({})
       } else {
-        this.isModel = true
+        this.$navigateTo('/pages/login/index')
       }
     },
     onShareAppMessage: share()

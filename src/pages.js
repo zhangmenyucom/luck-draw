@@ -124,5 +124,11 @@ module.exports = [{
     navigationBarTitleText: '发起抽奖',
     enablePullDownRefresh: true
   }
-}
-]
+}, {
+  path: '/pages/login/index',
+  config: {
+    navigationBarTitleText: '登录',
+    enablePullDownRefresh: true,
+    backgroundColor: '#00000000'
+  }
+}]
