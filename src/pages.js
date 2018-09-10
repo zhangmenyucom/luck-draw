@@ -87,7 +87,7 @@ module.exports = [{
   path: 'pages/createActivities/createActivities',
   config: {
     navigationBarTitleText: '发起抽奖',
-    enablePullDownRefresh: true
+    enablePullDownRefresh: false
   }
 }, {
   path: 'pages/myActivityDetail/myActivityDetail',
@@ -99,7 +99,7 @@ module.exports = [{
   path: 'pages/baseCreateActivity/createActivities',
   config: {
     navigationBarTitleText: '发起抽奖',
-    enablePullDownRefresh: true
+    enablePullDownRefresh: false
   }
 }, {
   path: '/pages/myActivitiesDetails/index',

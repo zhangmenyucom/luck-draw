@@ -7,7 +7,7 @@
       <!-- <meIntegral :score='score'/> -->
       <div class="activitiesDetails">
         <img mode='aspectFit' :src="activitie.media[0].url">
-        <div class="prompt antialiased">
+        <!-- <div class="prompt antialiased">
           <div class="left" v-if='(0+activitie.metadata.ticketsNum-betNum) != 0'>
             剩余<span>{{0+activitie.metadata.ticketsNum-betNum}}</span> 注
           </div>
@@ -17,23 +17,37 @@
           <div class="right">
             |  满<span>{{activitie.metadata.ticketsNum}}</span>&nbsp;注开奖
           </div>
-        </div>
+        </div> -->
         <div class="name antialiased">
-          <span>「奖品」</span>{{prize.name}}&nbsp;<span>X&nbsp;{{prize.metadata.num}}</span>
+          <span>[ 奖品 ]&nbsp;{{prize.name}}</span>
         </div>
         <!-- 中间提示 -->
-        <div class="goldBean">
-          <img src='/static/img/goldBean.png'>
-          <text class='bold'>
-            {{activitie.metadata.price}} 金豆 1 注
-          </text>
-      <!-- <span>
-        ¥{{prize.price}}
-      </span> -->
-      <!-- <div>
-        <i />中奖规则 {{state}}
-      </div> -->
-    </div>
+        <div v-if="activitie.metadata.drawRule === 'timed'" class="goldBean">
+          <div class='bold'>
+            <span>{{endDateStr}}</span><span style="color:red">{{endTimeStr}}</span>开奖
+          </div>
+        </div>
+        <div v-if="activitie.metadata.drawRule === 'fullTicket'" class="goldBean">
+              <div class='bold'>
+                满{{activitie.metadata.ticketsNum}}注自动开奖，剩余{{activitie.metadata.ticketsNum-activitie.betNum}}注
+              </div>
+        </div>
+        <div v-if="activitie.metadata.drawRule === 'fullParticipant'" class="goldBean">
+          <div class="prompt antialiased">
+            <div class="left" v-if='(0+activitie.metadata.ticketsNum-betNum) != 0'>
+              满<span>{{activitie.metadata.ticketsNum}}</span>注自动开奖,剩余<span>{{0+activitie.metadata.ticketsNum-betNum}}</span> 注
+            </div>
+            <div class="left" v-else>
+              满<span>{{activitie.metadata.ticketsNum}}</span>注自动开奖,已满注
+            </div>
+            <div class="right">
+              <img src='/static/img/goldBean.png'>
+              <div class='bold'>
+                {{activitie.metadata.price}} 金豆 1 注
+              </div>
+            </div>
+          </div>
+        </div>
     <div v-if="prize.name == '定制真爱马克杯'">
       <div class='hei' />
       <div class="productsInfo">
@@ -128,10 +142,16 @@
     <!-- 抽奖按钮 -->
     <div class="prize" v-if ="state >= 0 && state <= 3 ">
       <div>
-        <div class='bold antialiased'>
+        <div v-if="activitie.metadata.drawRule === 'fullTicket'" class='bold antialiased'>
           <form :data-state="state + 1" @submit.stop = "modifyState">
             <button v-if="state >= 0 && state <= 1" form-type = "submit">点我抽奖</button>
             <button v-if="state >= 2 && state <= 4" form-type = "submit">点我加注</button>
+          </form>
+        </div>
+        <div v-else class='bold antialiased'>
+          <form :data-state="state + 1" @submit.stop = "joinActivity">
+            <button v-if="state >= 0 && state <= 1" form-type = "submit">参与抽奖</button>
+            <button v-if="state >= 2 && state <= 4" form-type = "submit">等待开奖</button>
           </form>
         </div>
       </div>
@@ -295,7 +315,9 @@
         isAnimation: false,
         isLookAtTheLuckyNumber: false,
         miniappId: 'qianbaocard_mkt',
-        state: 0
+        state: 0,
+        endDateStr: '',
+        endTimeStr: ''
         // 0 NotInvolved 未参与
         // 1 Bets 下注
         // 2 ParticipateIn 参与过
@@ -343,6 +365,7 @@
           id,
           append: 'BET_NUM'
         }).then((res) => {
+          console.log('1', res)
           if (res.code === 0) {
             if (res.data.metadata.ticketsNum) {
               res.data.metadata.ticketsNum = parseInt(res.data.metadata.ticketsNum)
@@ -350,6 +373,20 @@
             this.prize = res.data.items[0]
             this.activitie = res.data
             this.betNum = res.data.betNum
+            if (this.activitie.metadata.drawRule === 'timed') {
+              let getMonth = new Date(this.activitie.endTime).getMonth()
+              let getDay = new Date(this.activitie.endTime).getDate()
+              let getHours = new Date(this.activitie.endTime).getHours().toString()
+              let getMinutes = new Date(this.activitie.endTime).getMinutes().toString()
+              if (getHours.length < 2) {
+                getHours = '0' + getHours
+              }
+              if (getMinutes.length < 2) {
+                getMinutes = '0' + getMinutes
+              }
+              this.endDateStr = getMonth + '月' + getDay + '日'
+              this.endTimeStr = getHours + ':' + getMinutes
+            }
 
             if (res.data.metadata.ticketsNum === res.data.betNum) {
               this.modifyState(3.1)

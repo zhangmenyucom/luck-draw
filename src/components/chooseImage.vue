@@ -1,34 +1,50 @@
 <template>
-    <div>
-        <div class="wx-content-info">
-            <div class='cropper-content'>
-                <scroll-view scroll-y="true" scroll-x="true" class = "FilePath" @touchmove="scroll" @touchstart='scroll' @touchend='endTou'>
-                    <img class="imgPath" :src="imageSrc" :style="'width: '+width+'px;height: '+height+'px;'" />
-                </scroll-view>
-            </div>
-            <div class='cropper-config'>
-                <button type="primary reverse" @click="getImage" style='margin-top: 30rpx'> 选择图片 </button>
-                <button type="primary" @click="getImageInfo" style='margin-top: 30rpx'> 完成裁剪 </button>
-            </div>
-            <canvas canvas-id="myCanvas" :style="'position:absolute;border: 1px solid red; width:'+width+'px;height:'+height+'px;top:-99999px;left:-99999px;'"></canvas>
+    <div class="wx-content-info">
+        <!-- <div class="FilePath" @touchmove="scroll" @touchstart='scroll' @touchend='endTou'>
+            <img class="imgPath" :src="imageSrc" :style="'position:absolute;width: '+width+'px;height: '+height+'px;top:'+topDistance+'px;left:'+leftDiatance+'px;'" />
+        </div> -->
+        <!-- <div class='cropper-config'>
+            <button type="primary" @click="getImageInfo" style='margin-top: 30rpx'> 完成裁剪 </button>
+        </div> -->
+        <movable-area class="viewPic" :style="'position:absolute;width:375px;height:187.5px;top:'+topDistance+'px;'" scale-area>
+          <movable-view :style="'width: '+width+'px;height: '+height+'px;top:'+viewTop+'px;'" direction="all" scale scale-min="1" scale-max="2.5">
+            <img class="FilePath" :src="imageSrc" :style="'width: '+width+'px;height: '+height+'px;'" />
+          </movable-view>
+        </movable-area>
+        <div class="topHideHalf" :style="'height:'+hideHeight+'px;'">
         </div>
+        <div class="bottomHideHalf" :style="'height:'+hideHeight+'px;'">
+        </div>
+        <div class='cropper-config'>
+            <div @click="getImageInfo"> 完成 </div>
+        </div>
+        <canvas canvas-id="myCanvas" :style="'position:absolute;border: 1px solid red; width:'+width+'px;height:'+height+'px;top:-99999px;left:-99999px;'"></canvas>
     </div>
 </template>
 
 <script>
 export default {
-  props: ['showImage', 'picIndex', 'picIndexSrc'],
+  props: ['showImage', 'picIndex', 'picIndexSrc', 'imageSrc'],
   data () {
     return {
-      imageSrc: 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1535632840778&di=62f69c4ea48467a23e329575053443f5&imgtype=0&src=http%3A%2F%2Fpic-cdn.35pic.com%2F58pic%2F19%2F55%2F11%2F91j58PICIyv_1024.jpg',
-      width: 300,
-      height: 150,
+      width: 375,
+      height: 187.5,
       olddistance: 0,
+      oldSingleDisX: 0,
+      viewTop: 0,
+      singleDisX: 0,
+      oldSingleDisY: 0,
+      singleDisY: 0,
+      topDistance: 0,
+      leftDiatance: 0,
       newdistance: 0,
       diffdistance: '',
       Scale: 1,
       baseHeight: '',
       baseWidth: '',
+      hideHeight: 0,
+      maxLeft: 0,
+      maxTop: 0,
       x: '',
       y: '',
       imgx: '',
@@ -36,26 +52,17 @@ export default {
     }
   },
   methods: {
-    getImage () {
-      this.$chooseImage().then(res => {
-        this.imageSrc = res.tempFilePaths[0]
-        this.loadImage()
-      })
-    },
     loadImage () {
       this.$getImageInfo(this.imageSrc).then(res => {
         this.baseHeight = res.height
         this.baseWidth = res.width
-        const str = res.width / res.height
-        // if (str > 1) {
-        //     this.height = 150
-        //     this.width = str * this.height
-        // } else {
-        //     this.width = 300
-        //     this.height = str * this.width
-        // }
-        this.width = 300
+        const str = this.baseWidth / this.baseHeight
+        this.width = 375
         this.height = this.width / str
+        const windowH = this.$getWindowH()
+        this.topDistance = (windowH - 187.5) / 2
+        this.viewTop = (187.5 - this.height) / 2
+        this.hideHeight = (windowH - 187.5) / 2
       })
     },
     getImageInfo () {
@@ -67,36 +74,39 @@ export default {
       let y = this.y - this.imgy
       ctx.drawImage(this.imageSrc, 0, 0, this.baseWidth, this.baseHeight)
       ctx.draw(true, () => {
-        this.$canvasToTempFilePath(x, y, 300, 150, 300, 150, 1, 'myCanvas').then(res => {
+        this.$canvasToTempFilePath(x, y, 375, 187.5, 375, 187.5, 1, 'myCanvas').then(res => {
           this.showImage(res.tempFilePath, this.picIndex)
         })
       })
     },
-    scroll (e) {
-      if (e.mp.touches.length === 2) {
-        let xMove = e.mp.touches[1].clientX - e.mp.touches[0].clientX
-        let yMove = e.mp.touches[1].clientY - e.mp.touches[0].clientY
-        let distance = Math.sqrt(xMove * xMove + yMove * yMove)
-        if (this.olddistance === 0) {
-          this.olddistance = distance
-        } else {
-          this.newdistance = distance
-          this.diffdistance = this.newdistance - this.olddistance
-          this.olddistance = this.newdistance
-          this.Scale = this.Scale + 0.005 * this.diffdistance
-          console.log(this.Scale)
-          if (this.Scale > 2.5) {
-            return
-          } else if (this.Scale < 1) {
-            return
-          }
-          this.height = 150 * this.Scale
-          this.width = 300 * this.Scale
-        }
-      }
-    },
-    endTou (e) {
-      this.olddistance = 0
+    // scroll (e) {
+    //   this.maxLeft = 375 - this.width
+    //   this.maxTop = 375 - this.height
+    //   if (e.mp.touches.length === 2) {
+    //     let xMove = e.mp.touches[1].clientX - e.mp.touches[0].clientX
+    //     let yMove = e.mp.touches[1].clientY - e.mp.touches[0].clientY
+    //     let distance = Math.sqrt(xMove * xMove + yMove * yMove)
+    //     if (this.olddistance === 0) {
+    //       this.olddistance = distance
+    //     } else {
+    //       this.newdistance = distance
+    //       this.diffdistance = this.newdistance - this.olddistance
+    //       this.olddistance = this.newdistance
+    //       this.Scale = this.Scale + 0.005 * this.diffdistance
+    //       if (this.Scale > 2.5) {
+    //         return
+    //       } else if (this.Scale < 1) {
+    //         return
+    //       }
+    //       this.height = 150 * this.Scale
+    //       this.width = 300 * this.Scale
+    //     }
+    //   }
+    // },
+    endTou () {
+      // this.olddistance = 0
+      // this.oldSingleDisX = 0
+      // this.oldSingleDisY = 0
       this.getRect()
     },
     getRect () {
@@ -105,16 +115,13 @@ export default {
         _this.x = Math.abs(rect.left)
         _this.y = Math.abs(rect.top)
       }).exec()
-      this.$createSelectorQuery().select('.imgPath').boundingClientRect(function (rect) {
+      this.$createSelectorQuery().select('.viewPic').boundingClientRect(function (rect) {
         _this.imgx = Math.abs(rect.left)
         _this.imgy = Math.abs(rect.top)
       }).exec()
     }
   },
   onReady () {
-    if (this.picIndexSrc) {
-      this.imageSrc = this.picIndexSrc
-    }
     this.loadImage()
   }
 }
@@ -133,29 +140,49 @@ export default {
   right: 0;
   bottom: 0;
   display: block;
+  background-color: black;
   align-items: center;
   flex-direction: column;
 }
+.topHideHalf {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: rgb(61, 61, 61);
+  opacity: 0.8;
+  z-index: 9999999999999999999;
+}
+.bottomHideHalf {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgb(61, 61, 61);
+  opacity: 0.8;
+  z-index: 9999999999999999999;
+}
 
 .cropper-config{
-  padding: 40rpx;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 40px;
+  color: white;
+  background-color: rgb(83, 83, 83);
+  z-index: 9999999999999999999999999999;
+  text-align: center;
+  line-height: 40px;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .cropper-content{
   margin-top: 60px;
-  height: 300px;
+  height: 80;
   padding-top: 40px;
   width: 100%;
-  background-color: black;
-}
-
-.FilePath {
-    width: 300px;
-    height: 150px;
-    margin: 0px auto;
-    overflow: hidden;
-    text-align: center;
-    line-height: 150px;
+  overflow: visible;
 }
 .wx-corpper{
   position: relative;
