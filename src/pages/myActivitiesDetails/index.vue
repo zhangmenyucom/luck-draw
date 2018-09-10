@@ -4,22 +4,20 @@
     <load :isshow="isShow" :isanimation="isAnimation"/>
     <signIn :isanimation.sync='isAnimation'  :signInCB = "signInCB"/>
     <div v-if='!isShow'>
-      <!-- <meIntegral :score='score'/> -->
       <div class="activitiesDetails">
         <img mode='aspectFit' :src="prize.metadata.url">
         <div class="name antialiased">
           <span>[ 奖品 ]&nbsp;{{prize.name}}</span>
         </div>
-        <!-- 中间提示 -->
         <div v-if="activitie.metadata.drawRule === 'timed'" class="goldBean">
-          <span class='bold'>
-            <span style="color:red">{{activitie.metadata.endTimeString}}</span>开奖
-          </span>
+          <div class='bold'>
+            {{endDateStr}}<span style="color:red">{{endTimeStr}}</span>开奖
+          </div>
     </div>
     <div v-if="activitie.metadata.drawRule === 'fullParticipant'" class="goldBean">
-          <span class='bold'>
+          <div class='bold'>
             满<span style="color:red">{{activitie.num}}</span>人开奖
-          </span>
+          </div>
     </div>
     <div v-if="prize.name == '定制真爱马克杯'">
       <div class='hei' />
@@ -53,25 +51,6 @@
         <sapn class='explainq'>最终服务与责任由合作方承担，本次活动最终解释权归钱包生活所有。</sapn>
       </div>
     </div>
-    <!-- <div class="hint" v-if="state >= 0 && state < 5">
-      <div class="c"></div>
-      <div class="bets" v-if="(state >= 2 && state < 5) && participants.id">
-        <span>
-          已下注
-        </span>
-        <div>
-          {{participants.tickets ? participants.tickets.length : 0}}<span>注</span>
-        </div>
-        <text @tap="() => {this.isLookAtTheLuckyNumber = true}">
-          查看幸运号
-        </text>
-        <i></i>
-      </div>
-      提示：注数越多，获胜几率越大，开奖以幸运号为准。
-    </div> -->
-    <!-- 中间提示结束 -->
-
-    <!-- 未中奖 -->
     <div class="draw hint" v-if="state === 5 && participants.id">
       <span></span>
       <div class="">
@@ -83,9 +62,6 @@
       </div>
       <span></span>
     </div>
-    <!-- 未中奖结束 -->
-
-    <!-- 未参与 活动结束 -->
     <div class="draw hint" v-if="state >= 5 && !participants.id">
       <span></span>
       <div class="">
@@ -96,9 +72,6 @@
       </div>
       <span></span>
     </div>
-    <!-- 未参与 活动结束 结束-->
-
-    <!-- 中奖 -->
     <div class="draw hint" v-if="state === 6 || state === 7">
       <span></span>
       <div class="">
@@ -110,9 +83,6 @@
       </div>
       <span></span>
     </div>
-    <!-- 中奖结束 -->
-
-    <!-- 抽奖按钮 -->
     <div class="prize" v-if ="state >= 0 && state <= 3 ">
       <div>
         <div class='bold antialiased'>
@@ -122,8 +92,6 @@
         </div>
       </div>
     </div>
-    <!-- 抽奖按钮结束 -->
-    <!-- 中奖名单 -->
     <div class="drawList" v-if='state >= 5'>
       <div class="border">
         <div>
@@ -138,25 +106,15 @@
         查看更多<img src="/static/img/right.png" alt="">
       </a>
     </div>
-    <!-- 中奖名单结束 -->
-
-    <!-- 参加列表 -->
     <div class="participant" v-if="participantTotal>0">
       <span class='antialiased'>
         已有{{participantTotal}}人参加 <a :href= "'/pages/participantList/index?id=' + activitie.id">查看全部 》</a>
       </span>
       <headPortrait :list="participantList" rangeKey="img" />
     </div>
-    <!-- 参加列表结束 -->
-    <!-- 我发起的可编辑 -->
-    <!-- <div v-if="activitie.owner.id === userId && state <= 3 && participantTotal === 0">
-      <button>编辑</button>
-    </div> -->
     <button class="bottom button" open-type="share" v-if="state <= 3">
       分享领金豆
     </button>
-
-    <!-- 弹出层 -->
     <div class="modal" @tap="hideModal" v-if="isModal && (state === 1 || state === 3 || state === 4 || isLookAtTheLuckyNumber)">
       <div class="content" @tap.stop="">
         <img src="../../../static/img/group.png" mode='widthFix'>
@@ -237,7 +195,7 @@
   import signIn from '@/components/signIn'
   import top from '@/components/top'
   import FootprintsActivities from '@/services/footprintsActivities'
-  import ActivitiesService from '@/services/activitiesService'
+  import ActivitiesService from '@/services/getMyActivityDetail'
   import ParticipantsService from '@/services/participantsService'
   import { getUserInfo } from '@/utils'
   import MeScoresService from '@/services/meScoresService.js'
@@ -287,7 +245,9 @@
         isLookAtTheLuckyNumber: false,
         miniappId: 'qianbaocard_mkt',
         state: 0,
-        userId: ''
+        userId: '',
+        endDateStr: '',
+        endTimeStr: ''
         // 0 NotInvolved 未参与
         // 1 Bets 下注
         // 2 ParticipateIn 参与过
@@ -326,15 +286,15 @@
       getActivitie (id) { // 获取活动详情
         const userInfo = getUserInfo()
         this.userId = userInfo.id
-        ActivitiesService.get({
+        ActivitiesService.createActivity({
           id
         }).then((res) => {
           if (res.code === 0) {
             this.prize = res.data.items[0]
-            console.log('1', this.prize)
             this.activitie = res.data
             this.activitie.endTime = new Date(this.activitie.endTime).toLocaleString()
-            console.log('2', this.activitie)
+            this.endDateStr = res.data.metadata.endTimeString.substr(0, 10)
+            this.endTimeStr = res.data.metadata.endTimeString.substr(-5)
             if (res.data.status === 'REWARDED') { // 活动已结束
               // 处理中奖信息
               const luckyItems = JSON.parse(res.data.metadata.luckyItems)

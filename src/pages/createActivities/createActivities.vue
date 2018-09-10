@@ -42,8 +42,8 @@
                     <div class="weui-cell__bd">开奖方式</div>
                     <div class="weui-cell__ft">
                       <radio-group class="radio-group" @change="radioChange">
-                          <radio style="transform:scale(0.7);position:relative;left:5px;bottom:2px" value="timed" color="red" checked="true"/>到时间
-                          <radio style="transform:scale(0.7);position:relative;left:5px;bottom:2px" value="fullParticipant" color="red" />满人数
+                          <radio style="transform:scale(0.8);position:relative;left:5px;bottom:2px" value="timed" color="red" checked="true"/>到时间
+                          <radio style="transform:scale(0.8);position:relative;left:5px;bottom:2px" value="fullParticipant" color="red" />满人数
                       </radio-group>
                     </div>
                 </div>
@@ -56,14 +56,14 @@
                 </div>
                 <div v-if="drawRule === 'fullParticipant'" class="weui-cell weui-cell_access">
                     <div class="weui-cell__bd">开奖人数 <span style="color: red">*</span></div>
-                    <input type="number" placeholder="数量" @input="fullParticipantNum" class="weui-cell__ft" style="color:black;display: inline;vertical-align: middle;" />
+                    <input type="number" placeholder="数量" :value="peopleNum" @input="fullParticipantNum" class="weui-cell__ft" style="color:black;display: inline;vertical-align: middle;" />
                     <span class="weui-cell__ft" style="margin-left:5px;vertical-align: middle;">人</span>
                 </div>
             </div>
             <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
                 <div class="weui-cell weui-cell_access" style="padding:5px 0">
                     <div class="weui-cell__bd">允许参与者分享</div>
-                    <switch class="weui-cell__ft" checked @change="switchChange" style="transform:scale(0.8);position:relative;left:10px" />
+                    <switch class="weui-cell__ft" @change="switchChange" style="transform:scale(0.8);position:relative;left:10px" />
                 </div>
             </div>
             <div class="uperAddActivity" @click="navToUper"><span>使用基本版&nbsp;></span></div>
@@ -112,7 +112,7 @@
           isShare: true,
           itemName: [],
           itemNum: [],
-          peopleNum: 0,
+          peopleNum: '',
           giftItems: [{id: 'system', name: '', metadata: {url: '', num: 0}}],
           prizeEndTime: 0,
           jsonString: ''
@@ -308,23 +308,45 @@
         switchChange (e) {
           this.isShare = e.mp.detail.value
         },
+        navToUper () {
+          this.$switchTab('/pages/baseCreateActivity/createActivities')
+        },
         dataHandle () {
-          this.prizeEndTime = new Date(this.dateTime).getTime()
+          this.prizeEndTime = new Date(this.dateTime).getTime() + 3000
+          this.giftImgSrc.map((item) => {
+            this.mediaData.push({
+              'type': 'IMAGE',
+              'url': item,
+              'layout': 'COVER',
+              'title': '',
+              'text': '',
+              'order': 0
+            })
+          })
           let jsonArr = []
           if (!this.giftPictures.length) return
           for (let i = 0; i < this.giftPictures.length; i++) {
             jsonArr.push({'picUrl': this.giftPictures[i]})
           }
           this.jsonString = JSON.stringify(jsonArr)
-          console.log(this.jsonString)
-        },
-        navToUper () {
-          this.$switchTab('/pages/baseCreateActivity/createActivities')
         },
         createActivity () {
-          const query = this.$createSelectorQuery()
-          console.log(query.select('#GiftName'))
+          if (this.peopleNumInput === 'null') {
+            this.$showToast('请输入开奖人数!')
+            return
+          }
+          if (this.itemName.length < this.giftList.length) {
+            this.$showToast('请输入奖品名称!')
+            return
+          }
+          if (this.itemNum.length < this.giftList.length) {
+            this.$showToast('请输入奖品数量!')
+            return
+          }
           this.dataHandle()
+          if (this.giftItems[0].metadata.url === '') {
+            this.giftItems[0].metadata.url = this.giftImgSrc[0]
+          }
           CreatePersonalActivity.createActivity({
             sellerId: 'system',
             owner: {id: this.userInfo.id, nickName: this.userInfo.nickName, avatar: this.userInfo.avatar},
@@ -333,17 +355,23 @@
             endTime: this.prizeEndTime,
             num: this.peopleNum,
             items: this.giftItems,
+            media: this.mediaData,
             metadata: {
               drawRule: this.drawRule,
               urls: this.jsonString,
-              isShare: this.isShare
+              isShare: this.isShare,
+              endTimeString: this.pickerDate
             }
           }).then(res => {
-            this.$navigateTo(`/pages/myActivitiesDetails/index?id=${res.data.id}`)
+            this.$navigateTo(`/pages/activitiesDetails/index?id=${res.data.id}`)
           })
         }
       },
-      onLoad () {
+      onShow () {
+        this.giftPictures = []
+        this.itemName = []
+        this.itemNum = []
+        this.peopleNum = ''
         this.userInfo = this.$getStorageSync('userInfo')
         this.getNowDate()
       }
