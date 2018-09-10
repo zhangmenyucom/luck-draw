@@ -51,7 +51,12 @@
         score: 0,
         scoreCounters: {},
         number: 0,
-        onLuckyDraw: [],
+        onLuckyDraw: [{
+          dayTime: '',
+          timeTime: '',
+          media: [{url: ''}],
+          metadata: {drawRule: ''}
+        }],
         willLuckDraw: []
       }
     },
@@ -122,6 +127,22 @@
               // 现在多余 留待后用
               if (date > activitie.startTime) {
                 onLuckyDraw.push(activitie)
+                onLuckyDraw.forEach((item) => {
+                  if (item.metadata.drawRule === 'timed') {
+                    let getMonth = new Date(item.endTime).getMonth()
+                    let getDay = new Date(item.endTime).getDate()
+                    let getHours = new Date(item.endTime).getHours().toString()
+                    let getMinutes = new Date(item.endTime).getMinutes().toString()
+                    if (getHours.length < 2) {
+                      getHours = '0' + getHours
+                    }
+                    if (getMinutes.length < 2) {
+                      getMinutes = '0' + getMinutes
+                    }
+                    item.dayTime = getMonth + '月' + getDay + '日'
+                    item.timeTime = getHours + ':' + getMinutes
+                  }
+                })
               } else {
                 willLuckDraw.push(activitie)
               }

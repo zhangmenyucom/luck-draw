@@ -270,6 +270,7 @@
           id,
           append: 'BET_NUM'
         }).then((res) => {
+          console.log('1', res)
           if (res.code === 0) {
             // 转化需要注数的数据类型
             res.data.metadata.ticketsNum = res.data.metadata.ticketsNum && parseInt(res.data.metadata.ticketsNum)
