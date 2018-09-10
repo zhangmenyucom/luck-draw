@@ -61,12 +61,11 @@ export default {
         {
           sn: '1003',
           relativeSn: '',
-          xelementLayoutType: 'ABSOLUTELY',
+          xelementLayoutType: 'CENTER',
           yelementLayoutType: 'ABSOLUTELY',
-          elementContent: this.$getStorageSync('userInfo').nickName,
+          elementContent: '[ 奖品 ]  ' + options.name,
           elementMediaType: 'TEXT',
-          x: 280,
-          y: 260,
+          y: 680,
           font: {
             name: '黑体',
             elementFontStyle: 0,
@@ -81,24 +80,42 @@ export default {
         {
           sn: '1004',
           relativeSn: '',
-          xelementLayoutType: 'ABSOLUTELY',
+          xelementLayoutType: 'CENTER',
           yelementLayoutType: 'ABSOLUTELY',
-          elementContent: 'https://oss.qianbaocard.org/20180904/4d42ed9420d74db1ad19f035ef6b6bea.jpg',
-          elementMediaType: 'IMG',
-          x: 319,
-          y: 700,
-          height: 112,
-          width: 112
+          elementContent: this.$getStorageSync('userInfo').nickName,
+          elementMediaType: 'TEXT',
+          y: 280,
+          font: {
+            name: '黑体',
+            elementFontStyle: 0,
+            fontSize: 25
+          },
+          color: {
+            r: 70,
+            g: 70,
+            b: 70
+          }
         },
         {
           sn: '1005',
           relativeSn: '',
           xelementLayoutType: 'ABSOLUTELY',
           yelementLayoutType: 'ABSOLUTELY',
+          elementContent: options.twoCode,
+          elementMediaType: 'IMG',
+          x: 319,
+          y: 750,
+          height: 100,
+          width: 100
+        },
+        {
+          sn: '1006',
+          relativeSn: '',
+          xelementLayoutType: 'CENTER',
+          yelementLayoutType: 'ABSOLUTELY',
           elementContent: '长按识别小程序码，参与抽奖。',
           elementMediaType: 'TEXT',
-          x: 220,
-          y: 860,
+          y: 910,
           font: {
             name: 'PingFangSC',
             elementFontStyle: 0,

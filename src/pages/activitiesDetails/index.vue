@@ -259,6 +259,7 @@
   import ParticipantsService from '@/services/participantsService'
   import { getUserInfo } from '@/utils'
   import MeScoresService from '@/services/meScoresService.js'
+  import TwoCodeService from '@/services/twoCodeService.js'
   import getMeScores from '@/common/js/getMeScores.js'
   const mta = require('@/common/js/mta_analysis.js')
   export default {
@@ -351,8 +352,11 @@
         this.display = !this.display
       },
       toMakeImg () {
-        console.log(this.activitie.media[0].url)
-        this.$navigateTo('../makePicture/index?title=生成分享图&url=' + this.activitie.media[0].url)
+        TwoCodeService.get().then((res) => {
+          if (res.code === 0) {
+            this.$navigateTo('../makePicture/index?title=生成分享图&url=' + this.activitie.media[0].url + '&twoCode=' + res.data.url + '&name=' + this.prize.name)
+          }
+        })
       },
       getActivitie (id) { // 获取活动详情
         const userInfo = getUserInfo()
