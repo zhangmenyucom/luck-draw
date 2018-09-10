@@ -120,7 +120,7 @@
       </div>
       <div class="divButton">
         <button class="butotn-o" @tap="chooseAddress">{{state === 6 ? '去领奖' : '信息已填写'}}</button>
-        <a :href="'/pages/imgDownload/index?url=' + melucky.metadata.image +'&'+ 'title=炫耀一下'" class="button">炫耀一下</a>
+        <a href="" class="button" @tap="toMakeImg">炫耀一下</a>
       </div>
       <span></span>
     </div>
@@ -305,7 +305,9 @@
         isLookAtTheLuckyNumber: false,
         miniappId: 'qianbaocard_mkt',
         state: 0,
-        display: true
+        display: true,
+        activity: '',
+        QR: ''
         // 0 NotInvolved 未参与
         // 1 Bets 下注
         // 2 ParticipateIn 参与过
@@ -353,8 +355,9 @@
       },
       toMakeImg () {
         TwoCodeService.get().then((res) => {
+          this.QR = res.data.url
           if (res.code === 0) {
-            this.$navigateTo('../makePicture/index?title=生成分享图&url=' + this.activitie.media[0].url + '&twoCode=' + res.data.url + '&name=' + this.prize.name)
+            this.$navigateTo('../makePicture/index?title=生成分享图&activity=' + JSON.stringify(this.activitie) + '&twoCode=' + res.data.url)
           }
         })
       },
@@ -370,6 +373,7 @@
             }
             this.prize = res.data.items[0]
             this.activitie = res.data
+            this.activity = JSON.stringify(res.data)
             this.betNum = res.data.betNum
 
             if (res.data.metadata.ticketsNum === res.data.betNum) {
