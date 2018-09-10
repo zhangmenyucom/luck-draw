@@ -157,51 +157,51 @@
         </div>
       </div>
     </template>
-    <script>
-      import load from '@/components/loading'
-      import meIntegral from '@/components/meIntegral'
-      import headPortrait from '@/components/headPortrait'
-      import signIn from '@/components/signIn'
-      import top from '@/components/top'
-      import luckyitems from './luckyItems'
-      import luckDraw from './luckDraw'
-      import openingPrizeAfter from './openingPrizeAfter'
-      import FootprintsActivities from '@/services/footprintsActivities'
-      import ActivitiesService from '@/services/activitiesService'
-      import ParticipantsService from '@/services/participantsService'
-      import {
-        getUserInfo
-      } from '@/utils'
-      import MeScoresService from '@/services/meScoresService.js'
-      import getMeScores from '@/common/js/getMeScores.js'
-      const mta = require('@/common/js/mta_analysis.js')
-      export default {
-        data () {
-          return {
-            isShow: true,
-            id: '',
-            score: 0,
-            participantList: [],
-            participantTotal: 0,
-            luckyList: [],
-            activitie: {
-              id: '',
-              metadata: {
-                ticketsNum: 0
-              },
-              media: [{
-                url: ''
-              }]
-            },
-            prize: {
-              metadata: {
-                num: 0
-              }
-            },
-            participants: {
-              tickets: []
-            },
-            isModal: false,
+<script>
+  import load from '@/components/loading'
+  import meIntegral from '@/components/meIntegral'
+  import headPortrait from '@/components/headPortrait'
+  import signIn from '@/components/signIn'
+  import top from '@/components/top'
+  import luckyitems from './luckyItems'
+  import luckDraw from './luckDraw'
+  import openingPrizeAfter from './openingPrizeAfter'
+  import FootprintsActivities from '@/services/footprintsActivities'
+  import ActivitiesService from '@/services/activitiesService'
+  import ParticipantsService from '@/services/participantsService'
+  import {
+    getUserInfo
+  } from '@/utils'
+  import MeScoresService from '@/services/meScoresService.js'
+  import getMeScores from '@/common/js/getMeScores.js'
+  const mta = require('@/common/js/mta_analysis.js')
+  export default {
+    data () {
+      return {
+        isShow: true,
+        id: '',
+        score: 0,
+        participantList: [],
+        participantTotal: 0,
+        luckyList: [],
+        activitie: {
+          id: '',
+          metadata: {
+            ticketsNum: 0
+          },
+          media: [{
+            url: ''
+          }]
+        },
+        prize: {
+          metadata: {
+            num: 0
+          }
+        },
+        participants: {
+          tickets: []
+        },
+        isModal: false,
         ticketsNum: 1, // 当前用户下注数
         ticketsTotal: 0, // 所有用户下注总数
         luckyItemTotal: 0,
@@ -297,15 +297,15 @@
             this.participateBet = parseInt(this.score / parseInt(this.activitie.metadata.price))
           }
         })
-},
-modifyTicketsNum (e) {
-  const type = e.target.dataset.type
-  let newTicketsNum
-  if (type === 'add') {
-    newTicketsNum = this.ticketsNum + 1
-  } else {
-    newTicketsNum = this.ticketsNum - 1
-  }
+      },
+      modifyTicketsNum (e) {
+        const type = e.target.dataset.type
+        let newTicketsNum
+        if (type === 'add') {
+          newTicketsNum = this.ticketsNum + 1
+        } else {
+          newTicketsNum = this.ticketsNum - 1
+        }
         // 开始判断是否可添加
         const surplusTicketsNum = parseInt(this.activitie.metadata.ticketsNum) - parseInt(this.betNum) // 活动剩余注数
         const price = this.activitie.metadata.price // 每注需要金豆

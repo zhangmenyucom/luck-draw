@@ -118,5 +118,11 @@ module.exports = [{
     navigationBarTitleText: '常见问题',
     enablePullDownRefresh: true
   }
+}, {
+  path: '/pages/baseCreateActivityHome/index',
+  config: {
+    navigationBarTitleText: '发起抽奖',
+    enablePullDownRefresh: true
+  }
 }
 ]
