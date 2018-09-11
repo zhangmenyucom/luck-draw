@@ -22,7 +22,7 @@
 
         <!-- 赞助商 -->
         <div class="hint">
-          <span>赞助商{{state}}</span>
+          <span>赞助商</span>
           <div class="">
             <span class='bold'>抽奖助手</span>
             <i class='icon iconfont icon-xiaochengxu' />

@@ -15,7 +15,7 @@
 </template>
 <script>
   export default {
-    props: [`title`, `background`, `hideIcone`],
+    props: [`title`, `background`, `hideIcone`, `backNum`],
     data () {
       return {
         isHome: false,
@@ -24,19 +24,18 @@
     },
     methods: {
       back () {
-        this.$navigateBack()
+        this.$navigateBack(this.backNum || 1)
       },
       goHome () {
         this.$switchTab('/pages/index/index')
       }
     },
     onLoad () {
-      const isHome = new Set([1008, 1014, 1007, '1007', 1011, '1011'])
+      const isHome = new Set([1008, 1014, 1007, '1007', 1011, '1011', 'createActivities'])
       const systemInfo = this.$getSystemInfoSync()
-      console.log('systemInfo', systemInfo)
-      this.isIPhoneX = systemInfo.model.indexOf('iPhone X') > -1
-      console.log('systemInfo', systemInfo)
       const scene = this.$getStorageSync('scene')
+      // 判断是否是isIPhoneX
+      this.isIPhoneX = systemInfo.model.indexOf('iPhone X') > -1
       this.isHome = scene && isHome.has(scene)
       // this.$removeStorage('scene')
     }
