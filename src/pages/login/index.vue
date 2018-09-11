@@ -13,7 +13,7 @@
       <img mode="widthFix" src="/static/img/login.png" alt="">
     </div>
 
-    <button class="button" @tap='login' open-type='getUserInfo'>
+    <button class="button" @getuserinfo='getUserInfo' open-type='getUserInfo'>
       去抽奖
     </button>
   </div>
@@ -34,7 +34,7 @@ export default {
 
   },
   methods: {
-    login (e) {
+    getUserInfo (e) {
       AuthService.wxLogin(e.mp.detail).then((res) => {
         if (res.code === 0) {
           this.$navigateBack()

@@ -17,7 +17,10 @@
       <activitieList :onDraw="onLuckyDraw" :willDraw="willLuckDraw" />
     </div>
     <!-- 活动列表结束 -->
-    <signIn :signInCB = "signInCB" :showModel="!isModel"/>
+
+    <!-- 签到 -->
+    <signIn :isLogin = 'isLogin' />
+    <!-- 签到结束 -->
   </div>
 </template>
 
@@ -30,7 +33,6 @@
   import {
     getUserInfo
   } from '@/utils'
-  import ScoreRulesService from '@/services/scoreRulesService'
   import getMeScores from '@/common/js/getMeScores.js'
   import share from '@/common/js/share.js'
   import MeScoresService from '@/services/meScoresService.js'
@@ -42,15 +44,13 @@
         userInfo: {},
         activitieList: [],
         week: ['一', '二', '三', '四', '五', '六', '七'],
-        goldBean: [0, 0, 0, 0, 0, 0, 0],
         complete: false,
         isGet: false,
         onPullDownRefresh: false,
         pageNum: 1,
-        isModel: true,
+        isLogin: false,
         score: 0,
         scoreCounters: {},
-        number: 0,
         onLuckyDraw: [{
           dayTime: '',
           timeTime: '',
@@ -77,18 +77,6 @@
         this.onPullDownRefresh = true
         this.complete = false
         this.getActivitieList()
-      },
-      getScoreRules () { // 获取积分规则
-        ScoreRulesService.getList().then(res => {
-          if (res.code === 0) {
-            // 处理每天对应的积分数
-            const number = this.scoreCounters.number > 7 ? this.scoreCounters.number - 7 : 0 // 需要展示的第一天
-            this.number = number
-            const goldBeanRules = JSON.parse(res.data.filter((rule) => rule.type === 2)[0].rule)
-            --goldBeanRules.maxStep
-            this.goldBean = [...Array(7)].map((v, i) => parseInt(goldBeanRules.base) + ((i + number) > parseInt(goldBeanRules.maxStep) ? parseInt(goldBeanRules.maxStep) : (i + number)) * parseInt(goldBeanRules.stepAdd))
-          }
-        })
       },
       getBean () {
         this.$setStorageSync('getBeanMethod', '首页-赚金豆')
@@ -124,9 +112,9 @@
             const willLuckDraw = []
             res.data.forEach((activitie) => {
               activitie.url = `/pages/activitiesDetails/index?id=${activitie.id}&method='首页'&name=${activitie.name}`
-              // 现在多余 留待后用
               if (date > activitie.startTime) {
                 onLuckyDraw.push(activitie)
+
                 onLuckyDraw.forEach((item) => {
                   if (item.metadata.drawRule === 'timed') {
                     let getMonth = new Date(item.endTime).getMonth()
@@ -166,7 +154,6 @@
           this.getMeScores()
         }
         this.scoreCounters = data.scoreCounters || this.$getStorageSync('scoreCounters') // 获取连续签到天数
-        this.getScoreRules()
         getMeScores.start(this)
       }
     },
@@ -179,8 +166,12 @@
     onShow () {
       const userInfo = getUserInfo()
       if (userInfo.id) {
+        setTimeout((data) => {
+          this.isLogin = true
+        }, 500)
         this.signInCB({})
       } else {
+        this.isLogin = false
         this.$navigateTo('/pages/login/index')
       }
     },

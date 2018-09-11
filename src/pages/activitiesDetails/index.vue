@@ -2,11 +2,9 @@
   <div>
     <top title="抽奖" />
     <load :isshow="isShow" :isanimation="isAnimation"/>
-    <signIn :isanimation.sync='isAnimation'  :signInCB = "signInCB"/>
     <div v-if='!isShow'>
-
       <div class="activitiesDetails">
-        <!-- <img mode='aspectFit' :src="activitie.media[0].url"> -->
+        <img v-if='activitie.media[0]' mode='aspectFit' :src="activitie.media[0].url">
         <div class="name antialiased">
           <text>「奖品」</text>{{prize.name}}&nbsp;<span>X&nbsp;{{prize.metadata.num}}</span>
         </div>
@@ -161,7 +159,6 @@
   import load from '@/components/loading'
   import meIntegral from '@/components/meIntegral'
   import headPortrait from '@/components/headPortrait'
-  import signIn from '@/components/signIn'
   import top from '@/components/top'
   import luckyitems from './luckyItems'
   import luckDraw from './luckDraw'
@@ -214,7 +211,6 @@
             image: ''
           }
         },
-        isAnimation: false,
         isLookAtTheLuckyNumber: false,
         miniappId: 'qianbaocard_mkt',
         mediaInfoimg: [], // 商品详情列表
@@ -237,7 +233,6 @@
     components: {
       load,
       headPortrait,
-      signIn,
       top,
       meIntegral,
       luckyitems,
@@ -472,6 +467,8 @@
       const userInfo = getUserInfo()
       if (userInfo.id) {
         this.signInCB()
+      } else {
+        this.$navigateTo('/pages/login/index')
       }
       this.isLoad()
     },
