@@ -52,7 +52,7 @@
         }
         if (type === `lucky`) getData.lucky = true
         this.isGet = true
-        ParticipantsService.get(getData).then((res) => {
+        ParticipantsService.getList(getData).then((res) => {
           if (res.code === 0) {
             const oldParticipantList = !this.onPullDownRefresh ? this.participantList : []
             const participantList = res.data.map((participant) => {

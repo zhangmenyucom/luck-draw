@@ -147,7 +147,7 @@
       },
       getParticipants (userInfo) {
         // 查询用户一共参与多少活动
-        ParticipantsService.get({
+        ParticipantsService.getList({
           userId: userInfo.id,
           activityType: 'PLATFORM_LUCKY_DRAW'
         }).then((res) => {
@@ -156,7 +156,7 @@
           }
         })
         // 查询中奖活动
-        ParticipantsService.get({
+        ParticipantsService.getList({
           userId: userInfo.id,
           activityType: 'PLATFORM_LUCKY_DRAW',
           lucky: true

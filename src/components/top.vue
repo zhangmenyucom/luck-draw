@@ -37,7 +37,7 @@
       // 判断是否是isIPhoneX
       this.isIPhoneX = systemInfo.model.indexOf('iPhone X') > -1
       this.isHome = scene && isHome.has(scene)
-      // this.$removeStorage('scene')
+      this.$removeStorage('scene')
     }
   }
 </script>
@@ -60,7 +60,7 @@
     }
     .icon{
       /*font-size: 20*@2;*/
-      padding-top: 11*@2;
+      padding-top: 9*@2;
       padding-left: 16*@2;
     }
     .title{

@@ -13,7 +13,7 @@
           <div v-if="activitie.metadata.drawRule == 'fullTicket'" class='state'>满<text>{{activitie.metadata.ticketsNum * activitie.metadata.price}}</text>金豆自动开奖，剩余<text>{{(activitie.metadata.ticketsNum-activitie.betNum)*activitie.metadata.price}}</text>金豆</div>
           <div v-if="activitie.metadata.drawRule == 'fullParticipant'" class='state'>满<text>{{activitie.metadata.participantsNum}}</text>人开奖，剩余<text>{{activitie.metadata.participantsNum-activitie.betNum}}</text>人</div>
           <div v-if="activitie.metadata.drawRule == 'timed'" class='state'>{{activitie.endTimeDay}}<text>{{activitie.endTimeHours}}</text>开奖</div>
-          <div class="info">
+          <div v-if="activitie.metadata.price" class="info">
             {{activitie.metadata.price}}<img src='/static/img/goldBean.png' class="" />参与
           </div>
         </div>
@@ -21,7 +21,7 @@
         <!-- 活动信息及状态end -->
 
         <!-- 赞助商 -->
-        <div class="hint">
+        <div class="hint" v-if='activitie.metadata.hasSponsor'>
           <span>赞助商</span>
           <div class="">
             <span class='bold'>抽奖助手</span>
@@ -42,13 +42,13 @@
           <!-- 开奖后 -->
 
           <!-- 中奖名单 -->
-          <luckyitems v-if='state >= 5' :list='luckyItemList' :activitie = 'activitie' />
+        <luckyitems v-if='state >= 5' :list='luckyItemList' :activitie = 'activitie' />
             <!-- 中奖名单结束 -->
             <!-- 抽奖按钮 -->
-            <luckDraw :state = 'state' :modifyState= 'modifyState'/>
+        <luckDraw :state = 'state' :bets='bets' :activitie= "activitie" :modifyState= 'modifyState'/>
             <!-- 抽奖按钮结束 -->
             <!-- 参加列表 -->
-            <div class="participant" v-if="participantTotal>0">
+        <div class="participant" v-if="participantTotal>0">
               <span class='antialiased'>
                 已有{{participantTotal}}人参加 <a :href= "'/pages/participantList/index?id=' + activitie.id">查看全部 》</a>
               </span>
@@ -58,9 +58,9 @@
             <!-- 底部 -->
             <div class='bottom'>
               <div>
-                <button class="button button-o">
+                <a href="/pages/baseCreateActivity/createActivities" class="button button-o">
                   发起抽奖
-                </button>
+                </a>
               </div>
               <div v-if="state <= 3" >
                 <button class="button" open-type="share"  @click="share">
@@ -117,7 +117,7 @@
                         {{state == 6 ? "恭喜，大奖是你的了" : '这次没中奖，送你点别的'}}
                       </div>
                       <div class="navigateP" >
-                        <a v-if="state == 6" class="navigate o-navigate">
+                        <a  :href="'/pages/takePrize/index?id='+participants.id" v-if="state == 6" class="navigate o-navigate">
                           领取奖品
                         </a>
                         <a v-if="state == 6" class="navigate">
@@ -322,13 +322,14 @@
         if (state > this.state) {
           this.isModal = true
           this.oldState = this.state
+          console.log('state', state)
           this.state = state
         }
       },
       getParticipants (activityId) {
         const userInfo = getUserInfo()
         // 查询用户是否参与活动
-        ParticipantsService.get({
+        ParticipantsService.getList({
           activityId,
           userId: userInfo.id
         }).then((res) => {
@@ -345,7 +346,7 @@
         })
 
         // 查询活动总参与人数
-        ParticipantsService.get({
+        ParticipantsService.getList({
           activityId
         }).then((res) => {
           if (res.code === 0) {
@@ -361,7 +362,20 @@
             this.participantTotal = res.total
           }
         })
+
         // 获取中奖者信息
+        ParticipantsService.getList({
+          activityId,
+          lucky: true
+        }).then((res) => {
+          if (res.code === 0) {
+            this.luckyItemList = res.data.map((data) => {
+              data.img = data.user.avatar
+              data.nickName = data.user.nickName
+              return data
+            })
+          }
+        })
       },
       isLoad () {
         if (this.$getStorageSync('activitieId') !== this.id || this.isShow) {
@@ -387,7 +401,6 @@
           }
         }).then(res => {
           this.$hideLoading()
-
           if (res.code === 0) {
             this.participants = res.data
             this.state = 2
@@ -405,7 +418,8 @@
           this.isLookAtTheLuckyNumber = false
           return false
         }
-        if (this.oldState || this.oldState === 0) {
+
+        if (this.state === 1 || this.state === 3) {
           this.state = this.oldState
         }
         this.ticketsNum = 1
@@ -432,7 +446,6 @@
       // }, 1000)
       this.ticketsNum = 1
       mta.Page.init()
-
       mta.Event.stat('lucky_draw', {
         'activityname': options.name
       })

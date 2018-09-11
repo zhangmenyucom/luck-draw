@@ -70,5 +70,7 @@
     color: #999!important;
     box-shadow:none!important;
   }
-
+  button::after{
+    border: none;
+  }
 </style>
