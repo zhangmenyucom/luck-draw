@@ -54,7 +54,7 @@
         onLuckyDraw: [{
           dayTime: '',
           timeTime: '',
-          media: [{url: ''}],
+          items: [{metadata: {image: ''}}],
           metadata: {drawRule: ''}
         }],
         willLuckDraw: []
@@ -111,11 +111,12 @@
             const onLuckyDraw = []
             const willLuckDraw = []
             res.data.forEach((activitie) => {
+              console.log(activitie)
               activitie.url = `/pages/activitiesDetails/index?id=${activitie.id}&method='首页'&name=${activitie.name}`
               if (activitie.metadata.drawRule === 'timed') {
                 const date = new Date(activitie.endTime)
-                activitie.endTimeDay = `${date.getMonth() + 1}月${date.getUTCDate()}日`
-                activitie.endTimeHours = `${date.getUTCHours() + 1}:${date.getUTCMinutes()}`
+                activitie.endTimeDay = `${date.getMonth() + 1}月${date.getDate()}日`
+                activitie.endTimeHours = `${date.getHours()}:${date.getMinutes()}分`
               }
               // 现在多余 留待后用
               if (date > activitie.startTime) {
