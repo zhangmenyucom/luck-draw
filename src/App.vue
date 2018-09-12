@@ -8,6 +8,7 @@
   export default {
     onShow (options) {
       this.$setStorageSync('scene', options.scene)
+      this.$setStorageSync('topscene', options.scene)
       mta.App.init({
         'appID': '500633711',
         'eventID': '500633717',

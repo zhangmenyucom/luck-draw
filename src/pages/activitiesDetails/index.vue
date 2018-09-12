@@ -532,17 +532,13 @@
       mta.Page.init()
 
       mta.Event.stat('lucky_draw', {
-        'activityname': options.name
+        'activityname': options.name,
+        'from': options.method
       })
-      if (options.method === '全部抽奖') {
-        mta.Event.stat('lucky_draw', {
-          'from': '全部抽奖'
-        })
-      } else if (options.method === '首页') {
-        mta.Event.stat('lucky_draw', {
-          'from': '首页'
-        })
-      }
+
+      mta.Event.stat('lucky_draw', {
+          'from': options.method
+      })
 
       if (this.$getStorageSync('scene') === 1014) {
         mta.Event.stat('lucky_draw', {

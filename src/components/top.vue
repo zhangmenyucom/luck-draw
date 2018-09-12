@@ -32,12 +32,13 @@
     },
     onLoad () {
       const isHome = new Set([1008, 1014, 1007, '1007', 1011, '1011', 'createActivities'])
-      const systemInfo = this.$getSystemInfoSync()
-      const scene = this.$getStorageSync('scene')
+      const scene = this.$getStorageSync('topscene')
+
       // 判断是否是isIPhoneX
+      const systemInfo = this.$getSystemInfoSync()
       this.isIPhoneX = systemInfo.model.indexOf('iPhone X') > -1
       this.isHome = scene && isHome.has(scene)
-      this.$removeStorage('scene')
+      this.$removeStorage('topscene')
     }
   }
 </script>
