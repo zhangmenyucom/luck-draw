@@ -1,9 +1,12 @@
 <template>
-  <div v-if ="state >= 0 && state <= 3 && activitie.metadata && activitie.metadata.drawRule == 'fullTicket'"  :class="{luckDraw:true, luckDraws:state == 2}">
+  <div v-if ="state >= 0 && state <= 3 && activitie.metadata && activitie.metadata.drawRule !== 'fullParticipant'"  :class="{luckDraw:true, luckDraws:state == 2}">
     <div class="prize">
       <div>
         <div class='bold antialiased'>
-          <form :data-state="state + 1" @submit.stop = "modifyState">
+          <form v-if="activitie.metadata.drawRule == 'fullTicket'" :data-state="state + 1" @submit.stop = "modifyState">
+            <button form-type = "submit">点我抽奖</button>
+          </form>
+          <form v-else report-submit @submit.stop = "bets">
             <button form-type = "submit">点我抽奖</button>
           </form>
         </div>
@@ -15,8 +18,11 @@
     <div class="prize">
       <div>
         <div class='bold antialiased'>
-          <form :data-state="state + 1" @submit.stop = "modifyState">
+          <form  v-if="activitie.metadata.drawRule == 'fullTicket'"  :data-state="state + 1" @submit.stop = "modifyState">
             <button form-type = "submit">点我加注</button>
+          </form>
+          <form v-else>
+            <button  open-type="share" >分享加速</button>
           </form>
         </div>
       </div>
@@ -27,9 +33,10 @@
     <div class="prize">
       <div>
         <div class='bold antialiased'>
-          <form :data-state="state + 1" @submit.stop = "modifyState">
+          <form >
             <button form-type = "submit">等待开奖</button>
           </form>
+
         </div>
       </div>
     </div>
@@ -37,7 +44,7 @@
   <!-- 按日期开奖 -->
   <div v-else :class="{'luckDraw-t':true, 'luckDraws-t':state == 2}">
     <div class="c"></div>
-    <div class="date">已参与，{{activitie.endTimeDay}} {{activitie.endTimeHours}}开奖</div>
+    <div class="date" v-if='state == 2'>已参与，{{activitie.endTimeDay}} {{activitie.endTimeHours}}开奖</div>
     <div class="prize">
       <div>
         <div class='bold antialiased'>

@@ -21,16 +21,30 @@
         <!-- 活动信息及状态end -->
 
         <!-- 赞助商 -->
-        <div class="hint" v-if='activitie.metadata.hasSponsor'>
-          <span>赞助商</span>
-          <div class="">
-            <span class='bold'>抽奖助手</span>
+        <div class="hint" v-if="activitie.metadata.hasSponsor || activitie.type == 'PERSONAL_LUCKY_DRAW'">
+          <span>{{activitie.type == "PERSONAL_LUCKY_DRAW" ? '抽奖发起人' : '赞助商'}}</span>
+          <div v-if='activitie.metadata.hasSponsor' class="">
+            <span class='bold'>{{activitie.metadata.sponsor.appName}}</span>
             <i class='icon iconfont icon-xiaochengxu' />
             <i class='icon iconfont icon-xuanzedizhi gray' />
           </div>
+          <div v-else>
+            <img :src="activitie.owner.avatar" />
+            {{activitie.owner.nickName}}
+          </div>
         </div>
         <!-- 赞助商结束 -->
-
+        <!-- 我发起的活动 可以看到中奖者信息 -->
+        <div class="participantMe" v-if="activitie.type == 'PERSONAL_LUCKY_DRAW' && state >= 5">
+          <div class="participantInfo">
+            查看中奖者收货信息（0/1） <i class ='icon iconfont icon-xuanzedizhi' />
+          </div>
+          <div class="explain">
+            抽奖开奖后，请根据中奖人联系信息于7日内发奖，<br />
+            若中奖人不满足发奖品要求时，建议短信告知.
+          </div>
+        </div>
+        <!-- 我发起的活动 可以看到中奖者信息 结束 -->
         <!-- 奖品详情 -->
         <div class="mediaInfo">
           <img mode='widthFix' v-for='(item, i) in mediaInfoimg' :src="item.url">
@@ -48,7 +62,7 @@
         <luckDraw :state = 'state' :bets='bets' :activitie= "activitie" :modifyState= 'modifyState'/>
             <!-- 抽奖按钮结束 -->
             <!-- 参加列表 -->
-        <div class="participant" v-if="participantTotal>0">
+            <div class="participant" v-if="participantTotal>0">
               <span class='antialiased'>
                 已有{{participantTotal}}人参加 <a :href= "'/pages/participantList/index?id=' + activitie.id">查看全部 》</a>
               </span>
@@ -56,7 +70,7 @@
             </div>
             <!-- 参加列表结束 -->
             <!-- 底部 -->
-            <div class='bottom'>
+            <div v-if="activitie.type != 'PERSONAL_LUCKY_DRAW'" class='bottom'>
               <div>
                 <a href="/pages/baseCreateActivity/createActivities" class="button button-o">
                   发起抽奖
@@ -65,6 +79,18 @@
               <div v-if="state <= 3" >
                 <button class="button" open-type="share"  @click="share">
                   分享领金豆
+                </button>
+              </div>
+            </div>
+            <div v-else class='bottom'>
+              <div v-if='participantTotal == 0' >
+                <a href="" class="button button-o">
+                  编辑
+                </a>
+              </div>
+              <div v-if="state <= 3" >
+                <button class="button" open-type="share"  @click="share">
+                  分享抽奖
                 </button>
               </div>
             </div>
@@ -188,7 +214,8 @@
           },
           media: [{
             url: ''
-          }]
+          }],
+          type: ''
         },
         prize: {
           metadata: {
@@ -282,8 +309,9 @@
             // 如果到时开奖 格式化时间
             if (res.data.metadata.drawRule === 'timed') {
               const date = new Date(res.data.endTime)
-              res.data.endTimeDay = `${date.getMonth() + 1}月${date.getUTCDate()}日`
-              res.data.endTimeHours = `${date.getUTCHours() + 1}:${date.getUTCMinutes()}分`
+              debugger
+              res.data.endTimeDay = `${date.getMonth() + 1}月${date.getDate()}日`
+              res.data.endTimeHours = `${date.getHours()}:${date.getMinutes()}分`
             }
 
             this.mediaInfoimg = res.data.media.filter((img) => img.layout === 'INTRODUCTION')
@@ -374,6 +402,16 @@
               data.nickName = data.user.nickName
               return data
             })
+          }
+        })
+
+        // 查询填写地址的参与者信息
+        ParticipantsService.getList({
+          activityId,
+          addressExist: true
+        }).then((res) => {
+          if (res.code === 0 && res.data.length > 0) {
+
           }
         })
       },

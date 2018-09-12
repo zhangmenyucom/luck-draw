@@ -293,14 +293,14 @@
             type: 'PERSONAL_LUCKY_DRAW',
             description: this.prizeDescription,
             endTime: this.prizeEndTime,
-            num: this.peopleNum,
             items: this.giftItems,
             media: this.mediaData,
             metadata: {
               drawRule: this.drawRule,
               urls: this.jsonString,
               isShare: this.isShare,
-              endTimeString: this.pickerDate
+              endTimeString: this.pickerDate,
+              participantsNum: this.peopleNum
             }
           }).then(res => {
             this.$navigateTo(`/pages/activitiesDetails/index?id=${res.data.id}`)

@@ -95,12 +95,6 @@ module.exports = [{
     enablePullDownRefresh: false
   }
 }, {
-  path: '/pages/myActivitiesDetails/index',
-  config: {
-    navigationBarTitleText: '详情',
-    enablePullDownRefresh: true
-  }
-}, {
   path: '/pages/commonQuestion/index',
   config: {
     navigationBarTitleText: '常见问题',
