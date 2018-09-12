@@ -6,7 +6,7 @@
     <div v-if='!isShow'>
 
       <div class="activitiesDetails">
-        <!-- <img mode='aspectFit' :src="activitie.media[0].url"> -->
+        <img mode='aspectFit' :src="activitie.media[0].url">
         <div class="name antialiased">
           <text>「奖品」</text>{{prize.name}}&nbsp;<span>X&nbsp;{{prize.metadata.num}}</span>
         </div>
@@ -62,7 +62,7 @@
         <luckyitems v-if='state >= 5' :list='luckyItemList' :activitie = 'activitie' />
             <!-- 中奖名单结束 -->
             <!-- 抽奖按钮 -->
-        <luckDraw :state = 'state' :modifyState= 'modifyState'/>
+        <luckDraw :state = 'state' :activitie = 'activitie' :modifyState= 'modifyState'/>
             <!-- 抽奖按钮结束 -->
             <!-- 参加列表 -->
             <div class="participant" v-if="participantTotal>0">
@@ -80,7 +80,7 @@
                 </a>
               </div>
               <div v-if="state <= 3" >
-                <button class="button" open-type="share"  @click="share">
+                <button class="button" @click="share">
                   分享领金豆
                 </button>
               </div>
@@ -92,7 +92,7 @@
                 </a>
               </div>
               <div v-if="state <= 3" >
-                <button class="button" open-type="share"  @click="share">
+                <button class="button" @click="share">
                   分享抽奖
                 </button>
               </div>
@@ -225,7 +225,8 @@
           endTimeHours: '',
           id: '',
           metadata: {
-            ticketsNum: 0
+            ticketsNum: 0,
+            drawRule: ''
           },
           media: [{
             url: ''
@@ -537,7 +538,7 @@
       })
 
       mta.Event.stat('lucky_draw', {
-          'from': options.method
+        'from': options.method
       })
 
       if (this.$getStorageSync('scene') === 1014) {
