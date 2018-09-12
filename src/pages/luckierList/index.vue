@@ -3,7 +3,7 @@
         <top title='中奖者'/>
         <div class="head">
             <div class="IconDiv">
-                <img class="activityPic" :src="activity.media[0].url"/>
+                <img class="activityPic" :src="activity.items[0].metadata.url"/>
                 <div class="joinNum">参与人数<span style="color:#FDB700;">{{activity.realNum}}</span>人</div>
             </div>
             <div class="activityInfo">
@@ -17,12 +17,12 @@
             <span>中奖名单</span>
             <div class="list">
                 <div class="list-content">
-                    <div v-for="(item, index) in luckyItems" :key="index" :class="index ===luckyItems.length-1?'bottomMargin':''">
+                    <div v-for="(item, index) in luckyItems" :class="index === luckyItems.length-1?'bottomMargin':''">
                         <div class="list-content-one">
-                            <div>
+                            <div >
                                 <div class="avatar"><img :src="item.user.avatar" alt=""></div>
                                 <div class="name">{{item.user.nickName}}</div>
-                                <div class="prizeInfo">奖品：&nbsp;{{luckyItems[0].metadata.rewards[0].name}}&nbsp;&nbsp;&nbsp;&nbsp;X{{luckyItems[0].metadata.rewards[0].metadata.num}}</div>
+                                <div class="prizeInfo">奖品：&nbsp;{{item.metadata.rewards[0].name}}&nbsp;&nbsp;&nbsp;&nbsp;X{{item.metadata.rewards[0].metadata && item.metadata.rewards[0].metadata.num}}</div>
                             </div>
                             <p class="name-call" style="font-size:12px">收货信息</p>
                             <div v-if="item.metadata.address">
@@ -88,7 +88,6 @@ export default {
           // 处理中奖信息
           this.luckyItems = res.data
           this.luckyItems.forEach(element => {
-            console.log(element)
             let tel = ''
             let address = ''
             element.metadata.rewards = JSON.parse(element.metadata.rewards)
@@ -101,10 +100,13 @@ export default {
               tel = '未填写'
               address = '未填写'
             }
-            this.copyData += '姓名:' + element.user.nickName +
-                                      '    奖品:' + element.metadata.rewards[0].name + 'X' + element.metadata.rewards[0].metadata.num +
+
+            if (element.metadata.rewards[0].metadata) {
+              this.copyData += '姓名:' + element.user.nickName +
+                                      '    奖品:' + element.metadata.rewards[0].name + 'X' + (element.metadata.rewards[0].metadata.num || '0') +
                                       '    联系电话:' + tel +
                                       '    收货地址:' + address + '        '
+            }
           })
         }
       })
@@ -136,9 +138,9 @@ export default {
       this.emailId = e.mp.detail.value
     }
   },
-  onLoad (a) {
-    this.getParticipants('5b8cf5ca711eae26806c47ac')
-    this.getActivities('5b8cf5ca711eae26806c47ac')
+  onLoad (data) {
+    this.getParticipants(data.id)
+    this.getActivities(data.id)
   },
   onShareAppMessage: share()
 }

@@ -59,6 +59,7 @@
     line-height: 24*@2;
     padding: 24*@2;
     text-align: center;
+    margin-top: 16*@2;
    .divButton {
      margin-top: 16*@2;
      display: flex;

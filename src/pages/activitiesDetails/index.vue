@@ -39,9 +39,9 @@
         <!-- 赞助商结束 -->
         <!-- 我发起的活动 可以看到中奖者信息 -->
         <div class="participantMe" v-if="activitie.type == 'PERSONAL_LUCKY_DRAW' && state >= 5">
-          <div class="participantInfo">
+          <a :href="'/pages/luckierList/index?id=' + activitie.id" class="participantInfo">
             查看中奖者收货信息（{{addressExistTotal}}/{{ticketsTotal}}） <i class ='icon iconfont icon-xuanzedizhi' />
-          </div>
+          </a>
           <div class="explain">
             抽奖开奖后，请根据中奖人联系信息于7日内发奖，<br />
             若中奖人不满足发奖品要求时，建议短信告知.
