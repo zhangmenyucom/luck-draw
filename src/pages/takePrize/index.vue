@@ -3,7 +3,7 @@
     <top title='领奖' />
     <!-- 地址展示 -->
     <div class='tips'>
-      请在开奖七天内填写，超时后不能
+      请在开奖七天内填写，超时后不能填写
     </div>
     <div class="address">
         <span class="title bold">
@@ -74,7 +74,6 @@
         })
       },
       chooseAddress () {
-        console.log(11)
         if (!this.isTakePrize) return false
         this.$chooseAddress().then(res => {
           this.address = {

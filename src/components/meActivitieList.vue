@@ -4,7 +4,7 @@
       <!-- <img mode='center' :src='item.media[0].url' alt=""> -->
       <div class="info">
         <span class='title'>
-          {{item.name||item.owner.nickName+'创建的活动'}}
+          {{item.name||item.items[0].name}}
         </span>
         <div class="info">
           <!-- <span>

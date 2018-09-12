@@ -62,7 +62,7 @@
         width:456*@1;
         height:72*@1;
         line-height: 72*@1;
-        border-radius:8*@1;
+        border-radius:4*@1;
         border:1*@1 solid rgba(221,221,221,1);
     }
     .button {
