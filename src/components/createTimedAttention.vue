@@ -1,18 +1,19 @@
 <template>
     <div class="attentionPage">
         <div class="attentionModal">
+            <img class="backgroundImg" src="/static/img/backgroundModal.png" />
             <div>
                 <div class="leftSolid"></div>
                 <span class="attentionTitle">提示</span>
                 <div class="rightSolid"></div>
             </div>
-            <div class="lightImg"><img src="/static/img/lightModal.png"></div>
+            <div class="lightImg"><img style="width:184rpx; height:207rpx" src="/static/img/lightModal.png"></div>
             <div class="textDiv">
                 <p class="firstText">你选择了按人数开奖：</p>
                 <p class="secondText"> 如若未达到指定人数，3天后将按</p>
                 <p class="thirdText">实际参与人数开奖</p>
             </div>
-            <div class="sureCreate">我知道了，确认发起</div>
+            <div @tap="createActivity" class="sureCreate">我知道了，确认发起</div>
         </div>
     </div>
 </template>
@@ -35,14 +36,23 @@
         z-index: 999999999999999999999999999;
     }
     .attentionModal {
+        position: relative;
         margin: 250*@1 auto;
         width:530*@1;
         height:657*@1;
-        background-image: "/static/img/backgroundModal.png";
         border-radius:8*@1;
         text-align: center;
     }
+    .backgroundImg {
+        width:530*@1;
+        height:657*@1;
+        position: absolute;
+        top: 0;
+        left: 0;
+        z-index: -1;
+    }
     .leftSolid {
+        display: inline-block;
         width:40*@1;
         height:2*@1;
         background:rgba(67,67,67,1);
@@ -57,6 +67,7 @@
         vertical-align: middle;
     }
     .rightSolid {
+        display: inline-block;
         width:40*@1;
         height:2*@1;
         background:rgba(67,67,67,1);
@@ -67,6 +78,7 @@
         margin-top: 26*@1;
     }
     .textDiv {
+        margin: 0 auto;
         margin-top: 40*@1;
         width:410*@1;
         height:126*@1;
@@ -79,6 +91,8 @@
     .sureCreate {
         width:360*@1;
         height:80*@1;
+        margin: 0 auto;
+        margin-top: 40*@1;
         background:rgba(243,185,19,1);
         border-radius:4*@1;
         font-size:32*@1;

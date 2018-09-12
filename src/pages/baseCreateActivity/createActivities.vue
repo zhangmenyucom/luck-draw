@@ -35,17 +35,19 @@
             </div>
             <div class="uperAddActivity" @click="navToUper"><span>使用高级版&nbsp;></span></div>
             <div class="weui-cells weui-cells_after-title" style="position:fixed;bottom:0;padding:8px 15px;">
-                <div class="createActivities" @click="createActivity">发起抽奖</div>
+                <div class="createActivities" @click="createButton">发起抽奖</div>
             </div>
         </div>
         <div v-if="addPic">
           <chooseImage :showImage="showImage" :picIndex="picIndex" :picIndexSrc="picIndexSrc" :imageSrc="imageSrc" />
         </div>
+        <createAttention v-if="showAttention" :createActivity="createActivity" />
     </div>
 </template>
 
 <script>
     import top from '@/components/top'
+    import createAttention from '@/components/createTimedAttention'
     import addGiftComp from '@/components/baseAddGift'
     import chooseImage from '@/components/chooseImage'
     import CreatePersonalActivity from '@/services/createPersonalActivity'
@@ -84,13 +86,15 @@
           giftItems: [{id: 'system', name: '', metadata: {url: '', num: 0}}],
           prizeEndTime: 0,
           jsonString: '',
-          mediaData: []
+          mediaData: [],
+          showAttention: false
         }
       },
       components: {
         top,
         addGiftComp,
-        chooseImage
+        chooseImage,
+        createAttention
       },
       methods: {
         getImage (index, picIndexSrc) {
@@ -271,18 +275,6 @@
           this.jsonString = JSON.stringify(jsonArr)
         },
         createActivity () {
-          if (this.peopleNumInput === 'null') {
-            this.$showToast('请输入开奖人数!')
-            return
-          }
-          if (this.itemName.length < this.giftList.length) {
-            this.$showToast('请输入奖品名称!')
-            return
-          }
-          if (this.itemNum.length < this.giftList.length) {
-            this.$showToast('请输入奖品数量!')
-            return
-          }
           this.dataHandle()
           if (this.giftItems[0].metadata.url === '') {
             this.giftItems[0].metadata.url = this.giftImgSrc[0]
@@ -304,8 +296,37 @@
             }
           }).then(res => {
             this.$navigateTo(`/pages/activitiesDetails/index?id=${res.data.id}`)
+            this.mediaData = []
+            this.showAttention = !this.showAttention
           })
-          this.mediaData = []
+        },
+        createButton () {
+          if (this.peopleNumInput === 'null') {
+            this.$showToast('请输入开奖人数!')
+            return
+          }
+          if (this.itemName.length < this.giftList.length) {
+            this.$showToast('请输入奖品名称!')
+            return
+          }
+          if (this.itemNum.length < this.giftList.length) {
+            this.$showToast('请输入奖品数量!')
+            return
+          }
+          if (this.drawRule === 'fullParticipant') {
+            const openNum = parseInt(this.peopleNum)
+            let giftTotalNum = 0
+            this.itemNum.forEach(element => {
+              giftTotalNum += parseInt(element)
+            })
+            if (giftTotalNum > openNum) {
+              this.$showToast('奖品总数不能大于开奖人数，请重新输入！')
+            } else {
+              this.showAttention = !this.showAttention
+            }
+          } else {
+            this.createActivity()
+          }
         }
       },
       onShow () {
