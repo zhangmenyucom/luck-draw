@@ -265,7 +265,6 @@
           id,
           append: 'BET_NUM'
         }).then((res) => {
-          console.log('1', res)
           if (res.code === 0) {
             // 转化需要注数的数据类型
             res.data.metadata.ticketsNum = res.data.metadata.ticketsNum && parseInt(res.data.metadata.ticketsNum)
@@ -284,6 +283,7 @@
               const date = new Date(res.data.endTime)
               res.data.endTimeDay = `${date.getMonth() + 1}月${date.getUTCDate()}日`
               res.data.endTimeHours = `${date.getUTCHours() + 1}:${date.getUTCMinutes()}分`
+              console.log('1', res)
             }
 
             this.mediaInfoimg = res.data.media.filter((img) => img.layout === 'INTRODUCTION')

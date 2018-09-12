@@ -21,14 +21,14 @@
                     </div>
                 </div>
                 <div v-if="drawRule === 'timed'" class="weui-cell weui-cell_access">
-                    <div class="weui-cell__bd">开奖时间 <span style="color: red">*</span></div>
+                    <div class="weui-cell__bd"><div>开奖时间<span style="color: red">*</span></div></div>
                     <picker class="weui-cell__ft" mode="multiSelector" @change="MultiPickerChange" :value="indexMulPicker" :range="dateList">
                       {{pickerDate}}
                     </picker>
                     <div class="weui-cell__ft weui-cell__ft_in-access" style="font-size: 0"></div>
                 </div>
                 <div v-if="drawRule === 'fullParticipant'" class="weui-cell weui-cell_access">
-                    <div class="weui-cell__bd">开奖人数 <span style="color: red">*</span></div>
+                    <div class="weui-cell__bd"><div>开奖人数<span style="color: red">*</span></div></div>
                     <input id="fullPeopleNum" type="number" :value="peopleNum" placeholder="数量" @input="fullParticipantNum" class="weui-cell__ft" style="color:black;display: inline;vertical-align: middle;" />
                     <span class="weui-cell__ft" style="margin-left:5px;vertical-align: middle;">人</span>
                 </div>
@@ -312,6 +312,7 @@
         this.itemName = []
         this.itemNum = []
         this.peopleNum = ''
+        this.giftImgSrc = ['/static/img/defaultPic.jpg']
         this.userInfo = this.$getStorageSync('userInfo')
         this.getNowDate()
       }

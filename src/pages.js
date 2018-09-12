@@ -131,4 +131,10 @@ module.exports = [{
     enablePullDownRefresh: true,
     backgroundColor: '#00000000'
   }
+}, {
+  path: '/pages/luckierList/index',
+  config: {
+    navigationBarTitleText: '中奖名单',
+    enablePullDownRefresh: true
+  }
 }]
