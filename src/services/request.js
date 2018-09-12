@@ -1,7 +1,7 @@
 // const consfig = requestConfig
 import config from 'config'
 import ext from '../ext/ext'
-// import enumeMap from '@/common/js/enumeMap'
+import enumsMap from '@/common/js/enumsMap'
 
 // import authService from './authService'
 var Fly = require(`flyio/dist/npm/wx`)
@@ -26,12 +26,8 @@ fly.interceptors.response.use(
   (response) => {
     // ext.hideLoading()
     // 只将请求结果的data字段返回
-    if (response.data.code === 0) {
-      return response.data
-    } else {
-      ext.showToast(response.data.message)
-      return response.data
-    }
+    if (response.data.code !== 0) ext.showToast(enumsMap[response.data.code] || response.data.message)
+    return response.data
   },
   (err) => {
     // ext.hideLoading()

@@ -1,6 +1,7 @@
 require('./check-versions')()
 
 var config = require('../config')
+
 if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
 }
@@ -16,7 +17,8 @@ var webpackConfig = require('./webpack.dev.conf')
 // default port where dev server listens for incoming traffic
 var port = process.env.PORT || config.dev.port
 
-console.log('process.env.DISABLE_ESLINT', process.env.DISABLE_ESLINT)
+
+
 // automatically open browser, if not set will be false
 // var autoOpenBrowser = !!config.dev.autoOpenBrowser
 // Define HTTP proxies to your custom API backend

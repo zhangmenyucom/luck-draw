@@ -115,20 +115,20 @@
                 </div>
                 <!-- 中奖 -->
                 <div>
-                  <div class="tips">
-                    {{state == 6 ? "恭喜，大奖是你的了" : '这次没中奖，送你点别的'}}
-                  </div>
-                  <div class="navigateP" >
-                    <a v-if="state == 6" class="navigate o-navigate">
-                      领取奖品
-                    </a>
-                    <a v-if="state == 6" class="navigate" @tap="() => toMakeImg(true)">
-                      炫耀一下
-                    </a>
-                    <a open-type="switchTab" href='/pages/index/index' v-if="state == 5" class="navigate">
-                      去看看
-                    </a>
-                  </div>
+                    <div class="tips">
+                      {{state == 6 ? "恭喜，大奖是你的了" : '这次没中奖，送你点别的'}}
+                    </div>
+                    <div class="navigateP" >
+                      <a  :href="'/pages/takePrize/index?id='+participants.id" v-if="state == 6" class="navigate o-navigate">
+                        领取奖品
+                      </a>
+                      <a v-if="state == 6" class="navigate">
+                        炫耀一下
+                      </a>
+                      <a open-type="switchTab" href='/pages/index/index' v-if="state == 5" class="navigate">
+                        去看看
+                      </a>
+                    </div>
                 </div>
                 <!-- 中奖结束 -->
                 <!-- 中奖者名单 -->
@@ -194,6 +194,8 @@
         participantTotal: 0,
         luckyList: [],
         activitie: {
+          endTimeDay: '',
+          endTimeHours: '',
           id: '',
           metadata: {
             ticketsNum: 0

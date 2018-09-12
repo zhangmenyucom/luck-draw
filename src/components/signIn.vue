@@ -1,8 +1,7 @@
 <template>
- <div :class ="{model:true, showModel : isModel && !showModel  }">
-  {{isModel}}
-  <div :class="{signIn:true, showModel : isModel && !showModel}" >
-    <img :class="{ transform: isModel && !showModel }" src="/static/img/light.png" />
+ <div :class ="{model:true, showModel : isModel}">
+  <div :class="{signIn:true, showModel : isModel}" >
+    <img :class="{ transform: isModel }" src="/static/img/light.png" />
     <div class="sign">
       <img src="/static/img/signIn.png" />
       <div class="goldBean">
@@ -14,75 +13,42 @@
     </div>
   </div>
 </div>
+
 </template>
 
 <script>
-  import AuthService from '@/services/authService'
   import FootprintsActivities from '@/services/footprintsActivities'
   import DailyFootprintsService from '@/services/dailyFootprintsService'
-  import MeScoresService from '@/services/meScoresService'
   import { getUserInfo } from '@/utils'
   export default {
-    name: 'signIn',
-    props: [`signInCB`, `showModel`, `isanimation`],
-    data () {
-      return {
-        isModel: false,
-        userInfo: {},
-        scoreCounters: {},
-        signIn: false, // 是否签到过 此处 命名错误 是根据后台命名统一 后来后台改了 后面要更新
-        isSignInService: false
+    props: [`isLogin`],
+    watch: {
+      isLogin (val) {
+        console.log('val', val)
+        if (val) {
+          this.judgeSignIn().then((res) => {
+            this.isModel = !res
+          })
+        }
       }
     },
+    data () {
+      return {
+        isModel: false
+      }
+    },
+
     methods: {
       bindgetuserinfo (e) {
-        const userInfo = getUserInfo()
-        if (!e.mp.detail.encryptedData) {
-          this.$showToast('请允许授权')
-          return false
-        }
-        if (this.isSignInService) {
-          return false
-        } else {
-          this.isSignInService = true
-        }
-        AuthService.wxLogin(e.mp.detail).then((res) => {
-          if (res.code === 0) {
-            if (!userInfo.id) { // 判断之前是否 执行过 this.isSignIn
-              return this.isSignIn() // 判断是否今天签到过
-            } else {
-              return this.signIn
-            }
-          }
+        FootprintsActivities.add({
+          type: 'SIGN_IN'
         }).then((res) => {
-          if (!res) {
-            // 签到
-            return FootprintsActivities.add({
-              type: 'SIGN_IN'
-            })
-          } else {
-            // 获取用户积分数
-            this.signIn = true // 记录是否登录过
-            return MeScoresService.getList()
-          }
-        }).then(res => {
           if (res.code === 0) {
             this.isModel = false
-            if (!this.signIn) {
-              this.scoreCounters.number = this.scoreCounters.number ? ++this.scoreCounters.number : 1
-            }
-            this.$setStorageSync('scoreCounters', this.scoreCounters)
-            this.$setStorageSync('score', res.data.score)
-            this.$setStorageSync('signIn', true)
-            this.signInCB({
-              scoreCounters: this.scoreCounters,
-              score: res.data.score
-            })
-            this.isSignInService = false
           }
         })
       },
-      isSignIn () { // 判断今天是否签到
+      judgeSignIn () { // 判断今天是否签到
         const userInfo = getUserInfo()
         return DailyFootprintsService.getList({
           userId: userInfo.id,
@@ -95,13 +61,9 @@
             const oldScoreCounters = this.$getStorageSync('scoreCounters')
             if (oldScoreCounters.number !== scoreCounters) {
               this.$setStorageSync('scoreCounters', scoreCounters)
-              this.signInCB({
-                scoreCounters
-              })
             }
             // 记录最新签到信息
             this.scoreCounters = scoreCounters
-
             // 对比今天是否签到
             const lastSignInTime = scoreCounters.lastOperationTime
             if (!lastSignInTime) return false
@@ -123,26 +85,6 @@
           str = '0' + str
         }
         return str
-      }
-    },
-    onLoad () {
-      const userInfo = getUserInfo()
-      // 判断是否登录过
-      if (!userInfo.id) {
-        this.isModel = true
-        this.$emit('update:isanimation', true)
-      } else {
-        // 判断今天是否签到过
-        this.isSignIn().then(res => {
-          if (!res) {
-            this.isModel = true
-            this.$emit('update:isanimation', true)
-          } else {
-            this.isModel = false
-            this.signIn = true
-          }
-          this.$setStorageSync('signIn', this.signIn)
-        })
       }
     }
   }

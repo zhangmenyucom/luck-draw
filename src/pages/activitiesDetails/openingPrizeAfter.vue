@@ -34,7 +34,7 @@
         恭喜，大奖是你的了
       </div>
       <div class="divButton">
-        <button class="butotn-o" @tap="chooseAddress">{{state === 6 ? '去领奖' : '信息已填写'}}</button>
+        <a :href="'/pages/takePrize/index?id='+participants.id" class="butotn-o" >{{state === 6 ? '去领奖' : '信息已填写'}}</a>
         <a class="button">炫耀一下</a>
       </div>
       <span></span>
