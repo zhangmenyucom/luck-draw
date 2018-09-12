@@ -6,6 +6,7 @@ function formatNumber (n) {
   const str = n.toString()
   return str[1] ? str : `0${str}`
 }
+
 function formatTime (date) {
   const year = date.getFullYear()
   const month = date.getMonth() + 1

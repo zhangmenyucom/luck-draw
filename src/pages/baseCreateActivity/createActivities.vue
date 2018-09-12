@@ -3,48 +3,43 @@
         <top :hideIcone='true' title="新建抽奖" />
         <div v-if="!addPic">
             <div v-for="(item,index) in giftList" :key="index">
-                <addGiftComp :addGiftPic="addGiftPic"
+                <addGiftComp
                 :showCanvas="giftList[index]" :giftImgSrc="giftImgSrc[index]"
                 :index="index" :deleteGiftList="deleteGiftList"
                 :itemNameChange="itemNameChange" :itemNumChange="itemNumChange"
-                :itemName="itemName" :itemNum="itemNum" />
+                :itemName="itemName" :itemNum="itemNum"
+                :getImage="getImage" />
             </div>
             <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
                 <div class="weui-cell weui-cell_access border-middle">
                     <div class="weui-cell__bd">开奖方式</div>
                     <div class="weui-cell__ft">
                       <radio-group class="radio-group" @change="radioChange">
-                          <radio style="transform:scale(0.7);position:relative;left:5px;bottom:2px" value="timed" color="red" checked="true"/>到时间
-                          <radio style="transform:scale(0.7);position:relative;left:5px;bottom:2px" value="fullParticipant" color="red" />满人数
+                          <radio style="transform:scale(0.8);position:relative;left:5px;bottom:2px" value="timed" color="red" checked="true"/>到时间
+                          <radio style="transform:scale(0.8);position:relative;left:5px;bottom:2px" value="fullParticipant" color="red" />满人数
                       </radio-group>
                     </div>
                 </div>
                 <div v-if="drawRule === 'timed'" class="weui-cell weui-cell_access">
-                    <div class="weui-cell__bd">开奖时间 <span style="color: red">*</span></div>
+                    <div class="weui-cell__bd"><div>开奖时间<span style="color: red">*</span></div></div>
                     <picker class="weui-cell__ft" mode="multiSelector" @change="MultiPickerChange" :value="indexMulPicker" :range="dateList">
                       {{pickerDate}}
                     </picker>
                     <div class="weui-cell__ft weui-cell__ft_in-access" style="font-size: 0"></div>
                 </div>
                 <div v-if="drawRule === 'fullParticipant'" class="weui-cell weui-cell_access">
-                    <div class="weui-cell__bd">开奖人数 <span style="color: red">*</span></div>
-                    <input type="number" placeholder="数量" @input="fullParticipantNum" class="weui-cell__ft" style="color:black;display: inline;vertical-align: middle;" />
+                    <div class="weui-cell__bd"><div>开奖人数<span style="color: red">*</span></div></div>
+                    <input id="fullPeopleNum" type="number" :value="peopleNum" placeholder="数量" @input="fullParticipantNum" class="weui-cell__ft" style="color:black;display: inline;vertical-align: middle;" />
                     <span class="weui-cell__ft" style="margin-left:5px;vertical-align: middle;">人</span>
                 </div>
             </div>
-            <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
-                <div class="weui-cell weui-cell_access" style="padding:5px 0">
-                    <div class="weui-cell__bd">允许参与者分享</div>
-                    <switch class="weui-cell__ft" checked @change="switchChange" style="transform:scale(0.8);position:relative;left:10px" />
-                </div>
-            </div>
             <div class="uperAddActivity" @click="navToUper"><span>使用高级版&nbsp;></span></div>
-            <div class="weui-cells weui-cells_after-title" style="margin-top: 48px;padding:8px 15px;">
+            <div class="weui-cells weui-cells_after-title" style="position:fixed;bottom:0;padding:8px 15px;">
                 <div class="createActivities" @click="createActivity">发起抽奖</div>
             </div>
         </div>
         <div v-if="addPic">
-          <chooseImage :showImage="showImage" :picIndex="picIndex" :picIndexSrc="picIndexSrc" />
+          <chooseImage :showImage="showImage" :picIndex="picIndex" :picIndexSrc="picIndexSrc" :imageSrc="imageSrc" />
         </div>
     </div>
 </template>
@@ -58,6 +53,7 @@
     export default {
       data () {
         return {
+          imageSrc: '',
           dateTime: '',
           giftList: [true],
           addPic: false,
@@ -84,10 +80,11 @@
           isShare: true,
           itemName: [],
           itemNum: [],
-          peopleNum: 0,
+          peopleNum: '',
           giftItems: [{id: 'system', name: '', metadata: {url: '', num: 0}}],
           prizeEndTime: 0,
-          jsonString: ''
+          jsonString: '',
+          mediaData: []
         }
       },
       components: {
@@ -96,10 +93,13 @@
         chooseImage
       },
       methods: {
-        addGiftPic (index, picIndexSrc) {
-          this.addPic = !this.addPic
-          this.picIndex = index
-          this.picIndexSrc = picIndexSrc
+        getImage (index, picIndexSrc) {
+          this.$chooseImage().then(res => {
+            this.imageSrc = res.tempFilePaths[0]
+            this.addPic = !this.addPic
+            this.picIndex = index
+            this.picIndexSrc = picIndexSrc
+          })
         },
         itemNameChange (e) {
           const itemNameIndex = e.mp.currentTarget.dataset.index
@@ -121,6 +121,11 @@
         },
         radioChange (e) {
           this.drawRule = e.mp.detail.value
+          if (this.drawRule === 'fullParticipant') {
+            this.peopleNumInput = 'null'
+          } else {
+            this.peopleNumInput = ''
+          }
         },
         check (str) {
           str = str.toString()
@@ -223,6 +228,7 @@
         },
         fullParticipantNum (e) {
           this.peopleNum = e.mp.detail.value
+          this.peopleNumInput = e.mp.detail.value
         },
         MultiPickerChange (e) {
           if (e.mp.detail.value[0] === 0) {
@@ -246,16 +252,37 @@
           this.$navigateTo('/pages/createActivities/createActivities')
         },
         dataHandle () {
-          this.prizeEndTime = new Date(this.dateTime).getTime()
+          this.prizeEndTime = new Date(this.dateTime).getTime() + 3000
+          this.giftImgSrc.map((item) => {
+            this.mediaData.push({
+              'type': 'IMAGE',
+              'url': item,
+              'layout': 'COVER',
+              'title': '',
+              'text': '',
+              'order': 0
+            })
+          })
           let jsonArr = []
           if (!this.giftPictures.length) return
           for (let i = 0; i < this.giftPictures.length; i++) {
             jsonArr.push({'picUrl': this.giftPictures[i]})
           }
           this.jsonString = JSON.stringify(jsonArr)
-          console.log(this.jsonString)
         },
         createActivity () {
+          if (this.peopleNumInput === 'null') {
+            this.$showToast('请输入开奖人数!')
+            return
+          }
+          if (this.itemName.length < this.giftList.length) {
+            this.$showToast('请输入奖品名称!')
+            return
+          }
+          if (this.itemNum.length < this.giftList.length) {
+            this.$showToast('请输入奖品数量!')
+            return
+          }
           this.dataHandle()
           if (this.giftItems[0].metadata.url === '') {
             this.giftItems[0].metadata.url = this.giftImgSrc[0]
@@ -268,6 +295,7 @@
             endTime: this.prizeEndTime,
             num: this.peopleNum,
             items: this.giftItems,
+            media: this.mediaData,
             metadata: {
               drawRule: this.drawRule,
               urls: this.jsonString,
@@ -275,11 +303,16 @@
               endTimeString: this.pickerDate
             }
           }).then(res => {
-            this.$navigateTo(`/pages/myActivitiesDetails/index?id=${res.data.id}`)
+            this.$navigateTo(`/pages/activitiesDetails/index?id=${res.data.id}`)
           })
+          this.mediaData = []
         }
       },
-      onLoad () {
+      onShow () {
+        this.itemName = []
+        this.itemNum = []
+        this.peopleNum = ''
+        this.giftImgSrc = ['/static/img/defaultPic.jpg']
         this.userInfo = this.$getStorageSync('userInfo')
         this.getNowDate()
       }

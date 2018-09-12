@@ -48,7 +48,7 @@ export default {
       }, {
         'iconPath': 'static/img/createDraw.png',
         'selectedIconPath': 'static/img/createDraw1.png',
-        'pagePath': 'pages/baseCreateActivity/createActivities',
+        'pagePath': 'pages/baseCreateActivityHome/index',
         'text': '发起抽奖'
       }, {
         'iconPath': 'static/img/obtain-normal.png',

@@ -18,7 +18,7 @@
         [ 奖品 ]&nbsp;&nbsp;{{item.name}}
       </div>
 
-      <div v-if="item.metadata.drawRule === 'full'">
+      <div v-if="item.metadata.drawRule === 'fullTicket'">
         <span class="joined" v-if="item.metadata.participated">
           <img style="width:23rpx;height:23rpx;margin-right:3px;" src="/static/img/Combined Shape.png" />
           已参与 <span style="margin-left:8px;">|</span>
@@ -44,7 +44,7 @@
             已参与 <span style="margin-left:8px;">|</span>
           </span>
           <span class="goldBean">
-            <span style="color:red">{{item.endTime}}</span>开奖
+            <span >{{item.endTimeDay}}</span><span style="color:red">{{item.endTimeHours}}</span>开奖
           </span>
       </div>
       <div v-if="item.metadata.drawRule === 'fullParticipant'" style="margin-top: 5rpx;">

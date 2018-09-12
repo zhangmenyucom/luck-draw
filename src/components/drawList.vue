@@ -1,10 +1,10 @@
 <template>
   <div class="drawList">
     <a class="list" v-for="(item , i) in list" >
-      <img :src="item.luckyGuy.avatar">
+      <img :src="item.img">
       <br />
       <span>
-        {{ item.luckyGuy.nickName ? item.luckyGuy.nickName : '' }}
+        {{ item.nickName ? item.nickName : '' }}
       </span>
     </a>
   </div>

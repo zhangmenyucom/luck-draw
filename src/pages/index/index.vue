@@ -79,7 +79,12 @@
         score: 0,
         scoreCounters: {},
         number: 0,
-        onLuckyDraw: [],
+        onLuckyDraw: [{
+          dayTime: '',
+          timeTime: '',
+          media: [{url: ''}],
+          metadata: {drawRule: ''}
+        }],
         willLuckDraw: []
       }
     },
@@ -147,6 +152,11 @@
             const willLuckDraw = []
             res.data.forEach((activitie) => {
               activitie.url = `/pages/activitiesDetails/index?id=${activitie.id}&method='首页'&name=${activitie.name}`
+              if (activitie.metadata.drawRule === 'timed') {
+                const date = new Date(activitie.endTime)
+                activitie.endTimeDay = `${date.getMonth() + 1}月${date.getUTCDate()}日`
+                activitie.endTimeHours = `${date.getUTCHours() + 1}:${date.getUTCMinutes()}`
+              }
               // 现在多余 留待后用
               if (date > activitie.startTime) {
                 onLuckyDraw.push(activitie)

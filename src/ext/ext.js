@@ -226,6 +226,12 @@ export default class ext {
       })
     }
   }
+  static getWindowH () {
+    if (this.isWx) {
+      return wx.getSystemInfoSync().windowHeight
+    }
+  }
+
   static install (Vue, options) {
     Vue.prototype.$getStorageSync = this.getStorageSync.bind(this)
     Vue.prototype.$setStorageSync = this.setStorageSync.bind(this)
@@ -251,5 +257,6 @@ export default class ext {
     Vue.prototype.$canvasToTempFilePath = this.canvasToTempFilePath.bind(this)
     Vue.prototype.$createSelectorQuery = this.createSelectorQuery.bind(this)
     Vue.prototype.$showModal = this.showModal.bind(this)
+    Vue.prototype.$getWindowH = this.getWindowH.bind(this)
   }
 }

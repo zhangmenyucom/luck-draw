@@ -20,8 +20,7 @@ module.exports = [{
   path: 'pages/obtainGoldBean/index',
   config: {
     navigationBarTitleText: '赚金豆',
-    enablePullDownRefresh: false,
-    disableScroll: true
+    enablePullDownRefresh: false
   }
 }, {
   path: 'pages/meIntegral/index',
@@ -87,7 +86,7 @@ module.exports = [{
   path: 'pages/createActivities/createActivities',
   config: {
     navigationBarTitleText: '发起抽奖',
-    enablePullDownRefresh: true
+    enablePullDownRefresh: false
   }
 }, {
   path: 'pages/myActivityDetail/myActivityDetail',
@@ -99,7 +98,7 @@ module.exports = [{
   path: 'pages/baseCreateActivity/createActivities',
   config: {
     navigationBarTitleText: '发起抽奖',
-    enablePullDownRefresh: true
+    enablePullDownRefresh: false
   }
 }, {
   path: '/pages/myActivitiesDetails/index',
@@ -120,10 +119,15 @@ module.exports = [{
     enablePullDownRefresh: true
   }
 }, {
-  path: '/pages/winner/index',
+  path: '/pages/baseCreateActivityHome/index',
   config: {
-    navigationBarTitleText: '中奖者',
+    navigationBarTitleText: '发起抽奖',
     enablePullDownRefresh: true
   }
-}
-]
+}, {
+  path: '/pages/luckierList/index',
+  config: {
+    navigationBarTitleText: '中奖名单',
+    enablePullDownRefresh: true
+  }
+}]

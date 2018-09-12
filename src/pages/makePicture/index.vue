@@ -142,8 +142,8 @@ export default {
           elementContent: this.twoCode,
           elementMediaType: 'IMG',
           y: 750,
-          height: 200,
-          width: 200
+          height: 150,
+          width: 150
         },
         {
           sn: '1006',
@@ -152,7 +152,7 @@ export default {
           yelementLayoutType: 'ABSOLUTELY',
           elementContent: '长按识别小程序码，参与抽奖',
           elementMediaType: 'TEXT',
-          y: 1000,
+          y: 950,
           font: {
             name: 'PingFangSC',
             elementFontStyle: 0,
@@ -169,7 +169,7 @@ export default {
         items.push(creat)
       }
       if (this.lucky === true) {
-        creat.elementContent = '我中奖了 : 抽个人组队吃鸡'
+        creat.elementContent = '「我中奖了」'
         items.push(creat)
       }
       if (data.metadata.drawRule === 'timed') {
