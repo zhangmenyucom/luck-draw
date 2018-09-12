@@ -38,15 +38,18 @@
                 </div>
                 <div class="foot">
                     <button class="btn" @tap="copyAll">复制全部</button>
-                    <button class="btn btn2">发送邮箱</button>
+                    <button class="btn btn2" @tap="sendToEmail">发送邮箱</button>
                 </div>
             </div>
         </div>
+        <sendEmail v-if="showEmailModal" :cancleButton="cancleButton" :confirmButton="confirmButton" :emailId="emailId" :emailInputChange="emailInputChange" />
     </div>
 </template>
 <script>
 import top from '@/components/top'
+import sendEmail from '@/components/sendEmail'
 import ActivitiesService from '@/services/activitiesService'
+import SendEmail from '@/services/sendEmailService'
 import share from '@/common/js/share.js'
 export default {
   data () {
@@ -58,17 +61,23 @@ export default {
       }],
       activity: {realNum: 0, media: [ 'url' ]},
       getAddressNum: 0,
-      copyData: ''
+      copyData: '',
+      emailId: '',
+      showEmailModal: false
     }
   },
   components: {
-    top
+    top,
+    sendEmail
   },
   methods: {
     copyAll () {
       this.$setClipboardData({
         data: this.copyData
       })
+    },
+    sendToEmail () {
+      this.showEmailModal = !this.showEmailModal
     },
     getActivitie (id) { // 获取活动详情
       ActivitiesService.get({
@@ -77,11 +86,9 @@ export default {
       }).then((res) => {
         if (res.code === 0) {
           this.activity = res.data
-          console.log('activity', res.data)
           // 处理中奖信息
           if (res.data.metadata.luckyItems) {
             const luckyItems = JSON.parse(res.data.metadata.luckyItems)
-            console.log('luckyItems', luckyItems)
             this.luckyItems = luckyItems
             // let dataArray = []
             luckyItems.forEach(element => {
@@ -111,17 +118,35 @@ export default {
                 address = '未填写'
               }
               this.copyData += '姓名:' + element.luckyGuy.nickName +
-                                        '奖品:' + element.reward.name + 'X' + element.reward.metadata.num +
-                                        '联系电话:' + tel +
-                                        '收货地址:' + address + '    '
+                                        '    奖品:' + element.reward.name + 'X' + element.reward.metadata.num +
+                                        '    联系电话:' + tel +
+                                        '    收货地址:' + address + '        '
             })
           }
         }
       })
+    },
+    cancleButton () {
+      this.showEmailModal = !this.showEmailModal
+    },
+    confirmButton () {
+      this.$showLoading()
+      SendEmail.sendEmail({
+        subject: '中奖者名单',
+        targetAddress: this.emailId,
+        text: this.copyData
+      }).then(res => {
+        this.$hideLoading()
+        this.$emailToast('发送成功!')
+      })
+      this.showEmailModal = !this.showEmailModal
+    },
+    emailInputChange (e) {
+      this.emailId = e.mp.detail.value
     }
   },
   onLoad (a) {
-    this.getActivitie('5b8cf5ca711eae26806c47ac')
+    this.getActivitie('')
   },
   onShareAppMessage: share()
 }

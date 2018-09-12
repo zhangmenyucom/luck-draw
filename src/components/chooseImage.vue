@@ -70,7 +70,6 @@ export default {
       this.Scale = (this.width / this.baseWidth).toFixed(3)
       this.baseWidth = this.baseWidth * this.Scale
       this.baseHeight = this.baseHeight * this.Scale
-      console.log(this.x, this.y, this.imgx, this.imgy)
       let x = this.imgx - this.x
       let y = this.imgy - this.y
       ctx.drawImage(this.imageSrc, 0, 0, this.baseWidth, this.baseHeight)
