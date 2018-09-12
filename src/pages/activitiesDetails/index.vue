@@ -120,7 +120,7 @@
       </div>
       <div class="divButton">
         <button class="butotn-o" @tap="chooseAddress">{{state === 6 ? '去领奖' : '信息已填写'}}</button>
-        <a href="" class="button" @tap="toMakeImg">炫耀一下</a>
+        <a href="" class="button" :lucky="true" @tap="() => toMakeImg(true)">炫耀一下</a>
       </div>
       <span></span>
     </div>
@@ -353,7 +353,16 @@
       shadeShow () {
         this.display = !this.display
       },
-      toMakeImg () {
+      toMakeImg (lucky) {
+        if (lucky === true) {
+          TwoCodeService.get().then((res) => {
+            this.QR = res.data.url
+            if (res.code === 0) {
+              this.$navigateTo('../makePicture/index?title=生成分享图&lucky=true&activity=' + JSON.stringify(this.activitie) + '&twoCode=' + res.data.url)
+            }
+          })
+          return
+        }
         TwoCodeService.get().then((res) => {
           this.QR = res.data.url
           if (res.code === 0) {

@@ -98,6 +98,7 @@
         })
       },
       chooseAddress () {
+        console.log(11)
         if (!this.isTakePrize) return false
         this.$chooseAddress().then(res => {
           this.address = {

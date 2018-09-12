@@ -2,7 +2,9 @@
   <div class="imgDownload">
     <top :title='title' />
     <img mode="widthFix" :src="url">
-    <button class="saveFile" @tap='saveFile'>保存图片</button>
+    <div class="btnDiv">
+      <button class="saveFile" @tap='saveFile'>保存图片</button>
+    </div>
   </div>
 </template>
 <script>
@@ -15,7 +17,8 @@ export default {
       url: '',
       title: '',
       activity: {},
-      twoCode: ''
+      twoCode: '',
+      lucky: ''
     }
   },
   components: {
@@ -85,12 +88,11 @@ export default {
         {
           sn: '1002',
           relativeSn: '',
-          xelementLayoutType: 'ABSOLUTELY',
+          xelementLayoutType: 'CENTER',
           yelementLayoutType: 'ABSOLUTELY',
           elementContent: data.items[0].metadata.image,
           elementMediaType: 'IMG',
-          x: 125,
-          y: 372,
+          y: 380,
           height: 250,
           width: 500
         },
@@ -135,23 +137,22 @@ export default {
         {
           sn: '1005',
           relativeSn: '',
-          xelementLayoutType: 'ABSOLUTELY',
+          xelementLayoutType: 'CENTER',
           yelementLayoutType: 'ABSOLUTELY',
           elementContent: this.twoCode,
           elementMediaType: 'IMG',
-          x: 319,
           y: 750,
-          height: 100,
-          width: 100
+          height: 200,
+          width: 200
         },
         {
           sn: '1006',
           relativeSn: '',
           xelementLayoutType: 'CENTER',
           yelementLayoutType: 'ABSOLUTELY',
-          elementContent: '长按识别小程序码，参与抽奖。',
+          elementContent: '长按识别小程序码，参与抽奖',
           elementMediaType: 'TEXT',
-          y: 900,
+          y: 1000,
           font: {
             name: 'PingFangSC',
             elementFontStyle: 0,
@@ -165,6 +166,10 @@ export default {
         }
       ]
       if (data.owner.id === this.$getStorageSync('userInfo').id) {
+        items.push(creat)
+      }
+      if (this.lucky === true) {
+        creat.elementContent = '我中奖了 : 抽个人组队吃鸡'
         items.push(creat)
       }
       if (data.metadata.drawRule === 'timed') {
@@ -188,10 +193,15 @@ export default {
     }
   },
   onLoad (options) {
+    if (options.lucky === 'true') {
+      this.lucky = true
+    } else {
+      this.lucky = ''
+    }
     this.title = options.title
     this.twoCode = options.twoCode
+    this.activity = []
     this.activity = JSON.parse(options.activity)
-    console.log(JSON.parse(options.activity))
     this.getPicture(this.activity)
   },
   onShareAppMessage: share()
