@@ -17,23 +17,23 @@
             <span>中奖名单</span>
             <div class="list">
                 <div class="list-content">
-                    <div v-for="(item, index) in luckyItems" :key="index">
+                    <div v-for="(item, index) in luckyItems" :key="index" :class="index ===luckyItems.length-1?'bottomMargin':''">
                         <div class="list-content-one">
                             <div>
-                                <div class="avatar"><img :src="item.luckyGuy.avatar" alt=""></div>
-                                <div class="name">{{item.luckyGuy.nickName}}</div>
-                                <div class="prizeInfo">奖品：&nbsp;{{luckyItems[0].reward.name}}&nbsp;&nbsp;&nbsp;&nbsp;X{{luckyItems[0].reward.metadata.num}}</div>
+                                <div class="avatar"><img :src="item.user.avatar" alt=""></div>
+                                <div class="name">{{item.user.nickName}}</div>
+                                <div class="prizeInfo">奖品：&nbsp;{{luckyItems[0].metadata.rewards[0].name}}&nbsp;&nbsp;&nbsp;&nbsp;X{{luckyItems[0].metadata.rewards[0].metadata.num}}</div>
                             </div>
                             <p class="name-call" style="font-size:12px">收货信息</p>
                             <div v-if="item.metadata.address">
-                                <p class="name-call">{{item.metadata.address.name}}&nbsp;&nbsp;&nbsp;{{activity.metadata.address.phone}}</p>
+                                <p class="name-call">{{item.metadata.address.name}}&nbsp;&nbsp;&nbsp;{{item.metadata.address.phone}}</p>
                                 <p class="address">{{item.metadata.address.addition}}</p>
                             </div>
                             <div v-else class="noAddress">
                                 未填写
                             </div>
                         </div>
-                        <div v-if="index>0" class="solidDiv"></div>
+                        <div v-if="index<luckyItems.length-1" class="solidDiv"></div>
                     </div>
                 </div>
                 <div class="foot">
@@ -48,6 +48,7 @@
 <script>
 import top from '@/components/top'
 import sendEmail from '@/components/sendEmail'
+import participantsService from '@/services/participantsService'
 import ActivitiesService from '@/services/activitiesService'
 import SendEmail from '@/services/sendEmailService'
 import share from '@/common/js/share.js'
@@ -55,9 +56,8 @@ export default {
   data () {
     return {
       luckyItems: [{
-        luckyGuy: {},
-        metadata: {},
-        reward: {metadata: {num: 0}}
+        user: {},
+        metadata: {rewards: [{metadata: {num: 0}}]}
       }],
       activity: {realNum: 0, media: [ 'url' ]},
       getAddressNum: 0,
@@ -79,51 +79,42 @@ export default {
     sendToEmail () {
       this.showEmailModal = !this.showEmailModal
     },
-    getActivitie (id) { // 获取活动详情
+    getParticipants (id) { // 获取活动详情
+      participantsService.get({
+        activityId: id,
+        lucky: true
+      }).then((res) => {
+        if (res.code === 0) {
+          // 处理中奖信息
+          this.luckyItems = res.data
+          this.luckyItems.forEach(element => {
+            console.log(element)
+            let tel = ''
+            let address = ''
+            element.metadata.rewards = JSON.parse(element.metadata.rewards)
+            if (element.metadata.address) {
+              element.metadata.address = JSON.parse(element.metadata.address)
+              this.getAddressNum += 1
+              tel = element.metadata.address.phone
+              address = element.metadata.address.addition
+            } else {
+              tel = '未填写'
+              address = '未填写'
+            }
+            this.copyData += '姓名:' + element.user.nickName +
+                                      '    奖品:' + element.metadata.rewards[0].name + 'X' + element.metadata.rewards[0].metadata.num +
+                                      '    联系电话:' + tel +
+                                      '    收货地址:' + address + '        '
+          })
+        }
+      })
+    },
+    getActivities (id) {
       ActivitiesService.get({
         id,
         append: 'PARTICIPANT'
-      }).then((res) => {
-        if (res.code === 0) {
-          this.activity = res.data
-          // 处理中奖信息
-          if (res.data.metadata.luckyItems) {
-            const luckyItems = JSON.parse(res.data.metadata.luckyItems)
-            this.luckyItems = luckyItems
-            // let dataArray = []
-            luckyItems.forEach(element => {
-              // let tel = ''
-              // let address = ''
-              // if (element.metadata.address) {
-              //     this.getAddressNum += 1
-              //     tel = element.metadata.address.phone
-              //     address = element.metadata.address.addition
-              // } else {
-              //     tel = '未填写'
-              //     address = '未填写'
-              // }
-              // dataArray.push({'姓名': element.luckyGuy.nickName,
-              //                 '奖品': element.reward.name + 'X' + element.reward.metadata.num,
-              //                 '联系电话': tel,
-              //                 '收货地址': address
-              // })
-              let tel = ''
-              let address = ''
-              if (element.metadata.address) {
-                this.getAddressNum += 1
-                tel = element.metadata.address.phone
-                address = element.metadata.address.addition
-              } else {
-                tel = '未填写'
-                address = '未填写'
-              }
-              this.copyData += '姓名:' + element.luckyGuy.nickName +
-                                        '    奖品:' + element.reward.name + 'X' + element.reward.metadata.num +
-                                        '    联系电话:' + tel +
-                                        '    收货地址:' + address + '        '
-            })
-          }
-        }
+      }).then(res => {
+        this.activity = res.data
       })
     },
     cancleButton () {
@@ -146,7 +137,8 @@ export default {
     }
   },
   onLoad (a) {
-    this.getActivitie('')
+    this.getParticipants('5b8cf5ca711eae26806c47ac')
+    this.getActivities('5b8cf5ca711eae26806c47ac')
   },
   onShareAppMessage: share()
 }
