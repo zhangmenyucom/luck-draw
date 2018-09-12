@@ -1,8 +1,8 @@
-<template>
+f<template>
   <div class="imgDownload">
     <top :title='title' />
     <img mode="widthFix" :src="url">
-    <button class="saveFile" @tap='saveFile'>保存图片</button>
+    <button class="saveFile" @tap='saveFile'>保存图片</button>f
   </div>
 </template>
 <script>

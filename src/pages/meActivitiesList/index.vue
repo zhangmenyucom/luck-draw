@@ -1,7 +1,7 @@
 <template>
   <div class="list">
     <top :title='type === "lucky" ? "中奖记录" : "抽奖记录"' />
-    <meActivitieList :list="participantList" />
+    <meActivitieList :list="participantList" :Zindex="1"/>
   </div>
 </template>
 
@@ -62,6 +62,13 @@
               if (type === `lucky`) {
                 participant.activity.status = participant.metadata.address ? 'ADDRES' : 'LUCKY'
               }
+              if (participant.activity.status === 'REWARDED') {
+                if (participant.metadata.lucky === 'true') {
+                  participant.activity.status = participant.metadata.address ? 'ADDRES' : 'LUCKY'
+                } else {
+                  participant.activity.status = 'UNLUCK'
+                }
+              }
               return participant.activity
             })
             if (this.onPullDownRefresh) {
@@ -72,7 +79,6 @@
             this.isGet = false
             this.participantList = [...oldParticipantList, ...participantList]
             if (this.participantList.length >= res.total) this.complete = true
-            console.log(this.participantList)
           }
         })
       }

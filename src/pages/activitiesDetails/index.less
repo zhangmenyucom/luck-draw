@@ -260,222 +260,248 @@
           border-radius: 12*@2;
           background: #fff;
           vertical-align: middle;
-         }
-         >i {
-           display: inline-block;
-           margin-left: 4*@2;
-           color: #24AF41;
-         }
-         .gray {
-           color: #999999;
-           margin-left: 15*@2;
-         }
+        }
+        >i {
+         display: inline-block;
+         margin-left: 4*@2;
+         color: #24AF41;
        }
-     }
-     .mediaInfo {
-       margin-top: 16*@2;
-       img {
-         width: 100%;
-       }
-     }
-     .participant {
-       margin-top: 24*@2;
-       text-align: center;
-       span {
-         font-size: 12*@2;
-         line-height: 18*@2;
-         margin-bottom: 8*@2;
-         display: block;
-         >a {
-           display: inline-block;
-           color: #FE4C52;
-           background: transparent;
-         }
+       .gray {
+         color: #999999;
+         margin-left: 15*@2;
        }
      }
    }
-
-   .participantMe {
-    margin-top: 16*@2;
-    .participantInfo {
-      color: RGBA(67, 67, 67, 1);
-      font-size: 14*@2;
-      line-height: 18*@2;
-      > i{
-        text-align: center;
-        width: 40*@2;
-        color: RGBA(153, 153, 153, 1);
-        font-size: 12*@2;
-        line-height: 10*@2;
-        float: right;
-      }
-    }
-    .explain {
-      margin-top: 16*@2;
-      background: RGBA(255, 249, 237, 1);
-      color: RGBA(223, 194, 147, 1);
-      font-size: 12*@2;
-      line-height: 18*@2;
-      padding: 16*@2;
-      text-align: center;
-    }
-  }
-
-  .modal {
-   background: RGBA(0, 0, 0, 0.6);
-   position: fixed;
-   top: 0;
-   bottom: 0;
-   left: 0;
-   right: 0;
-   z-index: 100;
-   .content {
-     position: absolute;
-     top: 50%;
-     left: 50%;
-     width: 265*@2;
-     margin: auto;
-     transform: translate(-50%, -50%);
-     background: rgba(254, 251, 234, 1);
-     border-radius: 4*@2;
-     padding: 25*@2;
-     .title {
-       height: 25*@2;
-       line-height: 25*@2;
-       font-size: 18*@2;
-       text-align: center;
-       color: #434343;
+   .mediaInfo {
+     margin-top: 16*@2;
+     img {
+       width: 100%;
      }
-     >div {
-       max-height: 465*@2;
-       overflow: auto;
-       button {
-         width: 120*@2;
-       }
-       /*开奖*/
-       .prizeM{
-        text-align: center;
-        margin-top: 25*@2;
-        >img{
-          width: 56*@2;
-          height: 56*@2;
-          border-radius: 28*@2;
-        }
-        .userName{
-          color: RGBA(153, 153, 153, 1);
-          margin-top: 8*@2;
-          font-size: 14*@2;
-          line-height: 18*@2;
-        }
-        .goodsName{
-          color: RGBA(102, 102, 102, 1);
-          line-height:16*@2;
-          font-size: 12*@2;
-          margin-top: 17*@2;
-        }
-        .tips{
-          color: RGBA(254, 76, 82, 1);
-          font-size: 18*@2;
-          line-height: 22*@2;
-          text-align: center;
-          margin-top: 18*@2;
-          font-family:PingFang-SC-Medium;
-        }
-        .navigateP{
-          text-align: center;
-          height: 40*@2;
-          margin: 17*@2 0;
-          display: flex;
-          justify-content:center;
-          .navigate{
-            display: inline-block;
-            margin: 0 8*@2;
-            background: RGBA(243, 185, 19, 1);
-            line-height:40*@2;
-            font-size: 16*@2;
-            color: #fff;
-            border-radius:2*@2;
-            width: 104*@2;
-          }
-          .o-navigate{
-            border:1*@2 solid rgba(243,185,19,1);
-            color: RGBA(253, 183, 0, 1);
-            background: transparent;
-          }
-        }
-      }
-      /*下注*/
-      .betting {
-       margin-top: 55*@2;
-       .operation {
-         width: 185*@2;
-         height: 51*@2;
-         background: RGBA(243, 185, 19, 0.2);
-         border: 1*@2 solid #F3B913;
-         margin: 0 auto;
-         border-radius: 26*@2;
-         overflow: hidden;
-         display: flex;
-         >div {
-           line-height: 51*@2;
-           flex: 1;
-           text-align: center;
-           color: RGBA(243, 185, 19, 1)
-         }
-         >div:nth-child(2) {
-           font-size: 24*@2;
-           color: RGBA(67, 67, 67, 1);
-           border-left: 1*@2 solid RGBA(243, 185, 19, 1);
-           border-right: 1*@2 solid RGBA(243, 185, 19, 1);
-           background: RGBA(255, 255, 255, 1);
-         }
-       }
-       .cancel {
-         line-height: 20*@2;
-         margin: 18*@2 auto 29*@2;
+   }
+   .participant {
+     margin-top: 24*@2;
+     text-align: center;
+     span {
+       font-size: 12*@2;
+       line-height: 18*@2;
+       margin-bottom: 8*@2;
+       display: block;
+       >a {
          display: inline-block;
-         width: 100%;
-         text-align: center;
-         color: RGBA(252, 229, 194, 1);
-       }
-       .record {
-         text-align: center;
-         color: RGBA(240, 145, 66, 1);
-         font-family: PingFang-SC-Medium;
-         line-height: 21*@2;
-         width: 100%;
-         margin: 40*@2 auto 42*@2;
-       }
-       .button::after {
-         border: none;
-       }
-       .button {
-         width: 180*@2;
-         height: 40*@2;
-         line-height: 40*@2;
-         border-radius: 2*@2;
-       }
-     }
-     .point {
-       >div {
-         font-size: 18*@2;
-         color: RGBA(252, 229, 194, 1);
-         margin: 50*@2 auto 56*@2;
-         text-align: center;
-         line-height: 26*@2;
-         span {
-           font-size: 22*@2;
-         }
-       }
-       >span {
-         font-size: 12*@2;
-         line-height: 16*@2;
-         margin: 8*@2 auto;
-         display: block;
-         color: RGBA(252, 229, 194, 0.6);
-         text-align: center;
+         color: #FE4C52;
+         background: transparent;
        }
      }
    }
  }
+
+ .participantMe {
+  margin-top: 16*@2;
+  .participantInfo {
+    color: RGBA(67, 67, 67, 1);
+    font-size: 14*@2;
+    line-height: 18*@2;
+    > i{
+      text-align: center;
+      width: 40*@2;
+      color: RGBA(153, 153, 153, 1);
+      font-size: 12*@2;
+      line-height: 10*@2;
+      float: right;
+    }
+  }
+  .explain {
+    margin-top: 16*@2;
+    background: RGBA(255, 249, 237, 1);
+    color: RGBA(223, 194, 147, 1);
+    font-size: 12*@2;
+    line-height: 18*@2;
+    padding: 16*@2;
+    text-align: center;
+  }
+}
+
+.modal {
+ background: RGBA(0, 0, 0, 0.6);
+ position: fixed;
+ top: 0;
+ bottom: 0;
+ left: 0;
+ right: 0;
+ z-index: 100;
+ .content {
+   position: absolute;
+   top: 50%;
+   left: 50%;
+   width: 265*@2;
+   margin: auto;
+   transform: translate(-50%, -50%);
+   background: rgba(254, 251, 234, 1);
+   border-radius: 4*@2;
+   padding: 25*@2;
+   .title {
+     height: 25*@2;
+     line-height: 25*@2;
+     font-size: 18*@2;
+     text-align: center;
+     color: #434343;
+   }
+   >div {
+     max-height: 465*@2;
+     overflow: auto;
+     button {
+       width: 120*@2;
+     }
+     /*开奖*/
+     .prizeM{
+      text-align: center;
+      margin-top: 25*@2;
+      >img{
+        width: 56*@2;
+        height: 56*@2;
+        border-radius: 28*@2;
+      }
+      .userName{
+        color: RGBA(153, 153, 153, 1);
+        margin-top: 8*@2;
+        font-size: 14*@2;
+        line-height: 18*@2;
+      }
+      .goodsName{
+        color: RGBA(102, 102, 102, 1);
+        line-height:16*@2;
+        font-size: 12*@2;
+        margin-top: 17*@2;
+      }
+      .tips{
+        color: RGBA(254, 76, 82, 1);
+        font-size: 18*@2;
+        line-height: 22*@2;
+        text-align: center;
+        margin-top: 18*@2;
+        font-family:PingFang-SC-Medium;
+      }
+      .navigateP{
+        text-align: center;
+        height: 40*@2;
+        margin: 17*@2 0;
+        display: flex;
+        justify-content:center;
+        .navigate{
+          display: inline-block;
+          margin: 0 8*@2;
+          background: RGBA(243, 185, 19, 1);
+          line-height:40*@2;
+          font-size: 16*@2;
+          color: #fff;
+          border-radius:2*@2;
+          width: 104*@2;
+        }
+        .o-navigate{
+          border:1*@2 solid rgba(243,185,19,1);
+          color: RGBA(253, 183, 0, 1);
+          background: transparent;
+        }
+      }
+    }
+    /*下注*/
+    .betting {
+     margin-top: 55*@2;
+     .operation {
+       width: 185*@2;
+       height: 51*@2;
+       background: RGBA(243, 185, 19, 0.2);
+       border: 1*@2 solid #F3B913;
+       margin: 0 auto;
+       border-radius: 26*@2;
+       overflow: hidden;
+       display: flex;
+       >div {
+         line-height: 51*@2;
+         flex: 1;
+         text-align: center;
+         color: RGBA(243, 185, 19, 1)
+       }
+       >div:nth-child(2) {
+         font-size: 24*@2;
+         color: RGBA(67, 67, 67, 1);
+         border-left: 1*@2 solid RGBA(243, 185, 19, 1);
+         border-right: 1*@2 solid RGBA(243, 185, 19, 1);
+         background: RGBA(255, 255, 255, 1);
+       }
+     }
+     .cancel {
+       line-height: 20*@2;
+       margin: 18*@2 auto 29*@2;
+       display: inline-block;
+       width: 100%;
+       text-align: center;
+       color: RGBA(252, 229, 194, 1);
+     }
+     .record {
+       text-align: center;
+       color: RGBA(240, 145, 66, 1);
+       font-family: PingFang-SC-Medium;
+       line-height: 21*@2;
+       width: 100%;
+       margin: 40*@2 auto 42*@2;
+     }
+     .button::after {
+       border: none;
+     }
+     .button {
+       width: 180*@2;
+       height: 40*@2;
+       line-height: 40*@2;
+       border-radius: 2*@2;
+     }
+   }
+   .point {
+     >div {
+       font-size: 18*@2;
+       color: RGBA(252, 229, 194, 1);
+       margin: 50*@2 auto 56*@2;
+       text-align: center;
+       line-height: 26*@2;
+       span {
+         font-size: 22*@2;
+       }
+     }
+     >span {
+       font-size: 12*@2;
+       line-height: 16*@2;
+       margin: 8*@2 auto;
+       display: block;
+       color: RGBA(252, 229, 194, 0.6);
+       text-align: center;
+     }
+   }
+ }
+}
+}
+.shade {
+  position: absolute;
+  top:0;
+  bottom: 0;
+  width:100%;
+  height:100%;
+  background-color: rgba(90, 87, 87, 0.5) !important;
+  .foot {
+    position: fixed;
+    bottom: 0px;
+    width: 100%;
+    background:rgba(255,255,255,1);
+    >button{
+      text-align:center;
+      height:52*@2;
+      line-height:50*@2;
+      border-bottom: 1px solid #FFF0F5;
+      color: #434343;
+      font-size:16px;
+      border-radius: 0;
+    }
+  }
+}
+.display {
+  display:none;
 }

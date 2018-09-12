@@ -44,7 +44,7 @@
             已参与 <span style="margin-left:8px;">|</span>
           </span>
           <span class="goldBean">
-            <span >{{item.dayTime}}</span><span style="color:red">{{item.timeTime}}</span>开奖
+            <span >{{item.endTimeDay}}</span><span style="color:red">{{item.endTimeHours}}</span>开奖
           </span>
       </div>
       <div v-if="item.metadata.drawRule === 'fullParticipant'" style="margin-top: 5rpx;">

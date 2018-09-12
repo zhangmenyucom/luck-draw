@@ -166,7 +166,6 @@
             const shareRule = JSON.parse(res.data.filter(data => data.type === 3)[0] ? res.data.filter(data => data.type === 3)[0].rule : {})
             const advertiseRule = JSON.parse(res.data.filter(data => data.type === 6)[0] ? res.data.filter(data => data.type === 6)[0].rule : {})
             this.advertiseRule = advertiseRule
-            console.log('advertiseRule', advertiseRule)
             this.rule = rule
             this.shareRule = shareRule
             const number = this.scoreCounters.number > 7 ? this.scoreCounters.number - 7 : 0 // 需要展示的第一天

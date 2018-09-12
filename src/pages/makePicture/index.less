@@ -1,19 +1,29 @@
 @import '../../common/less/util.less';
 .imgDownload{
   min-height: 100vh;
-  background: #000;
+  background: rgba(255,255,255,1);
 }
 img{
  width: 100%;
  height: auto
 }
-.saveFile{
-  height: 50*@2;
-  line-height: 50*@2;
-  color: #fff;
-  background:#FE4C52;
-  border-radius: 0;
+.btnDiv {
+  width:100%;
+  height:66px;
+  line-height: 66px;
+  background:rgba(255,255,255,1);
+  border-top:1px solid rgba(234,234,234,1);
   position: fixed;
   bottom: 0;
-  width: 100%
+  vertical-align: middle;
 }
+.saveFile{
+  height: 40*@2;
+  line-height: 40*@2;
+  color: #fff;
+  background:#FE4C52;
+  border-radius: 2px;
+  width: 345px;
+  margin-left:15px;
+  margin-top:13px;
+} 

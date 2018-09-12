@@ -113,6 +113,12 @@ module.exports = [{
     enablePullDownRefresh: true
   }
 }, {
+  path: '/pages/luckierList/index',
+  config: {
+    navigationBarTitleText: '中奖名单',
+    enablePullDownRefresh: true
+  }
+}, {
   path: '/pages/login/index',
   config: {
     navigationBarTitleText: '登录',

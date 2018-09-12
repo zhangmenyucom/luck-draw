@@ -6,7 +6,7 @@ class CreatePersonalActivity extends ServiceBase {
     return request.post(`${this.url}`, data)
   }
   getAcitivity (data) {
-    return request.get(`${this.url}`, data)
+    return request.get(`${this.url}?type=${data}`)
   }
 }
 
