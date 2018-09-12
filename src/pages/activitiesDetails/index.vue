@@ -15,7 +15,7 @@
           <div v-if="activitie.metadata.drawRule == 'fullTicket'" class='state'>满<text>{{activitie.metadata.ticketsNum * activitie.metadata.price}}</text>金豆自动开奖，剩余<text>{{(activitie.metadata.ticketsNum-activitie.betNum)*activitie.metadata.price}}</text>金豆</div>
           <div v-if="activitie.metadata.drawRule == 'fullParticipant'" class='state'>满<text>{{activitie.metadata.participantsNum}}</text>人开奖，剩余<text>{{activitie.metadata.participantsNum-activitie.betNum}}</text>人</div>
           <div v-if="activitie.metadata.drawRule == 'timed'" class='state'>{{activitie.endTimeDay}}<text>{{activitie.endTimeHours}}</text>开奖</div>
-          <div class="info">
+          <div v-if='activitie.metadata.price' class="info">
             {{activitie.metadata.price}}<img src='/static/img/goldBean.png' class="" />参与
           </div>
         </div>
@@ -62,7 +62,7 @@
         <luckyitems v-if='state >= 5' :list='luckyItemList' :activitie = 'activitie' />
             <!-- 中奖名单结束 -->
             <!-- 抽奖按钮 -->
-        <luckDraw :state = 'state' :activitie = 'activitie' :modifyState= 'modifyState'/>
+        <luckDraw :state = 'state' :activitie = 'activitie' :modifyState= 'modifyState' :bets='bets'/>
             <!-- 抽奖按钮结束 -->
             <!-- 参加列表 -->
             <div class="participant" v-if="participantTotal>0">

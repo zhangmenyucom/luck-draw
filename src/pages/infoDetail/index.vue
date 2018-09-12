@@ -159,7 +159,7 @@
         // 查询用户一共参与多少活动
         ParticipantsService.getList({
           userId: userInfo.id,
-          activityType: 'PLATFORM_LUCKY_DRAW'
+          activityType: 'PLATFORM_LUCKY_DRAW,PERSONAL_LUCKY_DRAW'
         }).then((res) => {
           if (res.code === 0 && res.data.length > 0) {
             this.activitieTotal = res.total
@@ -168,7 +168,7 @@
         // 查询中奖活动
         ParticipantsService.getList({
           userId: userInfo.id,
-          activityType: 'PLATFORM_LUCKY_DRAW',
+          activityType: 'PLATFORM_LUCKY_DRAW,PERSONAL_LUCKY_DRAW',
           lucky: true
         }).then((res) => {
           if (res.code === 0) {
