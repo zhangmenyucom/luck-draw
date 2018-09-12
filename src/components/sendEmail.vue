@@ -14,7 +14,7 @@
 
 <script>
     export default {
-        props: ['cancleButton', 'confirmButton', 'emailId', 'emailInputChange']
+      props: ['cancleButton', 'confirmButton', 'emailId', 'emailInputChange']
     }
 </script>
 
