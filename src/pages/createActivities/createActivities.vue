@@ -369,6 +369,7 @@
       },
       onShow () {
         this.giftPictures = []
+        this.giftImgSrc = ['/static/img/defaultPic.jpg']
         this.itemName = []
         this.itemNum = []
         this.peopleNum = ''

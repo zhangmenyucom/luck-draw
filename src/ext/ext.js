@@ -150,7 +150,7 @@ export default class ext {
 
   static setClipboardData (data) {
     if (this.isWx) {
-      return wx.setClipboardData({data})
+      return wx.setClipboardData(data)
     }
   }
   static chooseImage () {

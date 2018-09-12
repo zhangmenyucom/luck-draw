@@ -124,5 +124,10 @@ module.exports = [{
     navigationBarTitleText: '发起抽奖',
     enablePullDownRefresh: true
   }
-}
-]
+}, {
+  path: '/pages/luckierList/index',
+  config: {
+    navigationBarTitleText: '中奖名单',
+    enablePullDownRefresh: true
+  }
+}]

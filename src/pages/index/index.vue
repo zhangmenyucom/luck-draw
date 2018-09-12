@@ -152,25 +152,14 @@
             const willLuckDraw = []
             res.data.forEach((activitie) => {
               activitie.url = `/pages/activitiesDetails/index?id=${activitie.id}&method='首页'&name=${activitie.name}`
+              if (activitie.metadata.drawRule === 'timed') {
+                const date = new Date(activitie.endTime)
+                activitie.endTimeDay = `${date.getMonth() + 1}月${date.getUTCDate()}日`
+                activitie.endTimeHours = `${date.getUTCHours() + 1}:${date.getUTCMinutes()}`
+              }
               // 现在多余 留待后用
               if (date > activitie.startTime) {
                 onLuckyDraw.push(activitie)
-                onLuckyDraw.forEach((item) => {
-                  if (item.metadata.drawRule === 'timed') {
-                    let getMonth = new Date(item.endTime).getMonth()
-                    let getDay = new Date(item.endTime).getDate()
-                    let getHours = new Date(item.endTime).getHours().toString()
-                    let getMinutes = new Date(item.endTime).getMinutes().toString()
-                    if (getHours.length < 2) {
-                      getHours = '0' + getHours
-                    }
-                    if (getMinutes.length < 2) {
-                      getMinutes = '0' + getMinutes
-                    }
-                    item.dayTime = getMonth + '月' + getDay + '日'
-                    item.timeTime = getHours + ':' + getMinutes
-                  }
-                })
               } else {
                 willLuckDraw.push(activitie)
               }

@@ -16,7 +16,7 @@
         <div class="bottomHideHalf" :style="'height:'+hideHeight+'px;'">
         </div>
         <div class='cropper-config'>
-            <div @click="getImageInfo"> 完成 </div>
+            <div @click="getFilePathRect"> 完成 </div>
         </div>
         <canvas canvas-id="myCanvas" :style="'position:absolute;border: 1px solid red; width:'+width+'px;height:'+height+'px;top:-99999px;left:-99999px;'"></canvas>
     </div>
@@ -70,55 +70,31 @@ export default {
       this.Scale = (this.width / this.baseWidth).toFixed(3)
       this.baseWidth = this.baseWidth * this.Scale
       this.baseHeight = this.baseHeight * this.Scale
-      let x = this.x - this.imgx
-      let y = this.y - this.imgy
+      console.log(this.x, this.y, this.imgx, this.imgy)
+      let x = this.imgx - this.x
+      let y = this.imgy - this.y
       ctx.drawImage(this.imageSrc, 0, 0, this.baseWidth, this.baseHeight)
       ctx.draw(true, () => {
-        this.$canvasToTempFilePath(x, y, 375, 187.5, 375, 187.5, 1, 'myCanvas').then(res => {
+        this.$canvasToTempFilePath(x, y, 375, 187.5, 750, 375, 1, 'myCanvas').then(res => {
           this.showImage(res.tempFilePath, this.picIndex)
         })
       })
     },
-    // scroll (e) {
-    //   this.maxLeft = 375 - this.width
-    //   this.maxTop = 375 - this.height
-    //   if (e.mp.touches.length === 2) {
-    //     let xMove = e.mp.touches[1].clientX - e.mp.touches[0].clientX
-    //     let yMove = e.mp.touches[1].clientY - e.mp.touches[0].clientY
-    //     let distance = Math.sqrt(xMove * xMove + yMove * yMove)
-    //     if (this.olddistance === 0) {
-    //       this.olddistance = distance
-    //     } else {
-    //       this.newdistance = distance
-    //       this.diffdistance = this.newdistance - this.olddistance
-    //       this.olddistance = this.newdistance
-    //       this.Scale = this.Scale + 0.005 * this.diffdistance
-    //       if (this.Scale > 2.5) {
-    //         return
-    //       } else if (this.Scale < 1) {
-    //         return
-    //       }
-    //       this.height = 150 * this.Scale
-    //       this.width = 300 * this.Scale
-    //     }
-    //   }
-    // },
-    endTou () {
-      // this.olddistance = 0
-      // this.oldSingleDisX = 0
-      // this.oldSingleDisY = 0
-      this.getRect()
-    },
-    getRect () {
+    getFilePathRect () {
       let _this = this
-      this.$createSelectorQuery().select('.FilePath').boundingClientRect(function (rect) {
-        _this.x = Math.abs(rect.left)
-        _this.y = Math.abs(rect.top)
-      }).exec()
-      this.$createSelectorQuery().select('.viewPic').boundingClientRect(function (rect) {
-        _this.imgx = Math.abs(rect.left)
-        _this.imgy = Math.abs(rect.top)
-      }).exec()
+      this.$createSelectorQuery().select('.FilePath').boundingClientRect().exec(res => {
+        _this.x = Math.abs(res[0].left)
+        _this.y = Math.abs(res[0].top)
+        return _this.getviewPicRect()
+      })
+    },
+    getviewPicRect  () {
+      let _thisthis = this
+      this.$createSelectorQuery().select('.viewPic').boundingClientRect().exec(res => {
+        _thisthis.imgx = Math.abs(res[0].left)
+        _thisthis.imgy = Math.abs(res[0].top)
+        return _thisthis.getImageInfo()
+      })
     }
   },
   onReady () {
