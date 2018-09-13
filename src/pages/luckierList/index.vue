@@ -22,7 +22,7 @@
                             <div >
                                 <div class="avatar"><img :src="item.user.avatar" alt=""></div>
                                 <div class="name">{{item.user.nickName}}</div>
-                                <div class="prizeInfo">奖品：&nbsp;{{item.metadata.rewards[0].name}}&nbsp;&nbsp;&nbsp;&nbsp;X{{item.metadata.rewards[0].metadata && item.metadata.rewards[0].metadata.num}}</div>
+                                <div class="prizeInfo">奖品：&nbsp;{{item.metadata.rewards[0].name}}&nbsp;&nbsp;&nbsp;&nbsp;X{{item.metadata.rewards[0].metadata || '1'}}</div>
                             </div>
                             <p class="name-call" style="font-size:12px">收货信息</p>
                             <div v-if="item.metadata.address">
@@ -80,7 +80,7 @@ export default {
       this.showEmailModal = !this.showEmailModal
     },
     getParticipants (id) { // 获取活动详情
-      participantsService.get({
+      participantsService.getList({
         activityId: id,
         lucky: true
       }).then((res) => {

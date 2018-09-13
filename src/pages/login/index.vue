@@ -35,6 +35,7 @@ export default {
   },
   methods: {
     getUserInfo (e) {
+      console.log(11)
       AuthService.wxLogin(e.mp.detail).then((res) => {
         if (res.code === 0) {
           this.$navigateBack()

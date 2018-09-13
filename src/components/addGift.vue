@@ -2,7 +2,7 @@
     <div>
         <div class="vip-card">
             <img :src="giftImgSrc" style="width:750rpx;height:375rpx;" />
-            <div @click="addGiftPic(index, giftImgSrc)" class="changeGiftPic">更换奖品图片</div>
+            <div @click="getImage(index, giftImgSrc)" class="changeGiftPic">更换奖品图片</div>
         </div>
         <div class="weui-cells weui-cells_after-title" style="margin-bottom: 8px;">
             <div class="weui-cell weui-cell_access border-middle">
@@ -26,7 +26,7 @@
 export default {
   props: ['addGiftPic', 'showCanvas', 'giftImgSrc',
     'index', 'deleteGiftList', 'itemNameChange',
-    'itemNumChange', 'itemName', 'itemNum']
+    'itemNumChange', 'itemName', 'itemNum', 'getImage']
 }
 </script>
 

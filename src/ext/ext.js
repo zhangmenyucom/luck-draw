@@ -2,6 +2,7 @@
 import {
   isWx
 } from '../decorator'
+import config from 'config'
 @isWx // eslint-disable-line
 export default class ext {
   static getStorageSync (key) {
@@ -209,15 +210,18 @@ export default class ext {
       })
     }
   }
-  static uploadFile (url, filePath, name) {
+  static uploadFile (filePath) {
     if (this.isWx) {
       return new Promise((resolve, reject) => {
         wx.uploadFile({
-          url,
+          url: config.baseURL + 'bc/v1/storage',
           filePath,
-          name,
+          header: {
+            authorization: this.getStorageSync(`token`)
+          },
+          name: 'file',
           success (res) {
-            resolve(res)
+            resolve(JSON.parse(res.data))
           },
           fail (err) {
             reject(err)

@@ -75,7 +75,12 @@ export default {
       ctx.drawImage(this.imageSrc, 0, 0, this.baseWidth, this.baseHeight)
       ctx.draw(true, () => {
         this.$canvasToTempFilePath(x, y, 375, 187.5, 750, 375, 1, 'myCanvas').then(res => {
-          this.showImage(res.tempFilePath, this.picIndex)
+          return this.$uploadFile(res.tempFilePath)
+        }).then((res) => {
+          console.log('res', res)
+          if (res.code === 0) {
+            this.showImage(res.data.url, this.picIndex)
+          }
         })
       })
     },
@@ -97,6 +102,7 @@ export default {
     }
   },
   onReady () {
+    console.log(this.imageSrc)
     this.loadImage()
   }
 }
