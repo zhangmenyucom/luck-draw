@@ -360,7 +360,8 @@
               drawRule: this.drawRule,
               urls: this.jsonString,
               isShare: this.isShare,
-              endTimeString: this.pickerDate
+              endTimeString: this.pickerDate,
+              participantsNum: this.peopleNum
             }
           }).then(res => {
             this.$navigateTo(`/pages/activitiesDetails/index?id=${res.data.id}`)

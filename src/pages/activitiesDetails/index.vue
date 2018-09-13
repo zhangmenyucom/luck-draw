@@ -12,7 +12,7 @@
         </swiper>
         <div class="name antialiased">
           <div v-for="(item, i) in activitie.items">
-            <text>「奖品{{i+1}}」</text>{{item.name}}&nbsp;<span>X&nbsp;{{item.metadata.num}}{{state}}</span>
+            <text>「奖品{{i+1}}」</text>{{item.name}}&nbsp;<span>X&nbsp;{{item.metadata.num}} {{state}}</span>
           </div>
         </div>
         <!-- 活动信息及状态 -->
@@ -67,7 +67,7 @@
           <luckyitems v-if='state >= 5' :list='luckyItemList' :activitie = 'activitie' />
             <!-- 中奖名单结束 -->
             <!-- 抽奖按钮 -->
-            <luckDraw :state = 'state' :activitie = 'activitie' :modifyState= 'modifyState' :bets='bets'/>
+            <luckDraw :state = 'state' :participants='participants' :activitie = 'activitie' :modifyState= 'modifyState' :bets='bets'/>
             <!-- 抽奖按钮结束 -->
             <!-- 参加列表 -->
             <div class="participant" v-if="participantTotal>0">
@@ -83,7 +83,6 @@
             </div>
             <!-- 免费说明结束 -->
             <!-- 底部 -->
-
             <div class='bottom'>
               <div>
                 <a href="/pages/baseCreateActivity/createActivities" class="button button-o">
@@ -117,8 +116,9 @@
                   —— {{isFree ? '提示' : (state < 5 ? '下注' : '开奖结果')}} ——
                 </div>
                 <div class="modalFree" v-if="isFree">
-                  <span>1.钱包抽奖助手作为提供发起及参与抽奖的</span>
-                  <span>2.钱包抽奖助手会在法律范围内尽可能地规</span>
+                  <img src="/static/img/lightModal.png">
+                  <span>1.钱包抽奖助手作为提供发起及参与抽奖的平台，不对第三方发起人行为承担责任，活动奖品均由发起者提供发放</span>
+                  <span>2.钱包抽奖助手会在法律范围内尽可能地规范、督促用户遵守相关法律和平台使用规则。营造良好的平台使用环境，感谢支持</span>
                 </div>
                 <div v-else>
                   <!-- 投注 -->
@@ -436,7 +436,6 @@
           userId: userInfo.id
         }).then((res) => {
           if (res.code === 0 && res.data.length > 0) {
-            res.data[0].rewards = JSON.parse(res.data[0].metadata.rewards)
             this.participants = res.data[0]
             if (res.data[0].metadata.address) { // 判断是否添加过地址
               this.modifyState(7)

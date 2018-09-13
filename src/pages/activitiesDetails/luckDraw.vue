@@ -19,7 +19,8 @@
       <div>
         <div class='bold antialiased'>
           <form  v-if="activitie.metadata.drawRule == 'fullTicket'"  :data-state="state + 1" @submit.stop = "modifyState">
-            <button form-type = "submit">点我加注</button>
+            <button form-type = "submit">加注</button>
+            <span class='tickets' >已下{{participants.tickets.length * activitie.metadata.ticketsNum}}金豆</span>
           </form>
           <form v-else>
             <button  open-type="share" >分享加速</button>
@@ -61,7 +62,7 @@
 <script>
   import drawList from '@/components/drawList'
   export default {
-    props: ['state', 'activitie', 'modifyState', 'bets'],
+    props: ['state', 'activitie', 'modifyState', 'bets', 'participants'],
     components: {
       drawList
     },
@@ -74,7 +75,9 @@
 </script>
 <style scoped>
   @import '../../common/less/util.less';
-
+  .tickets{
+    font-size: 10*@2;
+  }
   .loop(@count) when( @count > 0 ){
     >div:nth-child(@{count}){
       transition:all 0.2s linear @count*0.1s;
@@ -122,6 +125,7 @@
 
 
     .prize {
+
       opacity:1;
       transition:all 0.7s linear 0.5s;
       width: 100*@2;
@@ -141,6 +145,7 @@
        position: relative;
        top: 5*@2;
        >div {
+
          width: 84*@2;
          height: 84*@2;
          background: -webkit-linear-gradient(RGBA(255, 115, 42, 1), RGBA(255, 100, 113, 1));
@@ -214,6 +219,7 @@
    /* Safari 5.1 - 6.0 */
    border-radius: 55*@2;
    margin: 24*@2 auto;
+
    >div {
      width: 90*@2;
      height: 90*@2;

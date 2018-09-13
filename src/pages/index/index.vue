@@ -96,7 +96,7 @@
           type: 'PLATFORM_LUCKY_DRAW',
           status: 'CREATED',
           append: 'BET_NUM',
-          // startTimeLt: date, // 过滤未到时间活动
+          startTimeLt: date, // 过滤未到时间活动
           pageNum,
           pageSize
         }).then((res) => {
