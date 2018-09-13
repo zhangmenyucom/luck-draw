@@ -414,7 +414,10 @@
           }
         }
       },
-      onLoad () {
+      onLoad (options) {
+        if (options) {
+          console.log(options)
+        }
         this.giftPictures = []
         this.giftImgSrc = ['https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg']
         this.itemName = []

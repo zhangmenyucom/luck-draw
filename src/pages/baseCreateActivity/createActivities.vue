@@ -337,7 +337,10 @@
           }
         }
       },
-      onShow () {
+      onLoad (options) {
+        if (options) {
+          console.log(options)
+        }
         this.itemName = []
         this.itemNum = []
         this.peopleNum = ''
