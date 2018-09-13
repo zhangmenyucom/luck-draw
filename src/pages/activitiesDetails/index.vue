@@ -54,6 +54,9 @@
         </div>
         <!-- 我发起的活动 可以看到中奖者信息 结束 -->
         <!-- 奖品详情 -->
+        <div class="description">
+          {{activitie.description}}
+        </div>
         <div class="mediaInfo" v-if="mediaInfoimg.length > 0">
           <img mode='widthFix' v-for='(item, i) in mediaInfoimg' :src="item.url">
         </div>
@@ -90,7 +93,7 @@
                 </a>
               </div>
               <div v-if='participantTotal == 0 && activitie.owner.id == userInfo.id' >
-                <a href="" class="button button-o">
+                <a :href="activitie.metadata.edition === 'baseEdition' ? '/pages/baseCreateActivity/createActivities?id='+activitie.id : '/pages/createActivities/createActivities?id='+activitie.id" class="button button-o">
                   编辑
                 </a>
               </div>
@@ -167,7 +170,7 @@
                         <a  :href="'/pages/takePrize/index?id='+participants.id" v-if="state == 6" class="navigate o-navigate">
                           领取奖品
                         </a>
-                        <a v-if="state == 6" class="navigate">
+                        <a v-if="state == 6" class="navigate" @tap="()=>toMakeImg(true)">
                           炫耀一下
                         </a>
                         <a open-type="switchTab" href='/pages/index/index' v-if="state == 5" class="navigate">
@@ -340,19 +343,10 @@
         this.display = !this.display
       },
       toMakeImg (lucky) {
-        if (lucky === true) {
-          TwoCodeService.get().then((res) => {
-            this.QR = res.data.url
-            if (res.code === 0) {
-              this.$navigateTo('../makePicture/index?title=生成分享图&lucky=true&activity=' + JSON.stringify(this.activitie) + '&twoCode=' + res.data.url)
-            }
-          })
-          return
-        }
         TwoCodeService.get().then((res) => {
           this.QR = res.data.url
           if (res.code === 0) {
-            this.$navigateTo('../makePicture/index?title=生成分享图&activity=' + JSON.stringify(this.activitie) + '&twoCode=' + res.data.url)
+            lucky === true ? this.$navigateTo('../makePicture/index?title=生成分享图&lucky=true&activity=' + JSON.stringify(this.activitie) + '&twoCode=' + res.data.url) : this.$navigateTo('../makePicture/index?title=生成分享图&activity=' + JSON.stringify(this.activitie) + '&twoCode=' + res.data.url)
           }
         })
       },
@@ -362,6 +356,7 @@
           append: 'BET_NUM'
         }).then((res) => {
           if (res.code === 0) {
+            console.log(res.data)
             if (res.data.metadata.ticketsNum) {
               res.data.metadata.ticketsNum = parseInt(res.data.metadata.ticketsNum)
             }
@@ -555,25 +550,16 @@
       // }, 1000)
       this.ticketsNum = 1
       mta.Page.init()
-
+      let from = options.method
+      if (this.$getStorageSync('scene') === 1014) {
+        from = '模板消息'
+      } else if (this.$getStorageSync('scene') === 1007 || this.$getStorageSync('scene') === 1008) {
+        from = '好友分享'
+      }
       mta.Event.stat('lucky_draw', {
         'activityname': options.name,
-        'from': options.method
+        'from': from
       })
-
-      mta.Event.stat('lucky_draw', {
-        'from': options.method
-      })
-
-      if (this.$getStorageSync('scene') === 1014) {
-        mta.Event.stat('lucky_draw', {
-          'from': '模板消息'
-        })
-      } else if (this.$getStorageSync('scene') === 1007 || this.$getStorageSync('scene') === 1008) {
-        mta.Event.stat('lucky_draw', {
-          'from': '好友分享'
-        })
-      }
     },
     onHide () {
       getMeScores.end()

@@ -102,6 +102,7 @@ export default {
     }
   },
   onReady () {
+    console.log(this.imageSrc)
     this.loadImage()
   }
 }

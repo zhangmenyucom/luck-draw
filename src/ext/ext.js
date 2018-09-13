@@ -1,5 +1,5 @@
  // 尽量只扩展微信相关接口
- import {
+import {
   isWx
 } from '../decorator'
 import config from 'config'
@@ -195,6 +195,41 @@ export default class ext {
       })
     }
   }
+  static getFileInfo (filePath) {
+    if (this.isWx) {
+      return new Promise((resolve, reject) => {
+        wx.getFileInfo({
+          filePath,
+          success (res) {
+            resolve(res)
+          },
+          fail (err) {
+            reject(err)
+          }
+        })
+      })
+    }
+  }
+  static uploadFile (filePath) {
+    if (this.isWx) {
+      return new Promise((resolve, reject) => {
+        wx.uploadFile({
+          url: config.baseURL + 'bc/v1/storage',
+          filePath,
+          header: {
+            authorization: this.getStorageSync(`token`)
+          },
+          name: 'file',
+          success (res) {
+            resolve(JSON.parse(res.data))
+          },
+          fail (err) {
+            reject(err)
+          }
+        })
+      })
+    }
+  }
   static createCanvasContext (id) {
     if (this.isWx) {
       return wx.createCanvasContext(id)
@@ -243,27 +278,6 @@ export default class ext {
     }
   }
 
-  static uploadFile (filePath) {
-    if (this.isWx) {
-      return new Promise((resolve, reject) => {
-        wx.uploadFile({
-          url: config.baseURL + 'bc/v1/storage',
-          filePath,
-          header: {
-            authorization: this.getStorageSync(`token`)
-          },
-          name: 'file',
-          success (res) {
-            resolve(JSON.parse(res.data))
-          },
-          fail (err) {
-            reject(err)
-          }
-        })
-      })
-    }
-  }
-
   static install (Vue, options) {
     Vue.prototype.$getStorageSync = this.getStorageSync.bind(this)
     Vue.prototype.$setStorageSync = this.setStorageSync.bind(this)
@@ -292,5 +306,6 @@ export default class ext {
     Vue.prototype.$showModal = this.showModal.bind(this)
     Vue.prototype.$getWindowH = this.getWindowH.bind(this)
     Vue.prototype.$uploadFile = this.uploadFile.bind(this)
+    Vue.prototype.$getFileInfo = this.getFileInfo.bind(this)
   }
 }
