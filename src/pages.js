@@ -89,22 +89,10 @@ module.exports = [{
     enablePullDownRefresh: false
   }
 }, {
-  path: 'pages/myActivityDetail/myActivityDetail',
-  config: {
-    navigationBarTitleText: '详情',
-    enablePullDownRefresh: true
-  }
-}, {
   path: 'pages/baseCreateActivity/createActivities',
   config: {
     navigationBarTitleText: '发起抽奖',
     enablePullDownRefresh: false
-  }
-}, {
-  path: '/pages/myActivitiesDetails/index',
-  config: {
-    navigationBarTitleText: '详情',
-    enablePullDownRefresh: true
   }
 }, {
   path: '/pages/commonQuestion/index',
@@ -129,5 +117,12 @@ module.exports = [{
   config: {
     navigationBarTitleText: '中奖名单',
     enablePullDownRefresh: true
+  }
+}, {
+  path: '/pages/login/index',
+  config: {
+    navigationBarTitleText: '登录',
+    enablePullDownRefresh: true,
+    backgroundColor: '#00000000'
   }
 }]

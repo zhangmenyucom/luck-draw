@@ -2,50 +2,33 @@
   <div class="takePrize ">
     <top title='领奖' />
     <!-- 地址展示 -->
-    <div class="top">
-      请在xxx(开奖七天后)填写之前填写，超时后不能
+    <div class='tips'>
+      请在开奖七天内填写，超时后不能填写
     </div>
-    <div class='address'>
-      <span class='title antialiased'>
-        奖品配送至
+    <div class="address">
+        <span class="title bold">
+          收货地址
+        </span>
+      <div @tap="chooseAddress" class="center">
+          <div>
+          <span v-if='!address.phone'>选择收货地址</span>
+          <span v-else>
+            {{address.name}}   {{address.phone}}<br />
+            {{address.addition}}
+          </span>
+          </div>
+          <i class ='icon iconfont icon-xuanzedizhi' />
+      </div>
+    </div>
+    <div class="address">
+      <span class="title bold">
+        备注
       </span>
-      <!-- 无地址 -->
-      <div @tap="chooseAddress">
-        {{address.addition || '选择收货地址 '}} {{isTakePrize ? '>' : ''}}
-      </div>
-      <text class="phone" v-if='address.phone'>
-        {{address.phone}}
-      </text>
-      <!-- 无地址结束 -->
-    </div>
-    <!-- 地址展示结束 -->
-    <!-- 活动内容-->
-    <div class="activitie">
-      <div class="top">viod</div>
-      <div class="user">
-        <div class="head">
-          <img :src="userInfo.avatar">
-        </div>
-        <text class='nickName'>
-          {{userInfo.nickName}}
-        </text>
-        <br />
-        <!-- <span class="luckyNumber">
-          幸运号：{{participant.tickets[0]}}
-        </span> -->
-      </div>
-      <!-- <div class="content">
-        <text class="expression">
-          <text>「奖品」</text>{{participant.activity.items[0].name}}
-        </text>
-        <img mode='aspectFit' :src="participant.activity.items[0].metadata.image" >
-      </div> -->
-      <div class="tips antialiased">
-        友情提示：完善收货信息后我们会及时与您联系
+      <div class="center">
+        <textarea auto-height :disabled='isTakePrize' v-model='remarks' placeholder='请输入' name=""></textarea>
       </div>
     </div>
-    <!-- 活动内容结束 -->
-    <button @tap="addAddress" class="bottom" v-if='isTakePrize'>
+    <button @tap="addAddress"  class="bottom" v-if='isTakePrize'>
       确认领奖
     </button>
   </div>
@@ -61,34 +44,27 @@
     data () {
       return {
         userInfo: {},
-        participant: {
-          activity: {
-            name: '',
-            items: [{
-              media: [{}]
-            }]
-          }
-        },
+        participant: {},
         address: {},
-        isTakePrize: true
+        isTakePrize: true,
+        remarks: ''
       }
     },
     components: {
       top
     },
     methods: {
-      getParticipants (activityId) {
+      getParticipants (participantId) {
         const userInfo = getUserInfo()
         ParticipantsService.get({
-          activityId,
+          id: participantId,
           userId: userInfo.id
         }).then((res) => {
-          if (res.code === 0 && res.data.length > 0) {
-            this.participant = res.data[0]
-            console.log('this.participant.activity', this.participant.activity)
-            console.log('activity.items[0].name', this.participant.activity.items[0].name)
-            if (res.data[0].metadata.address) {
-              this.address = JSON.parse(res.data[0].metadata.address)
+          if (res.code === 0 && res.data.id) {
+            this.participant = res.data
+            if (res.data.metadata.address) {
+              this.address = JSON.parse(res.data.metadata.address)
+              this.remarks = this.address.remarks
               this.isTakePrize = false
             } else {
               this.address = {}
@@ -98,7 +74,6 @@
         })
       },
       chooseAddress () {
-        console.log(11)
         if (!this.isTakePrize) return false
         this.$chooseAddress().then(res => {
           this.address = {
@@ -114,6 +89,8 @@
           this.$showToast('请选择地址')
           return false
         }
+        this.address.remarks = this.remarks
+        console.log('this.participant', this.participant)
         ParticipantsService.addMetadata({
           id: this.participant.id,
           key: 'address',

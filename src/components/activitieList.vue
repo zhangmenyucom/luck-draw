@@ -4,7 +4,7 @@
       正在抽奖<i class="icon iconfont icon-Fillx"></i>
     </div>
     <a v-if='onDraw.length > 0' class="list" v-for="(item , i) in onDraw" :href="item.url" :key="i">
-      <img mode='aspectFit' :src='item.media[0].url'>
+      <img mode='aspectFit' :src='item.items[0].metadata.image'>
       <!-- <img mode='aspectFit' src='https://oss.qianbaocard.org/20180816/4802d958a0a54dbb8f0928d1e7f19141.jpg'> -->
       <!-- <div class="prompt antialiased">
         <div class="left">
@@ -15,7 +15,7 @@
         </div>
       </div> -->
       <div class="name antialiased">
-        [ 奖品 ]&nbsp;&nbsp;{{item.name}}
+        [ 奖品 ]&nbsp;&nbsp;{{item.items[0].name}}
       </div>
 
       <div v-if="item.metadata.drawRule === 'fullTicket'">

@@ -3,7 +3,7 @@
         <top title='中奖者'/>
         <div class="head">
             <div class="IconDiv">
-                <img class="activityPic" :src="activity.media[0].url"/>
+                <img class="activityPic" :src="activity.items[0].metadata.url"/>
                 <div class="joinNum">参与人数<span style="color:#FDB700;">{{activity.realNum}}</span>人</div>
             </div>
             <div class="activityInfo">
@@ -17,52 +17,58 @@
             <span>中奖名单</span>
             <div class="list">
                 <div class="list-content">
-                    <div v-for="(item, index) in luckyItems" :key="index">
+                    <div v-for="(item, index) in luckyItems" :class="index === luckyItems.length-1?'bottomMargin':''">
                         <div class="list-content-one">
-                            <div>
-                                <div class="avatar"><img :src="item.luckyGuy.avatar" alt=""></div>
-                                <div class="name">{{item.luckyGuy.nickName}}</div>
-                                <div class="prizeInfo">奖品：&nbsp;{{luckyItems[0].reward.name}}&nbsp;&nbsp;&nbsp;&nbsp;X{{luckyItems[0].reward.metadata.num}}</div>
+                            <div >
+                                <div class="avatar"><img :src="item.user.avatar" alt=""></div>
+                                <div class="name">{{item.user.nickName}}</div>
+                                <div class="prizeInfo">奖品：&nbsp;{{item.metadata.rewards[0].name}}&nbsp;&nbsp;&nbsp;&nbsp;X{{item.metadata.rewards[0].metadata && item.metadata.rewards[0].metadata.num}}</div>
                             </div>
                             <p class="name-call" style="font-size:12px">收货信息</p>
                             <div v-if="item.metadata.address">
-                                <p class="name-call">{{item.metadata.address.name}}&nbsp;&nbsp;&nbsp;{{activity.metadata.address.phone}}</p>
+                                <p class="name-call">{{item.metadata.address.name}}&nbsp;&nbsp;&nbsp;{{item.metadata.address.phone}}</p>
                                 <p class="address">{{item.metadata.address.addition}}</p>
                             </div>
                             <div v-else class="noAddress">
                                 未填写
                             </div>
                         </div>
-                        <div v-if="index>0" class="solidDiv"></div>
+                        <div v-if="index<luckyItems.length-1" class="solidDiv"></div>
                     </div>
                 </div>
                 <div class="foot">
                     <button class="btn" @tap="copyAll">复制全部</button>
-                    <button class="btn btn2">发送邮箱</button>
+                    <button class="btn btn2" @tap="sendToEmail">发送邮箱</button>
                 </div>
             </div>
         </div>
+        <sendEmail v-if="showEmailModal" :cancleButton="cancleButton" :confirmButton="confirmButton" :emailId="emailId" :emailInputChange="emailInputChange" />
     </div>
 </template>
 <script>
 import top from '@/components/top'
+import sendEmail from '@/components/sendEmail'
+import participantsService from '@/services/participantsService'
 import ActivitiesService from '@/services/activitiesService'
+import SendEmail from '@/services/sendEmailService'
 import share from '@/common/js/share.js'
 export default {
   data () {
     return {
-        luckyItems: [{
-            luckyGuy: {},
-            metadata: {},
-            reward: {metadata: {num: 0}}
-        }],
-        activity: {realNum: 0, media: [ 'url' ]},
-        getAddressNum: 0,
-        copyData: ''
+      luckyItems: [{
+        user: {},
+        metadata: {rewards: [{metadata: {num: 0}}]}
+      }],
+      activity: {realNum: 0, media: [ 'url' ]},
+      getAddressNum: 0,
+      copyData: '',
+      emailId: '',
+      showEmailModal: false
     }
   },
   components: {
-    top
+    top,
+    sendEmail
   },
   methods: {
     copyAll () {
@@ -70,60 +76,73 @@ export default {
         data: this.copyData
       })
     },
-    getActivitie (id) { // 获取活动详情
-        ActivitiesService.get({
-            id,
-            append: 'PARTICIPANT'
-        }).then((res) => {
-            if (res.code === 0) {
-                this.activity = res.data
-                console.log('activity', res.data)
-                // 处理中奖信息
-                if (res.data.metadata.luckyItems) {
-                    const luckyItems = JSON.parse(res.data.metadata.luckyItems)
-                    console.log('luckyItems', luckyItems)
-                    this.luckyItems = luckyItems
-                    // let dataArray = []
-                    luckyItems.forEach(element => {
-                        // let tel = ''
-                        // let address = ''
-                        // if (element.metadata.address) {
-                        //     this.getAddressNum += 1
-                        //     tel = element.metadata.address.phone
-                        //     address = element.metadata.address.addition
-                        // } else {
-                        //     tel = '未填写'
-                        //     address = '未填写'
-                        // }
-                        // dataArray.push({'姓名': element.luckyGuy.nickName,
-                        //                 '奖品': element.reward.name + 'X' + element.reward.metadata.num,
-                        //                 '联系电话': tel,
-                        //                 '收货地址': address
-                        // })
-                        let tel = ''
-                        let address = ''
-                        if (element.metadata.address) {
-                            this.getAddressNum += 1
-                            tel = element.metadata.address.phone
-                            address = element.metadata.address.addition
-                        } else {
-                            tel = '未填写'
-                            address = '未填写'
-                        }
-                        this.copyData += '姓名:' + element.luckyGuy.nickName +
-                                        '奖品:' + element.reward.name + 'X' + element.reward.metadata.num +
-                                        '联系电话:' + tel +
-                                        '收货地址:' + address + '    '
-                    })
-                }
+    sendToEmail () {
+      this.showEmailModal = !this.showEmailModal
+    },
+    getParticipants (id) { // 获取活动详情
+      participantsService.get({
+        activityId: id,
+        lucky: true
+      }).then((res) => {
+        if (res.code === 0) {
+          // 处理中奖信息
+          this.luckyItems = res.data
+          this.luckyItems.forEach(element => {
+            let tel = ''
+            let address = ''
+            element.metadata.rewards = JSON.parse(element.metadata.rewards)
+            if (element.metadata.address) {
+              element.metadata.address = JSON.parse(element.metadata.address)
+              this.getAddressNum += 1
+              tel = element.metadata.address.phone
+              address = element.metadata.address.addition
+            } else {
+              tel = '未填写'
+              address = '未填写'
             }
-        })
+
+            if (element.metadata.rewards[0].metadata) {
+              this.copyData += '姓名:' + element.user.nickName +
+                                      '    奖品:' + element.metadata.rewards[0].name + 'X' + (element.metadata.rewards[0].metadata.num || '0') +
+                                      '    联系电话:' + tel +
+                                      '    收货地址:' + address + '        '
+            }
+          })
+        }
+      })
+    },
+    getActivities (id) {
+      ActivitiesService.get({
+        id,
+        append: 'PARTICIPANT'
+      }).then(res => {
+        this.activity = res.data
+      })
+    },
+    cancleButton () {
+      this.showEmailModal = !this.showEmailModal
+    },
+    confirmButton () {
+      this.$showLoading()
+      SendEmail.sendEmail({
+        subject: '中奖者名单',
+        targetAddress: this.emailId,
+        text: this.copyData
+      }).then(res => {
+        this.$hideLoading()
+        this.$emailToast('发送成功!')
+      })
+      this.showEmailModal = !this.showEmailModal
+    },
+    emailInputChange (e) {
+      this.emailId = e.mp.detail.value
     }
   },
-  onLoad (a) {
-      this.getActivitie('5b8cf5ca711eae26806c47ac')
-    },
-    onShareAppMessage: share()
+  onLoad (data) {
+    this.getParticipants(data.id)
+    this.getActivities(data.id)
+  },
+  onShareAppMessage: share()
 }
 </script>
 

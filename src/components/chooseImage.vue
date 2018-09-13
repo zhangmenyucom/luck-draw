@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import pushImg from '@/services/pushImgService'
 export default {
   props: ['showImage', 'picIndex', 'picIndexSrc', 'imageSrc'],
   data () {
@@ -70,14 +71,24 @@ export default {
       this.Scale = (this.width / this.baseWidth).toFixed(3)
       this.baseWidth = this.baseWidth * this.Scale
       this.baseHeight = this.baseHeight * this.Scale
-      console.log(this.x, this.y, this.imgx, this.imgy)
       let x = this.imgx - this.x
       let y = this.imgy - this.y
       ctx.drawImage(this.imageSrc, 0, 0, this.baseWidth, this.baseHeight)
       ctx.draw(true, () => {
         this.$canvasToTempFilePath(x, y, 375, 187.5, 750, 375, 1, 'myCanvas').then(res => {
           this.showImage(res.tempFilePath, this.picIndex)
+          console.log(res.tempFilePath)
+          return this.$getFileInfo(res.tempFilePath).then(res => {
+              console.log(res)
+          })
         })
+      })
+    },
+    imgService (url) {
+      pushImg.post({
+        file: url
+      }).then(res => {
+        console.log(res)
       })
     },
     getFilePathRect () {

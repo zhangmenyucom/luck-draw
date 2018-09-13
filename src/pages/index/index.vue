@@ -12,40 +12,15 @@
         <div class="c"></div>
       </div>
     </div>
-    <!-- <div class="head">
-      <img src="/static/img/bitmap.png" alt="">
-      <div>
-        <span class='left'>
-          我的金豆：{{score+''}}
-        </span>
-        <a class='right' open-type="switchTab" href="/pages/obtainGoldBean/index" @click="getBean">
-          赚金豆&nbsp;>
-        </a>
-        <div class="c"></div>
-        <div class="calendar">
-          <img src="/static/img/calendar.png" />
-          <div>
-            第<span>{{scoreCounters.number}}</span>天
-          </div>
-        </div>
-        <div class="record">
-          <div v-for='i in 7' :class="{opacity:(i +1 ) > scoreCounters.number}">
-            <div class="icon">
-              {{goldBean[i]}}
-            </div>
-            <img src="/static/img/goldBean.png" alt="" />
-            <text>第{{i + 1 + number}}天</text>
-          </div>
-        </div>
-      </div>
-    </div> -->
     <!-- 活动列表 -->
     <div class="activitieList">
       <activitieList :onDraw="onLuckyDraw" :willDraw="willLuckDraw" />
     </div>
     <!-- 活动列表结束 -->
-    <signIn :signInCB = "signInCB" :showModel="!isModel"/>
 
+    <!-- 签到 -->
+    <signIn :isLogin = 'isLogin' />
+    <!-- 签到结束 -->
   </div>
 </template>
 
@@ -58,7 +33,6 @@
   import {
     getUserInfo
   } from '@/utils'
-  import ScoreRulesService from '@/services/scoreRulesService'
   import getMeScores from '@/common/js/getMeScores.js'
   import share from '@/common/js/share.js'
   import MeScoresService from '@/services/meScoresService.js'
@@ -70,19 +44,17 @@
         userInfo: {},
         activitieList: [],
         week: ['一', '二', '三', '四', '五', '六', '七'],
-        goldBean: [0, 0, 0, 0, 0, 0, 0],
         complete: false,
         isGet: false,
         onPullDownRefresh: false,
         pageNum: 1,
-        isModel: true,
+        isLogin: false,
         score: 0,
         scoreCounters: {},
-        number: 0,
         onLuckyDraw: [{
           dayTime: '',
           timeTime: '',
-          media: [{url: ''}],
+          items: [{metadata: {image: ''}}],
           metadata: {drawRule: ''}
         }],
         willLuckDraw: []
@@ -105,18 +77,6 @@
         this.onPullDownRefresh = true
         this.complete = false
         this.getActivitieList()
-      },
-      getScoreRules () { // 获取积分规则
-        ScoreRulesService.getList().then(res => {
-          if (res.code === 0) {
-            // 处理每天对应的积分数
-            const number = this.scoreCounters.number > 7 ? this.scoreCounters.number - 7 : 0 // 需要展示的第一天
-            this.number = number
-            const goldBeanRules = JSON.parse(res.data.filter((rule) => rule.type === 2)[0].rule)
-            --goldBeanRules.maxStep
-            this.goldBean = [...Array(7)].map((v, i) => parseInt(goldBeanRules.base) + ((i + number) > parseInt(goldBeanRules.maxStep) ? parseInt(goldBeanRules.maxStep) : (i + number)) * parseInt(goldBeanRules.stepAdd))
-          }
-        })
       },
       getBean () {
         this.$setStorageSync('getBeanMethod', '首页-赚金豆')
@@ -151,11 +111,12 @@
             const onLuckyDraw = []
             const willLuckDraw = []
             res.data.forEach((activitie) => {
+              console.log(activitie)
               activitie.url = `/pages/activitiesDetails/index?id=${activitie.id}&method='首页'&name=${activitie.name}`
               if (activitie.metadata.drawRule === 'timed') {
                 const date = new Date(activitie.endTime)
-                activitie.endTimeDay = `${date.getMonth() + 1}月${date.getUTCDate()}日`
-                activitie.endTimeHours = `${date.getUTCHours() + 1}:${date.getUTCMinutes()}`
+                activitie.endTimeDay = `${date.getMonth() + 1}月${date.getDate()}日`
+                activitie.endTimeHours = `${date.getHours()}:${date.getMinutes()}分`
               }
               // 现在多余 留待后用
               if (date > activitie.startTime) {
@@ -175,10 +136,6 @@
         })
       },
       signInCB (data) {
-        const signIn = this.$getStorageSync('signIn')
-        if (signIn) {
-          this.isModel = false
-        }
         this.pullDownRefresh()
         if (data.score) {
           // 签到后 直接获取积分数
@@ -187,13 +144,11 @@
           this.getMeScores()
         }
         this.scoreCounters = data.scoreCounters || this.$getStorageSync('scoreCounters') // 获取连续签到天数
-        this.getScoreRules()
         getMeScores.start(this)
       }
     },
     onLoad () {
       mta.Page.init()
-      this.$setStorageSync('signIn', false)
     },
     onHide () {
       getMeScores.end()
@@ -201,9 +156,13 @@
     onShow () {
       const userInfo = getUserInfo()
       if (userInfo.id) {
+        setTimeout((data) => {
+          this.isLogin = true
+        }, 500)
         this.signInCB({})
       } else {
-        this.isModel = true
+        this.isLogin = false
+        this.$navigateTo('/pages/login/index')
       }
     },
     onShareAppMessage: share()

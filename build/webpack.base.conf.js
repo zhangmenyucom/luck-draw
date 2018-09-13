@@ -75,7 +75,7 @@ module.exports = {
     alias: {
       'vue': 'mpvue',
       '@': resolve('src'),
-      'config': process.env.NODE_ENV === 'development' ? resolve('src/environment/devConfig') : resolve('src/environment/proConfig')
+      'config': process.env.NODE_ENV === 'development' ? resolve('src/environment/devConfig') : resolve(`src/environment/${process.env.NODE_ENV}Config`)
     },
     symlinks: false,
     aliasFields: ['mpvue', 'weapp', 'browser'],

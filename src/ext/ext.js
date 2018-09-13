@@ -49,6 +49,16 @@ export default class ext {
     }
   }
 
+  static emailToast (title) {
+    if (this.isWx) {
+      wx.showToast({
+        title,
+        icon: 'success',
+        duration: 2000
+      })
+    }
+  }
+
   static switchTab (url) {
     if (this.isWx) {
       wx.switchTab({
@@ -184,6 +194,38 @@ export default class ext {
       })
     }
   }
+  static getFileInfo (filePath) {
+    if (this.isWx) {
+      return new Promise((resolve, reject) => {
+        wx.getFileInfo({
+          filePath,
+          success (res) {
+            resolve(res)
+          },
+          fail (err) {
+            reject(err)
+          }
+        })
+      })
+    }
+  }
+  static uploadFile (url, filePath, name) {
+    if (this.isWx) {
+      return new Promise((resolve, reject) => {
+        wx.uploadFile({
+          url,
+          filePath,
+          name,
+          success (res) {
+            resolve(res)
+          },
+          fail (err) {
+            reject(err)
+          }
+        })
+      })
+    }
+  }
   static createCanvasContext (id) {
     if (this.isWx) {
       return wx.createCanvasContext(id)
@@ -238,6 +280,7 @@ export default class ext {
     Vue.prototype.$stopPullDownRefresh = this.stopPullDownRefresh.bind(this)
     Vue.prototype.$chooseAddress = this.chooseAddress.bind(this)
     Vue.prototype.$showToast = this.showToast.bind(this)
+    Vue.prototype.$emailToast = this.emailToast.bind(this)
     Vue.prototype.$clearStorageSync = this.clearStorageSync.bind(this)
     Vue.prototype.$switchTab = this.switchTab.bind(this)
     Vue.prototype.$chooseLocation = this.chooseLocation.bind(this)
@@ -258,5 +301,7 @@ export default class ext {
     Vue.prototype.$createSelectorQuery = this.createSelectorQuery.bind(this)
     Vue.prototype.$showModal = this.showModal.bind(this)
     Vue.prototype.$getWindowH = this.getWindowH.bind(this)
+    Vue.prototype.$uploadFile = this.uploadFile.bind(this)
+    Vue.prototype.$getFileInfo = this.getFileInfo.bind(this)
   }
 }

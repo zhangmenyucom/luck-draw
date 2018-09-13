@@ -35,17 +35,17 @@ export default {
     },
     getPicture (data) {
       let creat = {
-          sn: '1007',
+          sn: '1008',
           relativeSn: '',
           xelementLayoutType: 'CENTER',
           yelementLayoutType: 'ABSOLUTELY',
           elementContent: '发起了一个抽奖活动',
           elementMediaType: 'TEXT',
-          y: 248,
+          y: 250,
           font: {
             name: '黑体',
             elementFontStyle: 0,
-            fontSize: 25
+            fontSize: 38
           },
           color: {
             r: 102,
@@ -54,7 +54,7 @@ export default {
           }
         }
         let creatRule = {
-          sn: '1008',
+          sn: '1009',
           relativeSn: '',
           xelementLayoutType: 'CENTER',
           yelementLayoutType: 'ABSOLUTELY',
@@ -72,7 +72,7 @@ export default {
             b: 67
           }
         }
-        let items = [
+      let items = [
         {
           sn: '1001',
           relativeSn: '',
@@ -90,48 +90,50 @@ export default {
           relativeSn: '',
           xelementLayoutType: 'CENTER',
           yelementLayoutType: 'ABSOLUTELY',
-          elementContent: data.items[0].metadata.image ? data.items[0].metadata.image : data.items[0].metadata.url,
-          elementMediaType: 'IMG',
-          y: 380,
-          height: 250,
-          width: 500
+          elementContent: this.$getStorageSync('userInfo').nickName,
+          elementMediaType: 'TEXT',
+          y: 192,
+          font: {
+            name: '黑体',
+            elementFontStyle: 0,
+            fontSize: 28
+          },
+          color: {
+            r: 80,
+            g: 45,
+            b: 1,
+            a: 1
+          }
         },
         {
           sn: '1003',
           relativeSn: '',
           xelementLayoutType: 'CENTER',
           yelementLayoutType: 'ABSOLUTELY',
-          elementContent: '[ 奖品 ]  ' + data.items[0].name,
-          elementMediaType: 'TEXT',
-          y: 680,
-          font: {
-            name: '黑体',
-            elementFontStyle: 0,
-            fontSize: 25
-          },
-          color: {
-            r: 70,
-            g: 70,
-            b: 70
-          }
+          elementContent: data.items[0].metadata.image ? data.items[0].metadata.image : data.items[0].metadata.url,
+          elementMediaType: 'IMG',
+          y: 306,
+          height: 275,
+          width: 550
         },
         {
           sn: '1004',
           relativeSn: '',
           xelementLayoutType: 'CENTER',
           yelementLayoutType: 'ABSOLUTELY',
-          elementContent: this.$getStorageSync('userInfo').nickName,
+          elementContent: '[ 奖品 ]  ' + data.items[0].name,
           elementMediaType: 'TEXT',
-          y: 200,
+          y: 621,
           font: {
             name: '黑体',
             elementFontStyle: 0,
-            fontSize: 24
+            fontSize: 34
           },
           color: {
             r: 67,
             g: 67,
-            b: 67
+            b: 67,
+            a: 1
           }
         },
         {
@@ -141,7 +143,7 @@ export default {
           yelementLayoutType: 'ABSOLUTELY',
           elementContent: this.twoCode,
           elementMediaType: 'IMG',
-          y: 750,
+          y: 711,
           height: 150,
           width: 150
         },
@@ -152,7 +154,7 @@ export default {
           yelementLayoutType: 'ABSOLUTELY',
           elementContent: '长按识别小程序码，参与抽奖',
           elementMediaType: 'TEXT',
-          y: 950,
+          y: 917,
           font: {
             name: 'PingFangSC',
             elementFontStyle: 0,
@@ -161,15 +163,40 @@ export default {
           color: {
             r: 102,
             g: 102,
-            b: 102
+            b: 102,
+            a: 1
+          }
+        },
+        {
+          sn: '1007',
+          relativeSn: '',
+          xelementLayoutType: 'ABSOLUTELY',
+          yelementLayoutType: 'ABSOLUTELY',
+          elementContent: '抽奖助手 赞助',
+          elementMediaType: 'TEXT',
+          x: 432,
+          y: 342,
+          font: {
+            name: 'PingFangSC',
+            elementFontStyle: 0,
+            fontSize: 24
+          },
+          color: {
+            r: 255,
+            g: 255,
+            b: 255,
+            a: 1
           }
         }
       ]
+      // 个人发起抽奖
       if (data.owner.id === this.$getStorageSync('userInfo').id) {
         items.push(creat)
       }
+      // 中奖
       if (this.lucky === true) {
         creat.elementContent = '「我中奖了」'
+        this.bgUrl = 'https://oss.qianbaocard.com/20180912/5eb971d853a849c8a22f4e10a3c53cc4.png'
         items.push(creat)
       }
       if (data.metadata.drawRule === 'timed') {
@@ -185,26 +212,30 @@ export default {
         creatRule.elementContent = '满' + data.num + '人开奖'
       }
       MakePictureService.getPicture({
-        backgroundUrl: 'https://oss.qianbaocard.com/20180912/c45dced1f0564763a949c9067c209584.png',
+        backgroundUrl: 'https://oss.qianbaocard.com/20180912/5eb971d853a849c8a22f4e10a3c53cc4.png',
         items
       }).then((res) => {
-      this.url = res.data
-    })
+        if (res.code === 0) {
+          this.url = res.data
+          this.$hideLoading()
+        }
+      })
     }
   },
   onLoad (options) {
     if (options.lucky === 'true') {
       this.lucky = true
-      this.bgUrl = 'https://oss.qianbaocard.com/20180912/c45dced1f0564763a949c9067c209584.png'
     } else {
       this.lucky = ''
     }
+    this.url = ''
     this.title = options.title
     this.twoCode = options.twoCode
     this.activity = []
     this.activity = JSON.parse(options.activity)
     console.log(this.activity)
     this.getPicture(this.activity)
+    this.$showLoading()
   },
   onShareAppMessage: share()
 }

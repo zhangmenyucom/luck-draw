@@ -73,6 +73,21 @@
     top: 24*@2;
     left: 66*@2;
 }
+.name-call {
+    color:#DFC293;
+    font-size:12*@2;
+    margin-left:40*@2;
+    margin-top:6*@2;
+}
+.address {
+    color:#DFC293;
+    font-size: 14*@2;
+    margin-left:40*@2;
+    margin-top:6*@2;
+}
+.bottomMargin {
+    margin-bottom: 60*@2;
+}
 .list {
     width:375*@2;
     background:rgba(255,255,255,1);
@@ -133,12 +148,6 @@
         overflow: hidden;
         vertical-align: middle;
     }
-    .name-call {
-        color:#DFC293;
-        font-size:12*@2;
-        margin-left:40*@2;
-        margin-top:6*@2;
-    }
     .noAddress {
         font-size:28*@1;
         font-family:PingFangSC-Regular;
@@ -147,19 +156,14 @@
         margin-left:40*@2;
         margin-top:6*@2;
     }
-    .address {
-        color:#DFC293;
-        font-size: 14*@2;
-        margin-left:40*@2;
-        margin-top:6*@2;
-    }
     .foot {
-        margin-top: 57*@1;
+        position: fixed;
+        bottom: 0;
+        left: 0;
         width:100%;
         height: 56*@2;
-        padding:8*@2 0;
+        padding:8*@2 15*@2;
         background:rgba(255,255,255,1);
-        align-items:center;
     }
     .btn::after {
         border:0;
@@ -168,10 +172,13 @@
         width:168*@2 !important;
         height:40*@2 !important;
         line-height: 40*@2;
-        border-radius:8*@2;
-        border:1*@2 solid rgba(254,76,82,1) ;
+        border-radius:4*@2;
+        border:1*@1 solid rgba(254,76,82,1) ;
         display: inline-block;
-        font-size:14*@2;
+        font-size:28*@1;
+        font-family:PingFangSC-Regular;
+        font-weight:400;
+        color:rgba(254,76,82,1);
     }
     .btn2 {
         background:rgba(254,76,82,1);

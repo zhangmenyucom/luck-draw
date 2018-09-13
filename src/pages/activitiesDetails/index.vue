@@ -6,7 +6,7 @@
     <div v-if='!isShow'>
 
       <div class="activitiesDetails">
-        <!-- <img mode='aspectFit' :src="activitie.media[0].url"> -->
+        <img mode='aspectFit' :src="activitie.items[0].metadata.image">
         <div class="name antialiased">
           <text>「奖品」</text>{{prize.name}}&nbsp;<span>X&nbsp;{{prize.metadata.num}}</span>
         </div>
@@ -15,7 +15,7 @@
           <div v-if="activitie.metadata.drawRule == 'fullTicket'" class='state'>满<text>{{activitie.metadata.ticketsNum * activitie.metadata.price}}</text>金豆自动开奖，剩余<text>{{(activitie.metadata.ticketsNum-activitie.betNum)*activitie.metadata.price}}</text>金豆</div>
           <div v-if="activitie.metadata.drawRule == 'fullParticipant'" class='state'>满<text>{{activitie.metadata.participantsNum}}</text>人开奖，剩余<text>{{activitie.metadata.participantsNum-activitie.betNum}}</text>人</div>
           <div v-if="activitie.metadata.drawRule == 'timed'" class='state'>{{activitie.endTimeDay}}<text>{{activitie.endTimeHours}}</text>开奖</div>
-          <div class="info">
+          <div v-if='activitie.metadata.price' class="info">
             {{activitie.metadata.price}}<img src='/static/img/goldBean.png' class="" />参与
           </div>
         </div>
@@ -23,147 +23,185 @@
         <!-- 活动信息及状态end -->
 
         <!-- 赞助商 -->
-        <div class="hint">
-          <span>赞助商{{state}}</span>
-          <div class="">
-            <span class='bold'>抽奖助手</span>
+
+        <div class="hint" v-if="activitie.metadata.hasSponsor == 'true' || activitie.type == 'PERSONAL_LUCKY_DRAW'">
+          <span>{{activitie.type == "PERSONAL_LUCKY_DRAW" ? '抽奖发起人' : '赞助商'}}</span>
+          <div v-if='activitie.metadata.hasSponsor' class="">
+            <span class='bold'>{{activitie.metadata.sponsor.appName}}</span>
             <i class='icon iconfont icon-xiaochengxu' />
             <i class='icon iconfont icon-xuanzedizhi gray' />
           </div>
+          <div v-else>
+            <img :src="activitie.owner.avatar" />
+            {{activitie.owner.nickName}}
+          </div>
         </div>
         <!-- 赞助商结束 -->
-
+        <!-- 我发起的活动 可以看到中奖者信息 -->
+        <div class="participantMe" v-if="activitie.type == 'PERSONAL_LUCKY_DRAW' && state >= 5">
+          <a :href="'/pages/luckierList/index?id=' + activitie.id" class="participantInfo">
+            查看中奖者收货信息（{{addressExistTotal}}/{{ticketsTotal}}） <i class ='icon iconfont icon-xuanzedizhi' />
+          </a>
+          <div class="explain">
+            抽奖开奖后，请根据中奖人联系信息于7日内发奖，<br />
+            若中奖人不满足发奖品要求时，建议短信告知.
+          </div>
+        </div>
+        <!-- 我发起的活动 可以看到中奖者信息 结束 -->
         <!-- 奖品详情 -->
-        <div class="mediaInfo">
+        <div class="mediaInfo" v-if="mediaInfoimg.length > 0">
           <img mode='widthFix' v-for='(item, i) in mediaInfoimg' :src="item.url">
         </div>
         <!-- 奖品详情结束 -->
 
         <!-- 开奖后 -->
         <openingPrizeAfter v-if='state >= 5' :participants="participants" :state="state" :activitie="activitie" />
-          <!-- 开奖后 -->
+        <!-- 开奖后 -->
 
           <!-- 中奖名单 -->
-        <luckyitems v-if='state >= 5' :list='luckyItemList' :activitie = 'activitie' />
+          <luckyitems v-if='state >= 5' :list='luckyItemList' :activitie = 'activitie' />
             <!-- 中奖名单结束 -->
             <!-- 抽奖按钮 -->
-        <luckDraw :state = 'state' :modifyState= 'modifyState'/>
+            <luckDraw :state = 'state' :activitie = 'activitie' :modifyState= 'modifyState' :bets='bets'/>
             <!-- 抽奖按钮结束 -->
             <!-- 参加列表 -->
-        <div class="participant" v-if="participantTotal>0">
-          <span class='antialiased'>
-            已有{{participantTotal}}人参加 <a :href= "'/pages/participantList/index?id=' + activitie.id">查看全部 》</a>
-          </span>
-          <headPortrait :list="participantList" rangeKey="img" />
-        </div>
+            <div class="participant" v-if="participantTotal>0">
+              <span class='antialiased'>
+                已有{{participantTotal}}人参加 <a :href= "'/pages/participantList/index?id=' + activitie.id">查看全部 》</a>
+              </span>
+              <headPortrait :list="participantList" rangeKey="img" />
+            </div>
             <!-- 参加列表结束 -->
+            <!-- 免费说明 -->
+            <div class="free" @tap='() => {this.isFree = !this.isFree; this.isModal = true}'>
+              点此查看免费说明
+            </div>
+            <!-- 免费说明结束 -->
             <!-- 底部 -->
-        <div class='bottom'>
-          <div>
-            <button class="button button-o">
-              发起抽奖
-            </button>
-          </div>
-          <div v-if="state <= 3" >
-            <button class="button"  @click="share">
-              分享领金豆
-            </button>
-          </div>
-        </div>
-            <!-- 底部结束 -->
-            <!-- 弹出层 -->
-        <div class="modal" @tap="hideModal" v-if="isModal && (state === 1 || state === 3 || (participants.id && (state === 5 || state === 6)) || isLookAtTheLuckyNumber)">
-          <div class="content" @tap.stop="">
-            <div class="title">
-              —— {{state < 5 ? '下注' : '开奖结果'}} ——
-            </div>
-            <div>
-              <!-- 投注 -->
-              <div class="betting" v-if="state == 1 || state == 3">
-                <div class="operation">
-                  <div data-type = "reduce" @tap.stop="modifyTicketsNum">
-                    -
-                  </div>
-                  <div>
-                    {{ticketsNum}}
-                  </div>
-                  <div  data-type = "add" @tap.stop="modifyTicketsNum">
-                    +
-                  </div>
-                </div>
-                <span class="record">
-                  {{activitie.metadata.price}} 金豆/注 <br />
-                  你有{{score}}金豆
-                  <!-- 本次还可以下注 {{participateBet}} 次 -->
-                </span>
-                <form report-submit @submit.stop = "bets">
-                  <button class="button" form-type = "submit">
-                    下注
-                  </button>
-                </form>
+
+            <div class='bottom'>
+              <div>
+                <a href="/pages/baseCreateActivity/createActivities" class="button button-o">
+                  发起抽奖
+                </a>
               </div>
-              <!-- 投注结束 -->
-              <!-- 开奖 -->
-              <div class="prizeM" v-if="participants.id && (state == 5 || state == 6)">
-                <!-- participants -->
-                <img :src="participants.user.avatar">
-                <div class="userName">
-                  {{participants.user.nickName}}
-                </div>
-                <div class="goodsName" v-if="state == 6">
-                  奖品：{{prize.name}}
-                </div>
-                <!-- 中奖 -->
-                <div>
-                  <div class="tips">
-                    {{state == 6 ? "恭喜，大奖是你的了" : '这次没中奖，送你点别的'}}
-                  </div>
-                  <div class="navigateP" >
-                    <a v-if="state == 6" class="navigate o-navigate">
-                      领取奖品
-                    </a>
-                    <a v-if="state == 6" class="navigate" @tap="() => toMakeImg(true)">
-                      炫耀一下
-                    </a>
-                    <a open-type="switchTab" href='/pages/index/index' v-if="state == 5" class="navigate">
-                      去看看
-                    </a>
-                  </div>
-                </div>
-                <!-- 中奖结束 -->
-                <!-- 中奖者名单 -->
-                <luckyitems :list='luckyItemList' :activitie = 'activitie' />
-                <!-- 中奖者名单结束 -->
+              <div v-if='participantTotal == 0 && activitie.owner.id == userInfo.id' >
+                <a href="" class="button button-o">
+                  编辑
+                </a>
               </div>
-              <!-- 开奖结束 -->
-              <!-- 提示 -->
-              <div class="point" v-if="false">
-                <div>
-                  还差<span>4</span>金豆<br />可分享至微信群获得金豆
-                </div>
-                <button class="button">
-                  去分享
+              <div v-if="state <= 3" >
+                <button class="button" @click="share">
+                  分享领金豆
                 </button>
-                <span>
-                  还剩4次分享机会
-                </span>
               </div>
-              <!-- 提示结束 -->
             </div>
+            <!-- <div v-else class='bottom'>
+              <div v-if="state <= 3" >
+                <button class="button" @click="share">
+                  分享抽奖
+                </button>
+              </div>
+            </div> -->
+            <!-- 底部结束 -->
+
+            <!-- 弹出层 -->
+            <div class="modal" @tap="hideModal" v-if="isModal && (state === 1 || state === 3 || (participants.id && (state === 5 || state === 6)) || isLookAtTheLuckyNumber || isFree)">
+              <div class="content" @tap.stop="">
+                <div class="title">
+                  —— {{isFree ? '提示' : (state < 5 ? '下注' : '开奖结果')}} ——
+                </div>
+                <div class="modalFree" v-if="isFree">
+                  <span>1.钱包抽奖助手作为提供发起及参与抽奖的</span>
+                  <span>2.钱包抽奖助手会在法律范围内尽可能地规</span>
+                </div>
+                <div v-else>
+                  <!-- 投注 -->
+                  <div class="betting" v-if="state == 1 || state == 3">
+                    <div class="operation">
+                      <div data-type = "reduce" @tap.stop="modifyTicketsNum">
+                        -
+                      </div>
+                      <div>
+                        {{ticketsNum}}
+                      </div>
+                      <div  data-type = "add" @tap.stop="modifyTicketsNum">
+                        +
+                      </div>
+                    </div>
+                    <span class="record">
+                      {{activitie.metadata.price}} 金豆/注 <br />
+                      你有{{score}}金豆
+                      <!-- 本次还可以下注 {{participateBet}} 次 -->
+                    </span>
+                    <form report-submit @submit.stop = "bets">
+                      <button class="button" form-type = "submit">
+                        下注
+                      </button>
+                    </form>
+                  </div>
+                  <!-- 投注结束 -->
+                  <!-- 开奖 -->
+                  <div class="prizeM" v-if="participants.id && (state == 5 || state == 6)">
+                    <!-- participants -->
+                    <img :src="participants.user.avatar">
+                    <div class="userName">
+                      {{participants.user.nickName}}
+                    </div>
+                    <div class="goodsName" v-if="state == 6">
+                      奖品：{{prize.name}}
+                    </div>
+                    <!-- 中奖 -->
+                    <div>
+                      <div class="tips">
+                        {{state == 6 ? "恭喜，大奖是你的了" : '这次没中奖，送你点别的'}}
+                      </div>
+                      <div class="navigateP" >
+                        <a  :href="'/pages/takePrize/index?id='+participants.id" v-if="state == 6" class="navigate o-navigate">
+                          领取奖品
+                        </a>
+                        <a v-if="state == 6" class="navigate" @tap="()=>toMakeImg(true)">
+                          炫耀一下
+                        </a>
+                        <a open-type="switchTab" href='/pages/index/index' v-if="state == 5" class="navigate">
+                          去看看
+                        </a>
+                      </div>
+                    </div>
+                    <!-- 中奖结束 -->
+                    <!-- 中奖者名单 -->
+                    <luckyitems :list='luckyItemList' :activitie = 'activitie' />
+                    <!-- 中奖者名单结束 -->
+                  </div>
+                  <!-- 开奖结束 -->
+                  <!-- 提示 -->
+                  <div class="point" v-if="false">
+                    <div>
+                      还差<span>4</span>金豆<br />可分享至微信群获得金豆
+                    </div>
+                    <button class="button">
+                      去分享
+                    </button>
+                    <span>
+                      还剩4次分享机会
+                    </span>
+                  </div>
+                  <!-- 提示结束 -->
+                </div>
+              </div>
+            </div>
+            <!-- 弹出层结束 -->
           </div>
         </div>
-            <!-- 弹出层结束 -->
+        <div class="shade" :class="{display:display}" @tap="shadeShow">
+          <div class="foot">
+            <button open-type="share">邀请微信好友</button>
+            <button @tap="toMakeImg">生成分享图</button>
+            <button>取消</button>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="shade" :class="{display:display}" @tap="shadeShow">
-      <div class="foot">
-        <button open-type="share">邀请微信好友</button>
-        <button @tap="toMakeImg">生成分享图</button>
-        <button>取消</button>
-      </div>
-    </div>
-  </div>
-</template>
+    </template>
 
 <script>
   import load from '@/components/loading'
@@ -187,6 +225,7 @@
   export default {
     data () {
       return {
+        isFree: false,
         isShow: true,
         id: '',
         score: 0,
@@ -194,13 +233,21 @@
         participantTotal: 0,
         luckyList: [],
         activitie: {
+          owner: {},
+          endTimeDay: '',
+          endTimeHours: '',
           id: '',
           metadata: {
-            ticketsNum: 0
+            ticketsNum: 0,
+            drawRule: ''
           },
+          items: [{
+            metadata: {}
+          }],
           media: [{
             url: ''
-          }]
+          }],
+          type: ''
         },
         prize: {
           metadata: {
@@ -213,6 +260,7 @@
         isModal: false,
         ticketsNum: 1, // 当前用户下注数
         ticketsTotal: 0, // 所有用户下注总数
+        addressExistTotal: 0, // 填写过地址的总数
         luckyItemTotal: 0,
         userInfo: {},
         participateBet: 0,
@@ -231,6 +279,7 @@
         QR: '',
         mediaInfoimg: [], // 商品详情列表
         luckyItemList: [], // 中奖者名单
+
         state: 0
         // 0 NotInvolved 未参与
         // 1 Bets 下注
@@ -258,7 +307,9 @@
     },
     methods: {
       share () {
-        mta.Event.stat('share', {'method': '抽奖详情页分享'})
+        mta.Event.stat('share', {
+          'method': '抽奖详情页分享'
+        })
         this.display = !this.display
         mta.Event.stat('share', {
           'method': '抽奖详情页分享'
@@ -283,19 +334,10 @@
         this.display = !this.display
       },
       toMakeImg (lucky) {
-        if (lucky === true) {
-          TwoCodeService.get().then((res) => {
-            this.QR = res.data.url
-            if (res.code === 0) {
-              this.$navigateTo('../makePicture/index?title=生成分享图&lucky=true&activity=' + JSON.stringify(this.activitie) + '&twoCode=' + res.data.url)
-            }
-          })
-          return
-        }
         TwoCodeService.get().then((res) => {
           this.QR = res.data.url
           if (res.code === 0) {
-            this.$navigateTo('../makePicture/index?title=生成分享图&activity=' + JSON.stringify(this.activitie) + '&twoCode=' + res.data.url)
+            lucky === true ? this.$navigateTo('../makePicture/index?title=生成分享图&lucky=true&activity=' + JSON.stringify(this.activitie) + '&twoCode=' + res.data.url) : this.$navigateTo('../makePicture/index?title=生成分享图&activity=' + JSON.stringify(this.activitie) + '&twoCode=' + res.data.url)
           }
         })
       },
@@ -328,12 +370,12 @@
             // 如果到时开奖 格式化时间
             if (res.data.metadata.drawRule === 'timed') {
               const date = new Date(res.data.endTime)
-              res.data.endTimeDay = `${date.getMonth() + 1}月${date.getUTCDate()}日`
-              res.data.endTimeHours = `${date.getUTCHours() + 1}:${date.getUTCMinutes()}分`
-              console.log('1', res)
+              res.data.endTimeDay = `${date.getMonth() + 1}月${date.getDate()}日`
+              res.data.endTimeHours = `${date.getHours()}:${date.getMinutes()}分`
             }
 
             this.mediaInfoimg = res.data.media.filter((img) => img.layout === 'INTRODUCTION')
+
             this.prize = res.data.items[0] // 商品
             this.activitie = res.data
             this.betNum = res.data.betNum
@@ -396,19 +438,39 @@
           activityId
         }).then((res) => {
           if (res.code === 0) {
-            let ticketsTotal = 0
             this.participantList = res.data.map((data) => {
-              ticketsTotal += data.tickets.length
               data.img = data.user.avatar
               data.nickName = data.user.nickName
               return data
             }).slice(0, 9)
 
-            this.ticketsTotal = ticketsTotal
             this.participantTotal = res.total
           }
         })
         // 获取中奖者信息
+        ParticipantsService.getList({
+          activityId,
+          lucky: true
+        }).then((res) => {
+          if (res.code === 0) {
+            this.luckyItemList = res.data.map((data) => {
+              data.img = data.user.avatar
+              data.nickName = data.user.nickName
+              return data
+            })
+            this.ticketsTotal = res.total
+          }
+        })
+
+        // 查询填写地址的参与者信息
+        ParticipantsService.getList({
+          activityId,
+          addressExist: true
+        }).then((res) => {
+          if (res.code === 0) {
+            this.addressExistTotal = res.total
+          }
+        })
       },
       isLoad () {
         if (this.$getStorageSync('activitieId') !== this.id || this.isShow) {
@@ -448,11 +510,11 @@
         })
       },
       hideModal () {
-        if (this.isLookAtTheLuckyNumber) {
-          this.isLookAtTheLuckyNumber = false
+        if (this.isFree) {
+          this.isFree = false
           return false
         }
-        if (this.oldState || this.oldState === 0) {
+        if (this.state === 3 || this.state === 1) {
           this.state = this.oldState
         }
         this.ticketsNum = 1
@@ -503,6 +565,7 @@
         this.signInCB()
       }
       this.isLoad()
+      this.userInfo = userInfo
     },
     onShareAppMessage () {
       const introductionImageUrl = this.activitie.media.filter(media => media.layout === 'INTRODUCTION')[0]

@@ -1,6 +1,6 @@
 <template>
     <div class="page">
-        <top :hideIcone='true' title="新建抽奖" />
+        <top title="新建抽奖" />
         <div v-if="!addPic">
             <div v-for="(item,index) in giftList" :key="index">
                 <addGiftComp
@@ -35,17 +35,19 @@
             </div>
             <div class="uperAddActivity" @click="navToUper"><span>使用高级版&nbsp;></span></div>
             <div class="weui-cells weui-cells_after-title" style="position:fixed;bottom:0;padding:8px 15px;">
-                <div class="createActivities" @click="createActivity">发起抽奖</div>
+                <div class="createActivities" @click="createButton">发起抽奖</div>
             </div>
         </div>
         <div v-if="addPic">
           <chooseImage :showImage="showImage" :picIndex="picIndex" :picIndexSrc="picIndexSrc" :imageSrc="imageSrc" />
         </div>
+        <createAttention v-if="showAttention" :createActivity="createActivity" />
     </div>
 </template>
 
 <script>
     import top from '@/components/top'
+    import createAttention from '@/components/createTimedAttention'
     import addGiftComp from '@/components/baseAddGift'
     import chooseImage from '@/components/chooseImage'
     import CreatePersonalActivity from '@/services/createPersonalActivity'
@@ -84,13 +86,15 @@
           giftItems: [{id: 'system', name: '', metadata: {url: '', num: 0}}],
           prizeEndTime: 0,
           jsonString: '',
-          mediaData: []
+          mediaData: [],
+          showAttention: false
         }
       },
       components: {
         top,
         addGiftComp,
-        chooseImage
+        chooseImage,
+        createAttention
       },
       methods: {
         getImage (index, picIndexSrc) {
@@ -271,6 +275,32 @@
           this.jsonString = JSON.stringify(jsonArr)
         },
         createActivity () {
+          this.dataHandle()
+          if (this.giftItems[0].metadata.url === '') {
+            this.giftItems[0].metadata.url = this.giftImgSrc[0]
+          }
+          CreatePersonalActivity.createActivity({
+            sellerId: 'system',
+            owner: {id: this.userInfo.id, nickName: this.userInfo.nickName, avatar: this.userInfo.avatar},
+            type: 'PERSONAL_LUCKY_DRAW',
+            description: this.prizeDescription,
+            endTime: this.prizeEndTime,
+            items: this.giftItems,
+            media: this.mediaData,
+            metadata: {
+              drawRule: this.drawRule,
+              urls: this.jsonString,
+              isShare: this.isShare,
+              endTimeString: this.pickerDate,
+              participantsNum: this.peopleNum
+            }
+          }).then(res => {
+            this.$navigateTo(`/pages/activitiesDetails/index?id=${res.data.id}`)
+            this.mediaData = []
+            this.showAttention = !this.showAttention
+          })
+        },
+        createButton () {
           if (this.peopleNumInput === 'null') {
             this.$showToast('请输入开奖人数!')
             return
@@ -283,29 +313,20 @@
             this.$showToast('请输入奖品数量!')
             return
           }
-          this.dataHandle()
-          if (this.giftItems[0].metadata.url === '') {
-            this.giftItems[0].metadata.url = this.giftImgSrc[0]
-          }
-          CreatePersonalActivity.createActivity({
-            sellerId: 'system',
-            owner: {id: this.userInfo.id, nickName: this.userInfo.nickName, avatar: this.userInfo.avatar},
-            type: 'PERSONAL_LUCKY_DRAW',
-            description: this.prizeDescription,
-            endTime: this.prizeEndTime,
-            num: this.peopleNum,
-            items: this.giftItems,
-            media: this.mediaData,
-            metadata: {
-              drawRule: this.drawRule,
-              urls: this.jsonString,
-              isShare: this.isShare,
-              endTimeString: this.pickerDate
+          if (this.drawRule === 'fullParticipant') {
+            const openNum = parseInt(this.peopleNum)
+            let giftTotalNum = 0
+            this.itemNum.forEach(element => {
+              giftTotalNum += parseInt(element)
+            })
+            if (giftTotalNum > openNum) {
+              this.$showToast('奖品总数不能大于开奖人数，请重新输入！')
+            } else {
+              this.showAttention = !this.showAttention
             }
-          }).then(res => {
-            this.$navigateTo(`/pages/activitiesDetails/index?id=${res.data.id}`)
-          })
-          this.mediaData = []
+          } else {
+            this.createActivity()
+          }
         }
       },
       onShow () {
