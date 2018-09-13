@@ -15,8 +15,8 @@
                     <div class="weui-cell__bd">开奖方式</div>
                     <div class="weui-cell__ft">
                       <radio-group class="radio-group" @change="radioChange">
-                          <radio style="transform:scale(0.8);position:relative;left:5px;bottom:2px" value="timed" color="red" checked="true"/>到时间
-                          <radio style="transform:scale(0.8);position:relative;left:5px;bottom:2px" value="fullParticipant" color="red" />满人数
+                          <radio style="transform:scale(0.8);position:relative;left:5px;bottom:2px" value="timed" color="red" :checked="radioCheck"/>到时间
+                          <radio style="transform:scale(0.8);position:relative;left:5px;bottom:2px" value="fullParticipant" :checked="!radioCheck" color="red" />满人数
                       </radio-group>
                     </div>
                 </div>
@@ -51,6 +51,7 @@
     import addGiftComp from '@/components/baseAddGift'
     import chooseImage from '@/components/chooseImage'
     import CreatePersonalActivity from '@/services/createPersonalActivity'
+    import ActivitiesService from '@/services/activitiesService'
 
     export default {
       data () {
@@ -66,6 +67,7 @@
           prizeTextLength: 0,
           giftTextLength: 0,
           giftPictures: [],
+          radioCheck: true,
           showGiftPictures: false,
           drawRule: 'timed',
           pickerDate: '',
@@ -87,7 +89,8 @@
           prizeEndTime: 0,
           jsonString: '',
           mediaData: [],
-          showAttention: false
+          showAttention: false,
+          activityId: ''
         }
       },
       components: {
@@ -335,16 +338,43 @@
           } else {
             this.createActivity()
           }
+        },
+        getPersonalActivity (id) {
+          ActivitiesService.get({
+            id,
+            append: 'BET_NUM'
+          }).then(res => {
+            if (res.code === 0) {
+              console.log(res.data)
+              res.data.items.forEach(item => {
+                this.giftImgSrc.push(item.metadata.image)
+                this.itemName.push(item.name)
+                this.itemNum.push(item.metadata.num)
+              })
+              this.drawRule = res.data.metadata.drawRule
+              if (res.data.metadata.drawRule === 'timed') {
+                this.radioCheck = true
+                this.pickerDate = res.data.metadata.endTimeString
+              } else {
+                this.radioCheck = false
+                this.peopleNum = res.data.metadata.participantsNum
+              }
+            }
+          })
         }
       },
       onLoad (options) {
-        if (options) {
-          console.log(options)
+        this.activityId = options.id
+      },
+      onShow () {
+        if (this.activityId) {
+          this.getPersonalActivity(this.activityId)
+        } else {
+          this.giftImgSrc = ['https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg']
+          this.itemName = []
+          this.itemNum = []
+          this.peopleNum = ''
         }
-        this.itemName = []
-        this.itemNum = []
-        this.peopleNum = ''
-        this.giftImgSrc = ['https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg']
         this.userInfo = this.$getStorageSync('userInfo')
         this.getNowDate()
       }
