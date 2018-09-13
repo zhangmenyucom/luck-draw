@@ -277,7 +277,7 @@
         createActivity () {
           this.dataHandle()
           if (this.giftItems[0].metadata.url === '') {
-            this.giftItems[0].metadata.url = this.giftImgSrc[0]
+            this.giftItems[0].metadata.image = this.giftImgSrc[0]
           }
           CreatePersonalActivity.createActivity({
             sellerId: 'system',
@@ -292,7 +292,8 @@
               urls: this.jsonString,
               isShare: this.isShare,
               endTimeString: this.pickerDate,
-              participantsNum: this.peopleNum
+              participantsNum: this.peopleNum,
+              edition: 'baseEdition'
             }
           }).then(res => {
             this.$navigateTo(`/pages/activitiesDetails/index?id=${res.data.id}`)

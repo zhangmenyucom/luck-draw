@@ -356,6 +356,7 @@
           append: 'BET_NUM'
         }).then((res) => {
           if (res.code === 0) {
+            console.log(res.data)
             if (res.data.metadata.ticketsNum) {
               res.data.metadata.ticketsNum = parseInt(res.data.metadata.ticketsNum)
             }
