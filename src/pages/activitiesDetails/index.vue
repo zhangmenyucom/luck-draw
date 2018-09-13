@@ -4,11 +4,16 @@
     <load :isshow="isShow" :isanimation="isAnimation"/>
     <signIn :isanimation.sync='isAnimation'  :signInCB = "signInCB"/>
     <div v-if='!isShow'>
-
-      <div class="activitiesDetails">
-        <img mode='aspectFit' :src="activitie.items[0].metadata.image">
+      <div class="activitiesDetails" >
+        <swiper class='swiper' autoplay circular display-multiple-items>
+          <swiper-item v-for="(item, i) in activitie.items" :key="i">
+            <img mode='aspectFit' :src="item.metadata.image">
+          </swiper-item>
+        </swiper>
         <div class="name antialiased">
-          <text>「奖品」</text>{{prize.name}}&nbsp;<span>X&nbsp;{{prize.metadata.num}}</span>
+          <div v-for="(item, i) in activitie.items">
+            <text>「奖品{{i+1}}」</text>{{item.name}}&nbsp;<span>X&nbsp;{{item.metadata.num}}{{state}}</span>
+          </div>
         </div>
         <!-- 活动信息及状态 -->
         <div class="activitieInfo">
@@ -148,8 +153,10 @@
                     <div class="userName">
                       {{participants.user.nickName}}
                     </div>
-                    <div class="goodsName" v-if="state == 6">
-                      奖品：{{prize.name}}
+                    <div class="goodsName" v-if="state == 6" >
+                      <div v-for="(item, i) in participants.rewards">
+                        奖品{{i+1}}：{{item.name}}
+                      </div>
                     </div>
                     <!-- 中奖 -->
                     <div>
@@ -279,7 +286,6 @@
         QR: '',
         mediaInfoimg: [], // 商品详情列表
         luckyItemList: [], // 中奖者名单
-
         state: 0
         // 0 NotInvolved 未参与
         // 1 Bets 下注
@@ -360,10 +366,10 @@
             if (res.data.metadata.ticketsNum) {
               res.data.metadata.ticketsNum = parseInt(res.data.metadata.ticketsNum)
             }
-            this.prize = res.data.items[0]
-            this.activitie = res.data
-            this.activity = JSON.stringify(res.data)
-            this.betNum = res.data.betNum
+            // this.prize = res.data.items[0]
+            // this.activitie = res.data
+            // this.activity = JSON.stringify(res.data)
+            // this.betNum = res.data.betNum
 
             // 转化需要注数的数据类型
             res.data.metadata.ticketsNum = res.data.metadata.ticketsNum && parseInt(res.data.metadata.ticketsNum)
@@ -383,9 +389,8 @@
               res.data.endTimeDay = `${date.getMonth() + 1}月${date.getDate()}日`
               res.data.endTimeHours = `${date.getHours()}:${date.getMinutes()}分`
             }
-
+            // 过滤商品介绍图
             this.mediaInfoimg = res.data.media.filter((img) => img.layout === 'INTRODUCTION')
-
             this.prize = res.data.items[0] // 商品
             this.activitie = res.data
             this.betNum = res.data.betNum
@@ -427,11 +432,12 @@
       getParticipants (activityId) {
         const userInfo = getUserInfo()
         // 查询用户是否参与活动
-        ParticipantsService.get({
+        ParticipantsService.getList({
           activityId,
           userId: userInfo.id
         }).then((res) => {
           if (res.code === 0 && res.data.length > 0) {
+            res.data[0].rewards = JSON.parse(res.data[0].metadata.rewards)
             this.participants = res.data[0]
             if (res.data[0].metadata.address) { // 判断是否添加过地址
               this.modifyState(7)
@@ -444,7 +450,7 @@
         })
 
         // 查询活动总参与人数
-        ParticipantsService.get({
+        ParticipantsService.getList({
           activityId
         }).then((res) => {
           if (res.code === 0) {
