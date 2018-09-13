@@ -70,7 +70,7 @@
           <luckyitems v-if='state >= 5' :list='luckyItemList' :activitie = 'activitie' />
             <!-- 中奖名单结束 -->
             <!-- 抽奖按钮 -->
-            <luckDraw :state = 'state' :participants='participants' :activitie = 'activitie' :modifyState= 'modifyState' :bets='bets'/>
+            <luckDraw v-if='state >= 0 && state <= 3' :state = 'state' :participants='participants' :activitie = 'activitie' :modifyState= 'modifyState' :bets='bets'/>
             <!-- 抽奖按钮结束 -->
             <!-- 参加列表 -->
             <div class="participant" v-if="participantTotal>0">
@@ -80,11 +80,11 @@
               <headPortrait :list="participantList" rangeKey="img" />
             </div>
             <!-- 参加列表结束 -->
-            <!-- 免费说明 -->
+            <!-- 免责说明 -->
             <div class="free" @tap='() => {this.isFree = !this.isFree; this.isModal = true}'>
-              点此查看免费说明
+              点此查看免责说明
             </div>
-            <!-- 免费说明结束 -->
+            <!-- 免责说明结束 -->
             <!-- 底部 -->
             <div class='bottom'>
               <div>

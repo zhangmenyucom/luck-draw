@@ -1,5 +1,5 @@
 <template>
-  <div v-if ="state >= 0 && state <= 3 && activitie.metadata && activitie.metadata.drawRule !== 'fullParticipant'"  :class="{luckDraw:true, luckDraws:state == 2}">
+  <div v-if =" activitie.metadata && activitie.metadata.drawRule !== 'fullParticipant'"  :class="{luckDraw:true, luckDraws:state == 2}">
     <div class="prize">
       <div>
         <div class='bold antialiased'>
@@ -20,7 +20,7 @@
         <div class='bold antialiased'>
           <form  v-if="activitie.metadata.drawRule == 'fullTicket'"  :data-state="state + 1" @submit.stop = "modifyState">
             <button form-type = "submit">加注</button>
-            <span class='tickets' >已下{{participants.tickets.length * activitie.metadata.ticketsNum}}金豆</span>
+            <span class='tickets' >已下{{participants.tickets.length * activitie.metadata.price}}金豆</span>
           </form>
           <form v-else>
             <button  open-type="share" >分享加速</button>
@@ -77,6 +77,9 @@
   @import '../../common/less/util.less';
   .tickets{
     font-size: 10*@2;
+    margin:10*@2 -20*@2 0;
+    display: inline-block;
+    text-align: center;
   }
   .loop(@count) when( @count > 0 ){
     >div:nth-child(@{count}){
@@ -122,10 +125,7 @@
     margin-top: 40*@2;
   }
   .luckDraw-t{
-
-
     .prize {
-
       opacity:1;
       transition:all 0.7s linear 0.5s;
       width: 100*@2;
