@@ -354,7 +354,7 @@
         createActivity () {
           this.dataHandle()
           if (this.giftItems[0].metadata.url === '') {
-            this.giftItems[0].metadata.url = this.giftImgSrc[0]
+            this.giftItems[0].metadata.image = this.giftImgSrc[0]
           }
           CreatePersonalActivity.createActivity({
             sellerId: 'system',
@@ -369,7 +369,8 @@
               urls: this.jsonString,
               isShare: this.isShare,
               endTimeString: this.pickerDate,
-              participantsNum: this.peopleNum
+              participantsNum: this.peopleNum,
+              edition: 'uperEdition'
             }
           }).then(res => {
             this.$navigateTo(`/pages/activitiesDetails/index?id=${res.data.id}`)
@@ -413,7 +414,10 @@
           }
         }
       },
-      onLoad () {
+      onLoad (options) {
+        if (options) {
+          console.log(options)
+        }
         this.giftPictures = []
         this.giftImgSrc = ['https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg']
         this.itemName = []

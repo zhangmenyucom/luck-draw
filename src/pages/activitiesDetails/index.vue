@@ -91,7 +91,7 @@
                 </a>
               </div>
               <div v-if='participantTotal == 0 && activitie.owner.id == userInfo.id' >
-                <a href="" class="button button-o">
+                <a :href="activitie.metadata.edition === 'baseEdition'?'/pages/baseCreateActivity/createActivities?id='+activitie.id:'/pages/createActivity/createActivities?id='+activitie.id" class="button button-o">
                   编辑
                 </a>
               </div>
@@ -353,6 +353,7 @@
           append: 'BET_NUM'
         }).then((res) => {
           if (res.code === 0) {
+            console.log(res.data)
             if (res.data.metadata.ticketsNum) {
               res.data.metadata.ticketsNum = parseInt(res.data.metadata.ticketsNum)
             }
