@@ -270,15 +270,15 @@
       } else {
         this.isModel = true
       }
+      let from = ''
       if (!this.$getStorageSync('getBeanMethod')) {
-        mta.Event.stat('get_bean', {
-          'from': 'tab赚金豆'
-        })
+        from = 'tab赚金豆'
       } else {
-        mta.Event.stat('get_bean', {
-          'from': this.$getStorageSync('getBeanMethod')
-        })
+        from = this.$getStorageSync('getBeanMethod')
       }
+      mta.Event.stat('get_bean', {
+        'from': from
+      })
     },
     onShareAppMessage: share()
   }

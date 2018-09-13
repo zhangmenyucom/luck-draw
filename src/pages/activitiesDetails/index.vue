@@ -479,29 +479,16 @@
       // }, 1000)
       this.ticketsNum = 1
       mta.Page.init()
-
-      mta.Event.stat('lucky_draw', {
-        'activityname': options.name
-      })
-      if (options.method === '全部抽奖') {
-        mta.Event.stat('lucky_draw', {
-          'from': '全部抽奖'
-        })
-      } else if (options.method === '首页') {
-        mta.Event.stat('lucky_draw', {
-          'from': '首页'
-        })
-      }
-
+      let from = options.method
       if (this.$getStorageSync('scene') === 1014) {
-        mta.Event.stat('lucky_draw', {
-          'from': '模板消息'
-        })
+        from = '模板消息'
       } else if (this.$getStorageSync('scene') === 1007 || this.$getStorageSync('scene') === 1008) {
-        mta.Event.stat('lucky_draw', {
-          'from': '好友分享'
-        })
+        from = '好友分享'
       }
+      mta.Event.stat('lucky_draw', {
+        'activityname': options.name,
+        'from': from
+      })
     },
     onHide () {
       getMeScores.end()

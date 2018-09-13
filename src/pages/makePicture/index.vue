@@ -18,7 +18,8 @@ export default {
       title: '',
       activity: {},
       twoCode: '',
-      lucky: ''
+      lucky: '',
+      bgUrl: ''
     }
   },
   components: {
@@ -40,7 +41,7 @@ export default {
           yelementLayoutType: 'ABSOLUTELY',
           elementContent: '发起了一个抽奖活动',
           elementMediaType: 'TEXT',
-          y: 338,
+          y: 248,
           font: {
             name: '黑体',
             elementFontStyle: 0,
@@ -59,28 +60,27 @@ export default {
           yelementLayoutType: 'ABSOLUTELY',
           elementContent: '',
           elementMediaType: 'TEXT',
-          y: 725,
+          y: 238,
           font: {
             name: '黑体',
             elementFontStyle: 0,
-            fontSize: 26
+            fontSize: 38
           },
           color: {
-            r: 102,
-            g: 102,
-            b: 102
+            r: 67,
+            g: 67,
+            b: 67
           }
         }
         let items = [
         {
           sn: '1001',
           relativeSn: '',
-          xelementLayoutType: 'ABSOLUTELY',
+          xelementLayoutType: 'CENTER',
           yelementLayoutType: 'ABSOLUTELY',
           elementContent: this.$getStorageSync('userInfo').avatar,
           elementMediaType: 'IMG',
-          x: 319,
-          y: 104,
+          y: 32,
           height: 112,
           width: 112,
           elementImageType: 'CIRCLE'
@@ -90,7 +90,7 @@ export default {
           relativeSn: '',
           xelementLayoutType: 'CENTER',
           yelementLayoutType: 'ABSOLUTELY',
-          elementContent: data.items[0].metadata.image,
+          elementContent: data.items[0].metadata.image ? data.items[0].metadata.image : data.items[0].metadata.url,
           elementMediaType: 'IMG',
           y: 380,
           height: 250,
@@ -122,7 +122,7 @@ export default {
           yelementLayoutType: 'ABSOLUTELY',
           elementContent: this.$getStorageSync('userInfo').nickName,
           elementMediaType: 'TEXT',
-          y: 280,
+          y: 200,
           font: {
             name: '黑体',
             elementFontStyle: 0,
@@ -185,7 +185,7 @@ export default {
         creatRule.elementContent = '满' + data.num + '人开奖'
       }
       MakePictureService.getPicture({
-        backgroundUrl: 'https://oss.qianbaocard.org/20180905/8e46d2fa565e42a38678d3ee72514c21.png',
+        backgroundUrl: 'https://oss.qianbaocard.com/20180912/c45dced1f0564763a949c9067c209584.png',
         items
       }).then((res) => {
       this.url = res.data
@@ -195,6 +195,7 @@ export default {
   onLoad (options) {
     if (options.lucky === 'true') {
       this.lucky = true
+      this.bgUrl = 'https://oss.qianbaocard.com/20180912/c45dced1f0564763a949c9067c209584.png'
     } else {
       this.lucky = ''
     }
@@ -202,6 +203,7 @@ export default {
     this.twoCode = options.twoCode
     this.activity = []
     this.activity = JSON.parse(options.activity)
+    console.log(this.activity)
     this.getPicture(this.activity)
   },
   onShareAppMessage: share()
