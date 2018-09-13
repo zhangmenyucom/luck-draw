@@ -28,14 +28,14 @@
           <text class='bold'>
             &nbsp;&nbsp;{{item.metadata.price}} 金豆 1 注
           </text> -->
-          满<span style="color:red;">{{item.metadata.ticketsNum * item.metadata.price}}</span>金豆开奖
+          满<span >{{item.metadata.ticketsNum * item.metadata.price}}</span>金豆开奖
           <!-- <span>
             ¥8799
           </span> -->
         </span>
         <div class="fullGoldBean">
           {{item.metadata.price}}
-          <img src='/static/img/goldBean.png' style="width:15px;height:14px;position:relative;top:2px;margin-top:8px;" />参与
+          <img src='/static/img/goldBean.png'/>参与
         </div>
       </div>
       <div v-if="item.metadata.drawRule === 'timed'" style="margin-top: 5rpx;">
@@ -44,7 +44,7 @@
             已参与 <span style="margin-left:8px;">|</span>
           </span>
           <span class="goldBean">
-            <span >{{item.endTimeDay}}</span><span style="color:red">{{item.endTimeHours}}</span>开奖
+            {{item.endTimeDay}}<span style="color:red">{{item.endTimeHours}}</span>开奖
           </span>
       </div>
       <div v-if="item.metadata.drawRule === 'fullParticipant'" style="margin-top: 5rpx;">
@@ -105,7 +105,7 @@
   }
 }
 .list{
-  padding: 32*@1 15*@2 0;
+  padding: 32*@1 15*@2 16*@2;
   background: #FFFFFF;
   margin-bottom: 18*@1;
 }
@@ -117,8 +117,10 @@
   color:rgba(67,67,67,1);
   padding-top: 46*@2;
   padding-left: 10*@2;
-  background-color: white;
+  padding-bottom: 10*@2;
   display: flex;
+  margin-bottom: 10*@2;
+  color: RGBA(254, 76, 82, 1);
   i{
     color: #FE4C52;
     margin-left: 16*@1;
@@ -132,6 +134,14 @@
   float: right;
   font-weight:600;
   color:rgba(243,185,19,1);
+  > img{
+    width:15px;
+    height:14px;
+    position:relative;
+    top:2px;
+    margin: 0 3*@2;
+    left:-1*@2;
+  }
 }
 img {
   width: 345*@2;
@@ -154,14 +164,16 @@ img {
   font-family: PingFangSC-Regular;
   font-size: 14*@2;
   /*font-weight:400;*/
-  /* span{
-    text-decoration:line-through;
+   span{
     font-size:14*@2;
     line-height: 17*@2;
     color: #434343;
     flex:1;
+    color: #ff5459;
     text-align:right;
-  } */
+    position: relative;
+    left:-2*@2;
+  }
 }
 .joined {
   font-size:28rpx;
