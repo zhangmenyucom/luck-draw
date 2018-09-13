@@ -426,6 +426,7 @@
           }).then(res => {
             if (res.code === 0) {
               console.log(res.data)
+              this.giftImgSrc = []
               res.data.items.forEach(item => {
                 this.giftImgSrc.push(item.metadata.image)
                 this.itemName.push(item.name)
@@ -438,7 +439,7 @@
               res.data.metadata.urls.forEach(element => {
                 this.giftPictures.push(element.url)
               })
-    
+              console.log(this.itemName)
               this.drawRule = res.data.metadata.drawRule
               this.isShare = res.data.metadata.isShare
               this.prizeDescription = res.data.description
@@ -458,15 +459,19 @@
         this.activityId = options.id
       },
       onShow () {
+        this.giftPictures = []
+        this.giftImgSrc = ['https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg']
+        this.itemName = []
+        this.itemNum = []
+        this.prizeDescription = ''
+        this.peopleNum = ''
+        this.radioCheck = true
+        this.prizeExplainText = ''
+        this.isShare = false
+        this.drawRule = 'timed'
+        this.giftList = [true]
         if (this.activityId) {
           this.getPersonalActivity(this.activityId)
-        } else {
-          this.giftPictures = []
-          this.giftImgSrc = ['https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg']
-          this.itemName = []
-          this.itemNum = []
-          this.prizeDescription = ''
-          this.peopleNum = ''
         }
         this.userInfo = this.$getStorageSync('userInfo')
         this.getNowDate()

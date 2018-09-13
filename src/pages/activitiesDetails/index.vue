@@ -81,7 +81,7 @@
             </div>
             <!-- 参加列表结束 -->
             <!-- 免责说明 -->
-            <div class="free" @tap='() => {this.isFree = !this.isFree; this.isModal = true}'>
+            <div v-if="activitie.type == 'PLATFORM_LUCKY_DRAW'" class="free" @tap='() => {this.isFree = !this.isFree; this.isModal = true}'>
               点此查看免责说明
             </div>
             <!-- 免责说明结束 -->
