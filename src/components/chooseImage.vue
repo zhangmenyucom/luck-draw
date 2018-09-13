@@ -74,7 +74,7 @@ export default {
       let y = this.imgy - this.y
       ctx.drawImage(this.imageSrc, 0, 0, this.baseWidth, this.baseHeight)
       ctx.draw(true, () => {
-        this.$canvasToTempFilePath(x, y, 375, 187.5, 750, 375, 1, 'myCanvas').then(res => {
+        this.$canvasToTempFilePath(x, y, 375, 187.5, 375, 187.5, 1, 'myCanvas').then(res => {
           this.showImage(res.tempFilePath, this.picIndex)
         })
       })
@@ -97,6 +97,7 @@ export default {
     }
   },
   onReady () {
+    console.log(this.imageSrc)
     this.loadImage()
   }
 }
