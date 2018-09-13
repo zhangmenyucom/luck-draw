@@ -200,7 +200,7 @@
             <!-- 弹出层结束 -->
           </div>
         </div>
-        <div class="shade" :class="{display:display}" @tap="shadeShow">
+        <div class="shade" v-if="display" @tap="shadeShow">
           <div class="foot">
             <button open-type="share">邀请微信好友</button>
             <button @tap="toMakeImg">生成分享图</button>
@@ -281,7 +281,7 @@
         isAnimation: false,
         isLookAtTheLuckyNumber: false,
         miniappId: 'qianbaocard_mkt',
-        display: true,
+        display: false,
         activity: '',
         QR: '',
         mediaInfoimg: [], // 商品详情列表
@@ -542,6 +542,7 @@
       const userInfo = getUserInfo()
       this.userInfo = userInfo
       this.state = 0
+      this.display = true
       // setTimeout(() => {
       //   this.state = 2
       // }, 1000)
@@ -572,6 +573,7 @@
       }
       this.isLoad()
       this.userInfo = userInfo
+      this.display = false
     },
     onShareAppMessage () {
       const introductionImageUrl = this.activitie.media.filter(media => media.layout === 'INTRODUCTION')[0]
