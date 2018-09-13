@@ -41,7 +41,7 @@
         <div v-if="addPic">
           <chooseImage :showImage="showImage" :picIndex="picIndex" :picIndexSrc="picIndexSrc" :imageSrc="imageSrc" />
         </div>
-        <createAttention v-if="showAttention" :createActivity="createActivity" />
+        <createAttention v-if="showAttention" :createActivity="createActivity" :hideAttentionModal="hideAttentionModal" />
     </div>
 </template>
 
@@ -60,7 +60,7 @@
           giftList: [true],
           addPic: false,
           showCanvas: false,
-          giftImgSrc: ['/static/img/defaultPic.jpg'],
+          giftImgSrc: ['https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg'],
           picIndex: 0,
           picIndexSrc: '',
           prizeTextLength: 0,
@@ -121,7 +121,7 @@
             this.giftList[index] = !this.giftList[index]
           }
           this.giftImgSrc[index] = src
-          this.giftItems[index].metadata.url = src
+          this.giftItems[index].metadata.image = src
         },
         radioChange (e) {
           this.drawRule = e.mp.detail.value
@@ -297,8 +297,15 @@
           }).then(res => {
             this.$navigateTo(`/pages/activitiesDetails/index?id=${res.data.id}`)
             this.mediaData = []
-            this.showAttention = !this.showAttention
+            if (this.showAttention) {
+              this.showAttention = !this.showAttention
+            }
           })
+        },
+        hideAttentionModal () {
+          if (this.showAttention) {
+            this.showAttention = !this.showAttention
+          }
         },
         createButton () {
           if (this.peopleNumInput === 'null') {
@@ -333,7 +340,7 @@
         this.itemName = []
         this.itemNum = []
         this.peopleNum = ''
-        this.giftImgSrc = ['/static/img/defaultPic.jpg']
+        this.giftImgSrc = ['https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg']
         this.userInfo = this.$getStorageSync('userInfo')
         this.getNowDate()
       }
