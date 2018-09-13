@@ -19,7 +19,7 @@
                     <span class="weui-cell__ft" style="font-size:12px;font-family:PingFangSC-Regular;font-weight:400;color:rgba(153,153,153,1);">{{prizeTextLength}}/100</span>
                 </div>
                 <div class="weui-cell weui-cell_access">
-                    <textarea class="weui-cell__bd" placeholder="请输入" maxlength="100" auto-height="true" @input="prizeExplain"></textarea>
+                    <textarea class="weui-cell__bd" placeholder="请输入" maxlength="100" auto-height="true" :value="prizeExplainText" @input="prizeExplain"></textarea>
                 </div>
             </div>
             <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <div class="weui-cell weui-cell_access">
-                    <textarea class="weui-cell__bd" placeholder="请输入" maxlength="100" auto-height="true" @input="giftExplain"></textarea>
+                    <textarea class="weui-cell__bd" placeholder="请输入" :value="prizeDescription" maxlength="100" auto-height="true" @input="giftExplain"></textarea>
                 </div>
             </div>
             <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
@@ -45,8 +45,8 @@
                     <div class="weui-cell__bd">开奖方式</div>
                     <div class="weui-cell__ft">
                       <radio-group class="radio-group" @change="radioChange">
-                          <radio style="transform:scale(0.8);position:relative;left:5px;bottom:2px" value="timed" color="red" checked="true"/>到时间
-                          <radio style="transform:scale(0.8);position:relative;left:5px;bottom:2px" value="fullParticipant" color="red" />满人数
+                          <radio style="transform:scale(0.8);position:relative;left:5px;bottom:2px" value="timed" color="red" :checked="radioCheck"/>到时间
+                          <radio style="transform:scale(0.8);position:relative;left:5px;bottom:2px" value="fullParticipant" :checked="!radioCheck" color="red" />满人数
                       </radio-group>
                     </div>
                 </div>
@@ -66,7 +66,7 @@
             <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
                 <div class="weui-cell weui-cell_access" style="padding:5px 0">
                     <div class="weui-cell__bd">允许参与者分享</div>
-                    <switch class="weui-cell__ft" @change="switchChange" style="transform:scale(0.8);position:relative;left:10px" />
+                    <switch class="weui-cell__ft" @change="switchChange" :checked="isShare" style="transform:scale(0.8);position:relative;left:10px" />
                 </div>
             </div>
             <div class="uperAddActivity" @click="navToUper"><span>使用基本版&nbsp;></span></div>
@@ -89,13 +89,16 @@
     import addGiftComp from '@/components/addGift'
     import chooseImage from '@/components/chooseImage'
     import CreatePersonalActivity from '@/services/createPersonalActivity'
+    import ActivitiesService from '@/services/activitiesService'
 
     export default {
       data () {
         return {
           dateTime: '',
+          radioCheck: true,
           giftList: [true],
           addPic: false,
+          prizeExplainText: '',
           showCanvas: false,
           giftImgSrc: ['https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg'],
           picIndex: 0,
@@ -141,7 +144,7 @@
           gl.push(true)
           this.giftList = gl
           this.giftItems.push({id: 'system', name: '', metadata: {url: '', num: 0}})
-          this.giftImgSrc.push('/static/img/defaultPic.jpg')
+          this.giftImgSrc.push('https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg')
         },
         getImage (index, picIndexSrc) {
           this.$chooseImage().then(res => {
@@ -186,6 +189,7 @@
         },
         prizeExplain (e) {
           this.prizeTextLength = e.mp.detail.value.length
+          this.prizeExplainText = e.mp.detail.value
         },
         giftExplain (e) {
           this.giftTextLength = e.mp.detail.value.length
@@ -368,6 +372,7 @@
               drawRule: this.drawRule,
               urls: this.jsonString,
               isShare: this.isShare,
+              prizeExplainText: this.prizeExplainText,
               endTimeString: this.pickerDate,
               participantsNum: this.peopleNum,
               edition: 'uperEdition'
@@ -412,17 +417,49 @@
           } else {
             this.createActivity()
           }
+        },
+        getPersonalActivity (id) {
+          ActivitiesService.get({
+            id,
+            append: 'BET_NUM'
+          }).then(res => {
+            if (res.code === 0) {
+              console.log(res.data)
+              res.data.items.forEach(item => {
+                this.giftImgSrc.push(item.metadata.image)
+                this.itemName.push(item.name)
+                this.itemNum.push(item.metadata.num)
+              })
+              res.data.metadata.urls = JSON.parse(res.data.metadata.urls)
+              res.data.metadata.urls.forEach(element => {
+                this.giftPictures.push(element.url)
+              })
+              this.drawRule = res.data.metadata.drawRule
+              this.isShare = res.data.metadata.isShare
+              this.prizeDescription = res.data.description
+              this.prizeExplainText = res.data.metadata.prizeExplainText
+              if (res.data.metadata.drawRule === 'timed') {
+                this.radioCheck = true
+                this.pickerDate = res.data.metadata.endTimeString
+              } else {
+                this.radioCheck = false
+                this.peopleNum = res.data.metadata.participantsNum
+              }
+            }
+          })
         }
       },
       onLoad (options) {
-        if (options) {
-          console.log(options)
+        if (options.id) {
+          this.getPersonalActivity(options.id)
+        } else {
+          this.giftPictures = []
+          this.giftImgSrc = ['https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg']
+          this.itemName = []
+          this.itemNum = []
+          this.prizeDescription = ''
+          this.peopleNum = ''
         }
-        this.giftPictures = []
-        this.giftImgSrc = ['https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg']
-        this.itemName = []
-        this.itemNum = []
-        this.peopleNum = ''
         this.userInfo = this.$getStorageSync('userInfo')
         this.getNowDate()
       }

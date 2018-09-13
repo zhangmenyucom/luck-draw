@@ -35,43 +35,43 @@ export default {
     },
     getPicture (data) {
       let creat = {
-          sn: '1008',
-          relativeSn: '',
-          xelementLayoutType: 'CENTER',
-          yelementLayoutType: 'ABSOLUTELY',
-          elementContent: '发起了一个抽奖活动',
-          elementMediaType: 'TEXT',
-          y: 250,
-          font: {
-            name: '黑体',
-            elementFontStyle: 0,
-            fontSize: 38
-          },
-          color: {
-            r: 102,
-            g: 102,
-            b: 102
-          }
+        sn: '1008',
+        relativeSn: '',
+        xelementLayoutType: 'CENTER',
+        yelementLayoutType: 'ABSOLUTELY',
+        elementContent: '发起了一个抽奖活动',
+        elementMediaType: 'TEXT',
+        y: 250,
+        font: {
+          name: '黑体',
+          elementFontStyle: 0,
+          fontSize: 38
+        },
+        color: {
+          r: 102,
+          g: 102,
+          b: 102
         }
-        let creatRule = {
-          sn: '1009',
-          relativeSn: '',
-          xelementLayoutType: 'CENTER',
-          yelementLayoutType: 'ABSOLUTELY',
-          elementContent: '',
-          elementMediaType: 'TEXT',
-          y: 238,
-          font: {
-            name: '黑体',
-            elementFontStyle: 0,
-            fontSize: 38
-          },
-          color: {
-            r: 67,
-            g: 67,
-            b: 67
-          }
+      }
+      let creatRule = {
+        sn: '1009',
+        relativeSn: '',
+        xelementLayoutType: 'CENTER',
+        yelementLayoutType: 'ABSOLUTELY',
+        elementContent: '',
+        elementMediaType: 'TEXT',
+        y: 238,
+        font: {
+          name: '黑体',
+          elementFontStyle: 0,
+          fontSize: 38
+        },
+        color: {
+          r: 67,
+          g: 67,
+          b: 67
         }
+      }
       let items = [
         {
           sn: '1001',
