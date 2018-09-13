@@ -93,7 +93,7 @@
                 </a>
               </div>
               <div v-if='participantTotal == 0 && activitie.owner.id == userInfo.id' >
-                <a :href="activitie.metadata.edition === 'baseEdition' ? '/pages/baseCreateActivity/createActivities?id='+activitie.id : '/pages/createActivities/createActivities?id='+activitie.id" class="button button-o">
+                <a :href="activitie.metadata.edition === 'baseEdition'?'/pages/baseCreateActivity/createActivities?id='+activitie.id:'/pages/createActivities/createActivities?id='+activitie.id" class="button button-o">
                   编辑
                 </a>
               </div>
