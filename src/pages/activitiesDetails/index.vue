@@ -24,7 +24,10 @@
             {{activitie.metadata.price}}<img src='/static/img/goldBean.png' class="" />参与
           </div>
         </div>
-        <div class="c"> </div>
+
+        <div class="c">
+          <img src="https://oss.qianbaocard.org/20180914/7b0e9c5fc57f482c97d47c34c541b03c.png" />
+         </div>
         <!-- 活动信息及状态end -->
 
         <!-- 赞助商 -->
@@ -81,7 +84,7 @@
             </div>
             <!-- 参加列表结束 -->
             <!-- 免责说明 -->
-            <div v-if="activitie.type == 'PLATFORM_LUCKY_DRAW'" class="free" @tap='() => {this.isFree = !this.isFree; this.isModal = true}'>
+            <div v-if="activitie.type !== 'PLATFORM_LUCKY_DRAW'" class="free" @tap='() => {this.isFree = !this.isFree; this.isModal = true}'>
               点此查看免责说明
             </div>
             <!-- 免责说明结束 -->

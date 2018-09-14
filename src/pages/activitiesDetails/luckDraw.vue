@@ -1,5 +1,5 @@
 <template>
-  <div v-if =" activitie.metadata && activitie.metadata.drawRule !== 'fullParticipant'"  :class="{luckDraw:true, luckDraws:state == 2}">
+  <div v-if =" activitie.metadata && activitie.metadata.drawRule !== 'timed'"  :class="{luckDraw:true, luckDraws:state == 2}">
     <div class="prize">
       <div>
         <div class='bold antialiased'>
@@ -18,8 +18,8 @@
     <div class="prize">
       <div>
         <div class='bold antialiased'>
-          <form  v-if="activitie.metadata.drawRule == 'fullTicket'"  :data-state="state + 1" @submit.stop = "modifyState">
-            <button form-type = "submit">加注</button>
+          <form  v-if="activitie.metadata.drawRule == 'fullTicket'"  :data-state="state + 1" @tab.stop = "modifyState">
+            <button >加注</button>
             <span class='tickets' >已下{{participants.tickets.length * activitie.metadata.price}}金豆</span>
           </form>
           <form v-else>
