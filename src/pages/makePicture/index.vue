@@ -16,7 +16,9 @@ export default {
     return {
       url: '',
       title: '',
-      activity: {},
+      activity: {
+
+      },
       twoCode: '',
       lucky: '',
       bgUrl: ''
@@ -27,6 +29,7 @@ export default {
   },
   methods: {
     saveFile () {
+      console.log(1)
       this.$downloadFile(this.url).then(res => {
         this.$saveImageToPhotosAlbum(res.tempFilePath).then(res => {
           this.$showToast('已保存至相册')
@@ -60,16 +63,17 @@ export default {
         yelementLayoutType: 'ABSOLUTELY',
         elementContent: '',
         elementMediaType: 'TEXT',
-        y: 238,
+        y: 680,
         font: {
           name: '黑体',
           elementFontStyle: 0,
-          fontSize: 38
+          fontSize: 26
         },
         color: {
-          r: 67,
-          g: 67,
-          b: 67
+          r: 102,
+          g: 102,
+          b: 102,
+          a: 1
         }
       }
       let items = [
@@ -123,7 +127,7 @@ export default {
           yelementLayoutType: 'ABSOLUTELY',
           elementContent: '[ 奖品 ]  ' + data.items[0].name,
           elementMediaType: 'TEXT',
-          y: 621,
+          y: 663,
           font: {
             name: '黑体',
             elementFontStyle: 0,
@@ -143,7 +147,7 @@ export default {
           yelementLayoutType: 'ABSOLUTELY',
           elementContent: this.twoCode,
           elementMediaType: 'IMG',
-          y: 711,
+          y: 769,
           height: 150,
           width: 150
         },
@@ -154,7 +158,7 @@ export default {
           yelementLayoutType: 'ABSOLUTELY',
           elementContent: '长按识别小程序码，参与抽奖',
           elementMediaType: 'TEXT',
-          y: 917,
+          y: 975,
           font: {
             name: 'PingFangSC',
             elementFontStyle: 0,
@@ -182,37 +186,84 @@ export default {
             fontSize: 24
           },
           color: {
-            r: 255,
-            g: 255,
-            b: 255,
+            r: 67,
+            g: 67,
+            b: 67,
             a: 1
           }
         }
       ]
+      this.bgUrl = 'https://oss.qianbaocard.com/20180912/c45dced1f0564763a949c9067c209584.png'
       // 个人发起抽奖
       if (data.owner.id === this.$getStorageSync('userInfo').id) {
         items.push(creat)
+        if (data.metadata.drawRule === 'timed') {
+          const date = new Date(data.endTime)
+          data.endTimeDay = `${date.getMonth() + 1}月${date.getUTCDate()}日`
+          data.endTimeHours = `${date.getUTCHours() + 1}:${date.getUTCMinutes()}分`
+          creatRule.elementContent = data.endTimeDay + data.endTimeHours + '开奖'
+        } else if (data.metadata.drawRule === 'fullTicket') {
+          creatRule.elementContent = '满' + data.metadata.ticketsNum + '金豆开奖'
+        } else if (data.metadata.drawRule === 'fullParticipant') {
+          creatRule.elementContent = '满' + data.num + '人开奖'
+        }
+        // 两种奖品
+        if (data.items.length === 1) {
+          this.bgUrl = 'https://oss.qianbaocard.com/20180912/c45dced1f0564763a949c9067c209584.png'
+          creatRule.y = 721
+          items.push(creatRule)
+        } else if (data.items.length === 2) {
+          let secondPrize = {
+            sn: '1010',
+            relativeSn: '',
+            xelementLayoutType: 'CENTER',
+            yelementLayoutType: 'ABSOLUTELY',
+            elementContent: data.items[1].metadata.image ? data.items[1].metadata.image : data.items[0].metadata.url,
+            elementMediaType: 'IMG',
+            y: 703,
+            height: 275,
+            width: 550
+          }
+          let secondPrizeName = {
+            sn: '1011',
+            relativeSn: '',
+            xelementLayoutType: 'CENTER',
+            yelementLayoutType: 'ABSOLUTELY',
+            elementContent: '[ 奖品 ]  ' + data.items[1].name,
+            elementMediaType: 'TEXT',
+            y: 1060,
+            font: {
+              name: '黑体',
+              elementFontStyle: 0,
+              fontSize: 34
+            },
+            color: {
+              r: 67,
+              g: 67,
+              b: 67,
+              a: 1
+            }
+          }
+          this.bgUrl = 'https://oss.qianbaocard.com/20180912/58ceabb9c6df4067acdfe6c7a2f70954.png'
+          items.push(secondPrize)
+          items.push(secondPrizeName)
+          items[4].y = 1166
+          items[5].y = 1372
+          creatRule.creatRule = 1318
+          creatRule.y = 1118
+          items.push(creatRule)
+        }
       }
       // 中奖
       if (this.lucky === true) {
         creat.elementContent = '「我中奖了」'
         this.bgUrl = 'https://oss.qianbaocard.com/20180912/5eb971d853a849c8a22f4e10a3c53cc4.png'
+        items[4].y = 711
+        items[5].y = 917
         items.push(creat)
       }
-      if (data.metadata.drawRule === 'timed') {
-        const date = new Date(data.endTime)
-        data.endTimeDay = `${date.getMonth() + 1}月${date.getUTCDate()}日`
-        data.endTimeHours = `${date.getUTCHours() + 1}:${date.getUTCMinutes()}分`
-        creatRule.elementContent = data.endTimeDay + data.endTimeHours + '开奖'
-        items.push(creatRule)
-      } else if (data.metadata.drawRule === 'fullTicket') {
-        creatRule.elementContent = '满' + data.metadata.ticketsNum + '金豆开奖'
-        items.push(creatRule)
-      } else if (data.metadata.drawRule === 'fullParticipant') {
-        creatRule.elementContent = '满' + data.num + '人开奖'
-      }
       MakePictureService.getPicture({
-        backgroundUrl: 'https://oss.qianbaocard.com/20180912/5eb971d853a849c8a22f4e10a3c53cc4.png',
+        backgroundUrl: this.bgUrl,
         items
       }).then((res) => {
         if (res.code === 0) {
@@ -233,7 +284,6 @@ export default {
     this.twoCode = options.twoCode
     this.activity = []
     this.activity = JSON.parse(options.activity)
-    console.log(this.activity)
     this.getPicture(this.activity)
     this.$showLoading()
   },

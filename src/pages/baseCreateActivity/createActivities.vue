@@ -6,7 +6,7 @@
                 <addGiftComp
                 :showCanvas="giftList[index]" :giftImgSrc="giftImgSrc[index]"
                 :index="index" :deleteGiftList="deleteGiftList"
-                :itemNameChange="itemNameChange" :itemNumChange="itemNumChange"
+                :inputText="inputText"
                 :itemName="itemName" :itemNum="itemNum"
                 :getImage="getImage" />
             </div>
@@ -14,10 +14,14 @@
                 <div class="weui-cell weui-cell_access border-middle">
                     <div class="weui-cell__bd">开奖方式</div>
                     <div class="weui-cell__ft">
-                      <radio-group class="radio-group" @change="radioChange">
-                          <radio style="transform:scale(0.8);position:relative;left:5px;bottom:2px" value="timed" color="red" :checked="radioCheck"/>到时间
-                          <radio style="transform:scale(0.8);position:relative;left:5px;bottom:2px" value="fullParticipant" :checked="!radioCheck" color="red" />满人数
-                      </radio-group>
+                      <div class="radioDiv div-marginR" @tap="openTypeChange">
+                        <img class="radioIcon" :src="radioCheck ? '/static/img/radio1.png' : '/static/img/radio2.png'" />
+                        <span class="radioText">到时间</span>
+                      </div>
+                      <div class="radioDiv" @tap="openTypeChange">
+                        <img class="radioIcon" :src="!radioCheck ? '/static/img/radio1.png' : '/static/img/radio2.png'" />
+                        <span class="radioText">满人数</span>
+                      </div>
                     </div>
                 </div>
                 <div v-if="drawRule === 'timed'" class="weui-cell weui-cell_access">
@@ -29,7 +33,7 @@
                 </div>
                 <div v-if="drawRule === 'fullParticipant'" class="weui-cell weui-cell_access">
                     <div class="weui-cell__bd"><div>开奖人数<span style="color: red">*</span></div></div>
-                    <input id="fullPeopleNum" type="number" :value="peopleNum" placeholder="数量" @input="fullParticipantNum" class="weui-cell__ft" style="color:black;display: inline;vertical-align: middle;" />
+                    <input id="fullPeopleNum" type="number" v-model="peopleNum" placeholder="数量" class="weui-cell__ft" style="color:black;display: inline;vertical-align: middle;" />
                     <span class="weui-cell__ft" style="margin-left:5px;vertical-align: middle;">人</span>
                 </div>
             </div>
@@ -90,7 +94,8 @@
           jsonString: '',
           mediaData: [],
           showAttention: false,
-          activityId: ''
+          activityId: '',
+          requestMetadata: {}
         }
       },
       components: {
@@ -100,6 +105,22 @@
         createAttention
       },
       methods: {
+        inputText (e) {
+          if (e.mp.currentTarget.dataset.name === 'prizeExplain') {
+            this.prizeTextLength = e.mp.detail.value.length
+          }
+          if (e.mp.currentTarget.dataset.name === 'giftExplain') {
+            this.giftTextLength = e.mp.detail.value.length
+          }
+          if (e.mp.currentTarget.dataset.name === 'itemName') {
+            const itemNameIndex = e.mp.currentTarget.dataset.index
+            this.giftItems[itemNameIndex].name = e.mp.detail.value
+          }
+          if (e.mp.currentTarget.dataset.name === 'itemNum') {
+            const itemNumIndex = e.mp.currentTarget.dataset.index
+            this.giftItems[itemNumIndex].metadata.num = e.mp.detail.value
+          }
+        },
         getImage (index, picIndexSrc) {
           this.$chooseImage().then(res => {
             this.imageSrc = res.tempFilePaths[0]
@@ -107,16 +128,6 @@
             this.picIndex = index
             this.picIndexSrc = picIndexSrc
           })
-        },
-        itemNameChange (e) {
-          const itemNameIndex = e.mp.currentTarget.dataset.index
-          this.itemName[itemNameIndex] = e.mp.detail.value
-          this.giftItems[itemNameIndex].name = e.mp.detail.value
-        },
-        itemNumChange (e) {
-          const itemNumIndex = e.mp.currentTarget.dataset.index
-          this.itemNum[itemNumIndex] = e.mp.detail.value
-          this.giftItems[itemNumIndex].metadata.num = e.mp.detail.value
         },
         showImage (src, index) {
           this.addPic = !this.addPic
@@ -126,13 +137,13 @@
           this.giftImgSrc[index] = src
           this.giftItems[index].metadata.image = src
         },
-        radioChange (e) {
-          this.drawRule = e.mp.detail.value
-          if (this.drawRule === 'fullParticipant') {
-            this.peopleNumInput = 'null'
+        openTypeChange () {
+          if (this.drawRule === 'timed') {
+            this.drawRule = 'fullParticipant'
           } else {
-            this.peopleNumInput = ''
+            this.drawRule = 'timed'
           }
+          this.radioCheck = !this.radioCheck
         },
         check (str) {
           str = str.toString()
@@ -233,10 +244,6 @@
           }
           this.dateTime = this.pickerDate + ':00'
         },
-        fullParticipantNum (e) {
-          this.peopleNum = e.mp.detail.value
-          this.peopleNumInput = e.mp.detail.value
-        },
         MultiPickerChange (e) {
           if (e.mp.detail.value[0] === 0) {
             if (e.mp.detail.value[1] < this.initIndexMulPicker[1]) {
@@ -256,7 +263,20 @@
           this.isShare = e.mp.detail.value
         },
         navToUper () {
-          this.$navigateTo('/pages/createActivities/createActivities')
+          if (this.activityId) {
+            this.$navigateTo('/pages/createActivities/createActivities?id=' + this.activityId)
+          } else {
+            this.$navigateTo('/pages/createActivities/createActivities')
+          }
+          this.clearData()
+        },
+        clearData () {
+          this.giftImgSrc = ['https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg']
+          this.itemName = []
+          this.itemNum = []
+          this.peopleNum = ''
+          this.radioCheck = true
+          this.drawRule = 'timed'
         },
         dataHandle () {
           this.prizeEndTime = new Date(this.dateTime).getTime() + 3000
@@ -276,35 +296,61 @@
             jsonArr.push({'picUrl': this.giftPictures[i]})
           }
           this.jsonString = JSON.stringify(jsonArr)
-        },
-        createActivity () {
-          this.dataHandle()
           if (this.giftItems[0].metadata.url === '') {
             this.giftItems[0].metadata.image = this.giftImgSrc[0]
           }
-          CreatePersonalActivity.createActivity({
-            sellerId: 'system',
-            owner: {id: this.userInfo.id, nickName: this.userInfo.nickName, avatar: this.userInfo.avatar},
-            type: 'PERSONAL_LUCKY_DRAW',
-            description: this.prizeDescription,
-            endTime: this.prizeEndTime,
-            items: this.giftItems,
-            media: this.mediaData,
-            metadata: {
+          if (this.drawRule === 'timed') {
+            this.requestMetadata = {
               drawRule: this.drawRule,
               urls: this.jsonString,
               isShare: this.isShare,
               endTimeString: this.pickerDate,
+              edition: 'baseEdition'
+            }
+          } else {
+            this.requestMetadata = {
+              drawRule: this.drawRule,
+              urls: this.jsonString,
+              isShare: this.isShare,
               participantsNum: this.peopleNum,
               edition: 'baseEdition'
             }
-          }).then(res => {
-            this.$navigateTo(`/pages/activitiesDetails/index?id=${res.data.id}`)
-            this.mediaData = []
-            if (this.showAttention) {
-              this.showAttention = !this.showAttention
-            }
-          })
+          }
+        },
+        createActivity () {
+          this.dataHandle()
+          if (this.activityId) {
+            CreatePersonalActivity.putActivity({
+              id: this.activityId,
+              request: {
+                description: this.prizeDescription,
+                endTime: this.prizeEndTime,
+                items: this.giftItems,
+                media: this.mediaData,
+                metadata: this.requestMetadata
+              }
+            }).then(res => {
+              console.log(res)
+            })
+          } else {
+            CreatePersonalActivity.createActivity({
+              sellerId: 'system',
+              owner: {id: this.userInfo.id, nickName: this.userInfo.nickName, avatar: this.userInfo.avatar},
+              type: 'PERSONAL_LUCKY_DRAW',
+              description: this.prizeDescription,
+              endTime: this.prizeEndTime,
+              items: this.giftItems,
+              media: this.mediaData,
+              metadata: this.requestMetadata
+            }).then(res => {
+              this.$navigateTo(`/pages/activitiesDetails/index?id=${res.data.id}`)
+            })
+          }
+          this.mediaData = []
+          this.clearData()
+          if (this.showAttention) {
+            this.showAttention = !this.showAttention
+          }
         },
         hideAttentionModal () {
           if (this.showAttention) {
@@ -312,10 +358,6 @@
           }
         },
         createButton () {
-          if (this.peopleNumInput === 'null') {
-            this.$showToast('请输入开奖人数!')
-            return
-          }
           if (this.itemName.length < this.giftList.length) {
             this.$showToast('请输入奖品名称!')
             return
@@ -325,6 +367,10 @@
             return
           }
           if (this.drawRule === 'fullParticipant') {
+            if (!this.peopleNum) {
+              this.$showToast('请输入开奖人数!')
+              return
+            }
             const openNum = parseInt(this.peopleNum)
             let giftTotalNum = 0
             this.itemNum.forEach(element => {
@@ -345,7 +391,6 @@
             append: 'BET_NUM'
           }).then(res => {
             if (res.code === 0) {
-              console.log(res.data)
               res.data.items.forEach(item => {
                 this.giftImgSrc.push(item.metadata.image)
                 this.itemName.push(item.name)
@@ -369,11 +414,6 @@
       onShow () {
         if (this.activityId) {
           this.getPersonalActivity(this.activityId)
-        } else {
-          this.giftImgSrc = ['https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg']
-          this.itemName = []
-          this.itemNum = []
-          this.peopleNum = ''
         }
         this.userInfo = this.$getStorageSync('userInfo')
         this.getNowDate()
