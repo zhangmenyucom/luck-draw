@@ -15,8 +15,8 @@
                     <div class="weui-cell__bd">开奖方式</div>
                     <div class="weui-cell__ft">
                       <radio-group class="radio-group" @change="radioChange">
-                          <radio style="transform:scale(0.8);position:relative;left:5px;bottom:2px" value="timed" color="red" :checked="radioCheck"/>到时间
-                          <radio style="transform:scale(0.8);position:relative;left:5px;bottom:2px" value="fullParticipant" :checked="!radioCheck" color="red" />满人数
+                          <radio style="transform:scale(0.9);position:relative;left:5px;bottom:2px" value="timed" color="red" :checked="radioCheck"/>到时间
+                          <radio style="transform:scale(0.9);position:relative;left:5px;bottom:2px" value="fullParticipant" :checked="!radioCheck" color="red" />满人数
                       </radio-group>
                     </div>
                 </div>
@@ -90,7 +90,8 @@
           jsonString: '',
           mediaData: [],
           showAttention: false,
-          activityId: ''
+          activityId: '',
+          requestMetadata: {}
         }
       },
       components: {
@@ -128,11 +129,7 @@
         },
         radioChange (e) {
           this.drawRule = e.mp.detail.value
-          if (this.drawRule === 'fullParticipant') {
-            this.peopleNumInput = 'null'
-          } else {
-            this.peopleNumInput = ''
-          }
+          this.radioCheck = !this.radioCheck
         },
         check (str) {
           str = str.toString()
@@ -256,7 +253,20 @@
           this.isShare = e.mp.detail.value
         },
         navToUper () {
-          this.$navigateTo('/pages/createActivities/createActivities')
+          if (this.activityId) {
+            this.$navigateTo('/pages/createActivities/createActivities?id=' + this.activityId)
+          } else {
+            this.$navigateTo('/pages/createActivities/createActivities')
+          }
+          this.clearData()
+        },
+        clearData () {
+          this.giftImgSrc = ['https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg']
+          this.itemName = []
+          this.itemNum = []
+          this.peopleNum = ''
+          this.radioCheck = true
+          this.drawRule = 'timed'
         },
         dataHandle () {
           this.prizeEndTime = new Date(this.dateTime).getTime() + 3000
@@ -276,35 +286,61 @@
             jsonArr.push({'picUrl': this.giftPictures[i]})
           }
           this.jsonString = JSON.stringify(jsonArr)
-        },
-        createActivity () {
-          this.dataHandle()
           if (this.giftItems[0].metadata.url === '') {
             this.giftItems[0].metadata.image = this.giftImgSrc[0]
           }
-          CreatePersonalActivity.createActivity({
-            sellerId: 'system',
-            owner: {id: this.userInfo.id, nickName: this.userInfo.nickName, avatar: this.userInfo.avatar},
-            type: 'PERSONAL_LUCKY_DRAW',
-            description: this.prizeDescription,
-            endTime: this.prizeEndTime,
-            items: this.giftItems,
-            media: this.mediaData,
-            metadata: {
+          if (this.drawRule === 'timed') {
+            this.requestMetadata = {
               drawRule: this.drawRule,
               urls: this.jsonString,
               isShare: this.isShare,
               endTimeString: this.pickerDate,
+              edition: 'baseEdition'
+            }
+          } else {
+            this.requestMetadata = {
+              drawRule: this.drawRule,
+              urls: this.jsonString,
+              isShare: this.isShare,
               participantsNum: this.peopleNum,
               edition: 'baseEdition'
             }
-          }).then(res => {
-            this.$navigateTo(`/pages/activitiesDetails/index?id=${res.data.id}`)
-            this.mediaData = []
-            if (this.showAttention) {
-              this.showAttention = !this.showAttention
-            }
-          })
+          }
+        },
+        createActivity () {
+          this.dataHandle()
+          if (this.activityId) {
+            CreatePersonalActivity.putActivity({
+              id: this.activityId,
+              request: {
+                description: this.prizeDescription,
+                endTime: this.prizeEndTime,
+                items: this.giftItems,
+                media: this.mediaData,
+                metadata: this.requestMetadata
+              }
+            }).then(res => {
+              console.log(res)
+            })
+          } else {
+            CreatePersonalActivity.createActivity({
+              sellerId: 'system',
+              owner: {id: this.userInfo.id, nickName: this.userInfo.nickName, avatar: this.userInfo.avatar},
+              type: 'PERSONAL_LUCKY_DRAW',
+              description: this.prizeDescription,
+              endTime: this.prizeEndTime,
+              items: this.giftItems,
+              media: this.mediaData,
+              metadata: this.requestMetadata
+            }).then(res => {
+              this.$navigateTo(`/pages/activitiesDetails/index?id=${res.data.id}`)
+            })
+          }
+          this.mediaData = []
+          this.clearData()
+          if (this.showAttention) {
+            this.showAttention = !this.showAttention
+          }
         },
         hideAttentionModal () {
           if (this.showAttention) {
@@ -312,10 +348,6 @@
           }
         },
         createButton () {
-          if (this.peopleNumInput === 'null') {
-            this.$showToast('请输入开奖人数!')
-            return
-          }
           if (this.itemName.length < this.giftList.length) {
             this.$showToast('请输入奖品名称!')
             return
@@ -325,6 +357,10 @@
             return
           }
           if (this.drawRule === 'fullParticipant') {
+            if (!this.peopleNum) {
+              this.$showToast('请输入开奖人数!')
+              return
+            }
             const openNum = parseInt(this.peopleNum)
             let giftTotalNum = 0
             this.itemNum.forEach(element => {
@@ -345,7 +381,6 @@
             append: 'BET_NUM'
           }).then(res => {
             if (res.code === 0) {
-              console.log(res.data)
               res.data.items.forEach(item => {
                 this.giftImgSrc.push(item.metadata.image)
                 this.itemName.push(item.name)
@@ -369,11 +404,6 @@
       onShow () {
         if (this.activityId) {
           this.getPersonalActivity(this.activityId)
-        } else {
-          this.giftImgSrc = ['https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg']
-          this.itemName = []
-          this.itemNum = []
-          this.peopleNum = ''
         }
         this.userInfo = this.$getStorageSync('userInfo')
         this.getNowDate()
