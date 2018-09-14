@@ -5,7 +5,7 @@
             <div v-for="(item,index) in giftList" :key="index">
                 <addGiftComp :addGiftPic="addGiftPic" :showCanvas="giftList[index]"
                 :giftImgSrc="giftImgSrc[index]" :index="index" :deleteGiftList="deleteGiftList"
-                :itemNameChange="itemNameChange" :itemNumChange="itemNumChange"
+                :inputText="inputText"
                 :itemName="itemName" :itemNum="itemNum" :getImage="getImage" />
             </div>
             <div class="addGift_div">
@@ -19,7 +19,7 @@
                     <span class="weui-cell__ft" style="font-size:12px;font-family:PingFangSC-Regular;font-weight:400;color:rgba(153,153,153,1);">{{prizeTextLength}}/100</span>
                 </div>
                 <div class="weui-cell weui-cell_access">
-                    <textarea class="weui-cell__bd" placeholder="请输入" maxlength="100" auto-height="true" :value="prizeExplainText" @input="prizeExplain"></textarea>
+                    <textarea class="weui-cell__bd" placeholder="请输入" maxlength="100" auto-height="true" data-name="prizeExplain" v-model="prizeExplainText" @input="inputText"></textarea>
                 </div>
             </div>
             <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
@@ -37,17 +37,21 @@
                     </div>
                 </div>
                 <div class="weui-cell weui-cell_access">
-                    <textarea class="weui-cell__bd" placeholder="请输入" :value="prizeDescription" maxlength="100" auto-height="true" @input="giftExplain"></textarea>
+                    <textarea class="weui-cell__bd" placeholder="请输入" v-model="prizeDescription" maxlength="100" auto-height="true" data-name="giftExplain" @input="inputText"></textarea>
                 </div>
             </div>
             <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
                 <div class="weui-cell weui-cell_access border-middle">
                     <div class="weui-cell__bd">开奖方式</div>
                     <div class="weui-cell__ft">
-                      <radio-group class="radio-group" @change="radioChange">
-                          <radio style="transform:scale(0.9);position:relative;left:5px;bottom:2px" value="timed" color="red" :checked="radioCheck"/>到时间
-                          <radio style="transform:scale(0.9);position:relative;left:5px;bottom:2px" value="fullParticipant" :checked="!radioCheck" color="red" />满人数
-                      </radio-group>
+                      <div class="radioDiv div-marginR" @tap="openTypeChange">
+                        <img class="radioIcon" :src="radioCheck ? '/static/img/radio1.png' : '/static/img/radio2.png'" />
+                        <span class="radioText">到时间</span>
+                      </div>
+                      <div class="radioDiv" @tap="openTypeChange">
+                        <img class="radioIcon" :src="!radioCheck ? '/static/img/radio1.png' : '/static/img/radio2.png'" />
+                        <span class="radioText">满人数</span>
+                      </div>
                     </div>
                 </div>
                 <div v-if="drawRule === 'timed'" class="weui-cell weui-cell_access">
@@ -59,7 +63,7 @@
                 </div>
                 <div v-if="drawRule === 'fullParticipant'" class="weui-cell weui-cell_access">
                     <div class="weui-cell__bd">开奖人数 <span style="color: red">*</span></div>
-                    <input type="number" placeholder="数量" :value="peopleNum" @input="fullParticipantNum" class="weui-cell__ft" style="color:black;display: inline;vertical-align: middle;" />
+                    <input type="number" placeholder="数量" v-model="peopleNum" class="weui-cell__ft" style="color:black;display: inline;vertical-align: middle;" />
                     <span class="weui-cell__ft" style="margin-left:5px;vertical-align: middle;">人</span>
                 </div>
             </div>
@@ -140,6 +144,22 @@
         allowedShare
       },
       methods: {
+        inputText (e) {
+          if (e.mp.currentTarget.dataset.name === 'prizeExplain') {
+            this.prizeTextLength = e.mp.detail.value.length
+          }
+          if (e.mp.currentTarget.dataset.name === 'giftExplain') {
+            this.giftTextLength = e.mp.detail.value.length
+          }
+          if (e.mp.currentTarget.dataset.name === 'itemName') {
+            const itemNameIndex = e.mp.currentTarget.dataset.index
+            this.giftItems[itemNameIndex].name = e.mp.detail.value
+          }
+          if (e.mp.currentTarget.dataset.name === 'itemNum') {
+            const itemNumIndex = e.mp.currentTarget.dataset.index
+            this.giftItems[itemNumIndex].metadata.num = e.mp.detail.value
+          }
+        },
         addGift () {
           let gl = this.giftList
           gl.push(true)
@@ -154,16 +174,6 @@
             this.picIndex = index
             this.picIndexSrc = picIndexSrc
           })
-        },
-        itemNameChange (e) {
-          const itemNameIndex = e.mp.currentTarget.dataset.index
-          this.itemName[itemNameIndex] = e.mp.detail.value
-          this.giftItems[itemNameIndex].name = e.mp.detail.value
-        },
-        itemNumChange (e) {
-          const itemNumIndex = e.mp.currentTarget.dataset.index
-          this.itemNum[itemNumIndex] = e.mp.detail.value
-          this.giftItems[itemNumIndex].metadata.num = e.mp.detail.value
         },
         deleteGiftList (index) {
           this.giftList.splice(index, 1)
@@ -188,14 +198,6 @@
           this.giftImgSrc[index] = src
           this.giftItems[index].metadata.image = src
         },
-        prizeExplain (e) {
-          this.prizeTextLength = e.mp.detail.value.length
-          this.prizeExplainText = e.mp.detail.value
-        },
-        giftExplain (e) {
-          this.giftTextLength = e.mp.detail.value.length
-          this.prizeDescription = e.mp.detail.value
-        },
         addPicture () {
           this.$chooseImage().then(res => {
             return this.pictureInService(res.tempFilePaths[0])
@@ -209,8 +211,12 @@
         deleteGiftPic (index) {
           this.giftPictures.splice(index, 1)
         },
-        radioChange (e) {
-          this.drawRule = e.mp.detail.value
+        openTypeChange () {
+          if (this.drawRule === 'timed') {
+            this.drawRule = 'fullParticipant'
+          } else {
+            this.drawRule = 'timed'
+          }
           this.radioCheck = !this.radioCheck
         },
         check (str) {
@@ -311,9 +317,6 @@
             this.dateList[0].push(this.check(endYear) + '/' + this.check(endMonth) + '/' + this.check(endDay))
           }
           this.dateTime = this.pickerDate + ':00'
-        },
-        fullParticipantNum (e) {
-          this.peopleNum = e.mp.detail.value
         },
         MultiPickerChange (e) {
           if (e.mp.detail.value[0] === 0) {

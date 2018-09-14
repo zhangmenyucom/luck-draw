@@ -6,7 +6,7 @@
                 <addGiftComp
                 :showCanvas="giftList[index]" :giftImgSrc="giftImgSrc[index]"
                 :index="index" :deleteGiftList="deleteGiftList"
-                :itemNameChange="itemNameChange" :itemNumChange="itemNumChange"
+                :inputText="inputText"
                 :itemName="itemName" :itemNum="itemNum"
                 :getImage="getImage" />
             </div>
@@ -14,10 +14,14 @@
                 <div class="weui-cell weui-cell_access border-middle">
                     <div class="weui-cell__bd">开奖方式</div>
                     <div class="weui-cell__ft">
-                      <radio-group class="radio-group" @change="radioChange">
-                          <radio style="transform:scale(0.9);position:relative;left:5px;bottom:2px" value="timed" color="red" :checked="radioCheck"/>到时间
-                          <radio style="transform:scale(0.9);position:relative;left:5px;bottom:2px" value="fullParticipant" :checked="!radioCheck" color="red" />满人数
-                      </radio-group>
+                      <div class="radioDiv div-marginR" @tap="openTypeChange">
+                        <img class="radioIcon" :src="radioCheck ? '/static/img/radio1.png' : '/static/img/radio2.png'" />
+                        <span class="radioText">到时间</span>
+                      </div>
+                      <div class="radioDiv" @tap="openTypeChange">
+                        <img class="radioIcon" :src="!radioCheck ? '/static/img/radio1.png' : '/static/img/radio2.png'" />
+                        <span class="radioText">满人数</span>
+                      </div>
                     </div>
                 </div>
                 <div v-if="drawRule === 'timed'" class="weui-cell weui-cell_access">
@@ -29,7 +33,7 @@
                 </div>
                 <div v-if="drawRule === 'fullParticipant'" class="weui-cell weui-cell_access">
                     <div class="weui-cell__bd"><div>开奖人数<span style="color: red">*</span></div></div>
-                    <input id="fullPeopleNum" type="number" :value="peopleNum" placeholder="数量" @input="fullParticipantNum" class="weui-cell__ft" style="color:black;display: inline;vertical-align: middle;" />
+                    <input id="fullPeopleNum" type="number" v-model="peopleNum" placeholder="数量" class="weui-cell__ft" style="color:black;display: inline;vertical-align: middle;" />
                     <span class="weui-cell__ft" style="margin-left:5px;vertical-align: middle;">人</span>
                 </div>
             </div>
@@ -101,6 +105,22 @@
         createAttention
       },
       methods: {
+        inputText (e) {
+          if (e.mp.currentTarget.dataset.name === 'prizeExplain') {
+            this.prizeTextLength = e.mp.detail.value.length
+          }
+          if (e.mp.currentTarget.dataset.name === 'giftExplain') {
+            this.giftTextLength = e.mp.detail.value.length
+          }
+          if (e.mp.currentTarget.dataset.name === 'itemName') {
+            const itemNameIndex = e.mp.currentTarget.dataset.index
+            this.giftItems[itemNameIndex].name = e.mp.detail.value
+          }
+          if (e.mp.currentTarget.dataset.name === 'itemNum') {
+            const itemNumIndex = e.mp.currentTarget.dataset.index
+            this.giftItems[itemNumIndex].metadata.num = e.mp.detail.value
+          }
+        },
         getImage (index, picIndexSrc) {
           this.$chooseImage().then(res => {
             this.imageSrc = res.tempFilePaths[0]
@@ -108,16 +128,6 @@
             this.picIndex = index
             this.picIndexSrc = picIndexSrc
           })
-        },
-        itemNameChange (e) {
-          const itemNameIndex = e.mp.currentTarget.dataset.index
-          this.itemName[itemNameIndex] = e.mp.detail.value
-          this.giftItems[itemNameIndex].name = e.mp.detail.value
-        },
-        itemNumChange (e) {
-          const itemNumIndex = e.mp.currentTarget.dataset.index
-          this.itemNum[itemNumIndex] = e.mp.detail.value
-          this.giftItems[itemNumIndex].metadata.num = e.mp.detail.value
         },
         showImage (src, index) {
           this.addPic = !this.addPic
@@ -127,8 +137,12 @@
           this.giftImgSrc[index] = src
           this.giftItems[index].metadata.image = src
         },
-        radioChange (e) {
-          this.drawRule = e.mp.detail.value
+        openTypeChange () {
+          if (this.drawRule === 'timed') {
+            this.drawRule = 'fullParticipant'
+          } else {
+            this.drawRule = 'timed'
+          }
           this.radioCheck = !this.radioCheck
         },
         check (str) {
@@ -229,10 +243,6 @@
             this.dateList[0].push(this.check(endYear) + '/' + this.check(endMonth) + '/' + this.check(endDay))
           }
           this.dateTime = this.pickerDate + ':00'
-        },
-        fullParticipantNum (e) {
-          this.peopleNum = e.mp.detail.value
-          this.peopleNumInput = e.mp.detail.value
         },
         MultiPickerChange (e) {
           if (e.mp.detail.value[0] === 0) {
