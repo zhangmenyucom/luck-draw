@@ -8,6 +8,9 @@ class CreatePersonalActivity extends ServiceBase {
   getAcitivity (data) {
     return request.get(`${this.url}?type=${data}`)
   }
+  putActivity (data) {
+    return request.put(`/mc/v1/activities/${data.id}`, data.request)
+  }
 }
 
 export default new CreatePersonalActivity('/mc/v1/me/activities')

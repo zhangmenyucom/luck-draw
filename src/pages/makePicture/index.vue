@@ -37,44 +37,44 @@ export default {
     },
     getPicture (data) {
       let creat = {
-          sn: '1008',
-          relativeSn: '',
-          xelementLayoutType: 'CENTER',
-          yelementLayoutType: 'ABSOLUTELY',
-          elementContent: '发起了一个抽奖活动',
-          elementMediaType: 'TEXT',
-          y: 250,
-          font: {
-            name: '黑体',
-            elementFontStyle: 0,
-            fontSize: 38
-          },
-          color: {
-            r: 102,
-            g: 102,
-            b: 102
-          }
+        sn: '1008',
+        relativeSn: '',
+        xelementLayoutType: 'CENTER',
+        yelementLayoutType: 'ABSOLUTELY',
+        elementContent: '发起了一个抽奖活动',
+        elementMediaType: 'TEXT',
+        y: 250,
+        font: {
+          name: '黑体',
+          elementFontStyle: 0,
+          fontSize: 38
+        },
+        color: {
+          r: 102,
+          g: 102,
+          b: 102
         }
-        let creatRule = {
-          sn: '1009',
-          relativeSn: '',
-          xelementLayoutType: 'CENTER',
-          yelementLayoutType: 'ABSOLUTELY',
-          elementContent: '',
-          elementMediaType: 'TEXT',
-          y: 680,
-          font: {
-            name: '黑体',
-            elementFontStyle: 0,
-            fontSize: 26
-          },
-          color: {
-            r: 102,
-            g: 102,
-            b: 102,
-            a: 1
-          }
+      }
+      let creatRule = {
+        sn: '1009',
+        relativeSn: '',
+        xelementLayoutType: 'CENTER',
+        yelementLayoutType: 'ABSOLUTELY',
+        elementContent: '',
+        elementMediaType: 'TEXT',
+        y: 680,
+        font: {
+          name: '黑体',
+          elementFontStyle: 0,
+          fontSize: 26
+        },
+        color: {
+          r: 102,
+          g: 102,
+          b: 102,
+          a: 1
         }
+      }
       let items = [
         {
           sn: '1001',
@@ -223,7 +223,7 @@ export default {
             height: 275,
             width: 550
           }
-        let secondPrizeName = {
+          let secondPrizeName = {
             sn: '1011',
             relativeSn: '',
             xelementLayoutType: 'CENTER',

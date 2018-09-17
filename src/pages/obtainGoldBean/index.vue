@@ -37,7 +37,7 @@
             绑定手机号
           </span>
           <br />
-          {{rule.mobile}} <img src="/static/img/goldBean.png" alt=""> <text>/&nbsp;次</text> &nbsp;&nbsp;
+          {{rule.mobile}} <img src="/static/img/goldBean.png" alt=""> &nbsp;&nbsp;
         </div>
         <div class="right" @click="bindPhone" style="padding:10px 0 10px 0">
           <button v-if="!userInfo.contactNumber" href="/pages/mobile/index" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">
@@ -58,7 +58,7 @@
             完善资料
           </span>
           <br />
-          {{rule.total}} <img src="/static/img/goldBean.png" alt=""><text>/&nbsp;次</text> &nbsp;&nbsp;
+          {{rule.total}} <img src="/static/img/goldBean.png" alt=""> &nbsp;&nbsp;
         </div>
         <div class="right" tyle="padding:10px 0 10px 0">
           <a v-if="!(userInfo.contactNumber && userInfo.location && userInfo.birthday)" href="/pages/editInfo/index" @click="complete">

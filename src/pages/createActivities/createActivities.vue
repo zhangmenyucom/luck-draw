@@ -5,7 +5,7 @@
             <div v-for="(item,index) in giftList" :key="index">
                 <addGiftComp :addGiftPic="addGiftPic" :showCanvas="giftList[index]"
                 :giftImgSrc="giftImgSrc[index]" :index="index" :deleteGiftList="deleteGiftList"
-                :itemNameChange="itemNameChange" :itemNumChange="itemNumChange"
+                :inputText="inputText"
                 :itemName="itemName" :itemNum="itemNum" :getImage="getImage" />
             </div>
             <div class="addGift_div">
@@ -19,7 +19,7 @@
                     <span class="weui-cell__ft" style="font-size:12px;font-family:PingFangSC-Regular;font-weight:400;color:rgba(153,153,153,1);">{{prizeTextLength}}/100</span>
                 </div>
                 <div class="weui-cell weui-cell_access">
-                    <textarea class="weui-cell__bd" placeholder="请输入" maxlength="100" auto-height="true" :value="prizeExplainText" @input="prizeExplain"></textarea>
+                    <textarea class="weui-cell__bd" placeholder="请输入" maxlength="100" auto-height="true" data-name="prizeExplain" v-model="prizeExplainText" @input="inputText"></textarea>
                 </div>
             </div>
             <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
@@ -29,7 +29,7 @@
                 </div>
                 <div class="turnLine">
                     <img src="../../../static/img/addPrizePic.png" class="addPicture" @click="addPicture" />
-                    <div v-if="showGiftPictures" v-for="(item, index) in giftPictures" :key="index" class="showPicDiv">
+                    <div v-for="(item, index) in giftPictures" :key="index" class="showPicDiv">
                       <img :src="item" style="width:110px;height:55px;vertical-align:top;">
                       <div class="deleteIconDiv" @click="deleteGiftPic(index)">
                         <img src="../../../static/img/delete.png" class="deleteIcon" />
@@ -37,17 +37,21 @@
                     </div>
                 </div>
                 <div class="weui-cell weui-cell_access">
-                    <textarea class="weui-cell__bd" placeholder="请输入" :value="prizeDescription" maxlength="100" auto-height="true" @input="giftExplain"></textarea>
+                    <textarea class="weui-cell__bd" placeholder="请输入" v-model="prizeDescription" maxlength="100" auto-height="true" data-name="giftExplain" @input="inputText"></textarea>
                 </div>
             </div>
             <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
                 <div class="weui-cell weui-cell_access border-middle">
                     <div class="weui-cell__bd">开奖方式</div>
                     <div class="weui-cell__ft">
-                      <radio-group class="radio-group" @change="radioChange">
-                          <radio style="transform:scale(0.8);position:relative;left:5px;bottom:2px" value="timed" color="red" :checked="radioCheck"/>到时间
-                          <radio style="transform:scale(0.8);position:relative;left:5px;bottom:2px" value="fullParticipant" :checked="!radioCheck" color="red" />满人数
-                      </radio-group>
+                      <div class="radioDiv div-marginR" @tap="openTypeChange">
+                        <img class="radioIcon" :src="radioCheck ? '/static/img/radio1.png' : '/static/img/radio2.png'" />
+                        <span class="radioText">到时间</span>
+                      </div>
+                      <div class="radioDiv" @tap="openTypeChange">
+                        <img class="radioIcon" :src="!radioCheck ? '/static/img/radio1.png' : '/static/img/radio2.png'" />
+                        <span class="radioText">满人数</span>
+                      </div>
                     </div>
                 </div>
                 <div v-if="drawRule === 'timed'" class="weui-cell weui-cell_access">
@@ -59,14 +63,14 @@
                 </div>
                 <div v-if="drawRule === 'fullParticipant'" class="weui-cell weui-cell_access">
                     <div class="weui-cell__bd">开奖人数 <span style="color: red">*</span></div>
-                    <input type="number" placeholder="数量" :value="peopleNum" @input="fullParticipantNum" class="weui-cell__ft" style="color:black;display: inline;vertical-align: middle;" />
+                    <input type="number" placeholder="数量" v-model="peopleNum" class="weui-cell__ft" style="color:black;display: inline;vertical-align: middle;" />
                     <span class="weui-cell__ft" style="margin-left:5px;vertical-align: middle;">人</span>
                 </div>
             </div>
             <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
                 <div class="weui-cell weui-cell_access" style="padding:5px 0">
                     <div class="weui-cell__bd">允许参与者分享</div>
-                    <switch class="weui-cell__ft" @change="switchChange" :checked="isShare" style="transform:scale(0.8);position:relative;left:10px" />
+                    <switch class="weui-cell__ft" @change="switchChange" :checked="isShare" style="transform:scale(0.9);position:relative;left:10px" />
                 </div>
             </div>
             <div class="uperAddActivity" @click="navToUper"><span>使用基本版&nbsp;></span></div>
@@ -140,11 +144,27 @@
         allowedShare
       },
       methods: {
+        inputText (e) {
+          if (e.mp.currentTarget.dataset.name === 'prizeExplain') {
+            this.prizeTextLength = e.mp.detail.value.length
+          }
+          if (e.mp.currentTarget.dataset.name === 'giftExplain') {
+            this.giftTextLength = e.mp.detail.value.length
+          }
+          if (e.mp.currentTarget.dataset.name === 'itemName') {
+            const itemNameIndex = e.mp.currentTarget.dataset.index
+            this.giftItems[itemNameIndex].name = e.mp.detail.value
+          }
+          if (e.mp.currentTarget.dataset.name === 'itemNum') {
+            const itemNumIndex = e.mp.currentTarget.dataset.index
+            this.giftItems[itemNumIndex].metadata.num = e.mp.detail.value
+          }
+        },
         addGift () {
           let gl = this.giftList
           gl.push(true)
           this.giftList = gl
-          this.giftItems.push({id: 'system', name: '', metadata: {url: '', num: 0}})
+          this.giftItems.push({id: 'system', name: '', metadata: {image: 'https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg', num: 0}})
           this.giftImgSrc.push('https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg')
         },
         getImage (index, picIndexSrc) {
@@ -154,16 +174,6 @@
             this.picIndex = index
             this.picIndexSrc = picIndexSrc
           })
-        },
-        itemNameChange (e) {
-          const itemNameIndex = e.mp.currentTarget.dataset.index
-          this.itemName[itemNameIndex] = e.mp.detail.value
-          this.giftItems[itemNameIndex].name = e.mp.detail.value
-        },
-        itemNumChange (e) {
-          const itemNumIndex = e.mp.currentTarget.dataset.index
-          this.itemNum[itemNumIndex] = e.mp.detail.value
-          this.giftItems[itemNumIndex].metadata.num = e.mp.detail.value
         },
         deleteGiftList (index) {
           this.giftList.splice(index, 1)
@@ -188,25 +198,26 @@
           this.giftImgSrc[index] = src
           this.giftItems[index].metadata.image = src
         },
-        prizeExplain (e) {
-          this.prizeTextLength = e.mp.detail.value.length
-          this.prizeExplainText = e.mp.detail.value
-        },
-        giftExplain (e) {
-          this.giftTextLength = e.mp.detail.value.length
-          this.prizeDescription = e.mp.detail.value
-        },
         addPicture () {
           this.$chooseImage().then(res => {
-            this.giftPictures.push(res.tempFilePaths[0])
-            this.showGiftPictures = true
+            return this.pictureInService(res.tempFilePaths[0])
+          })
+        },
+        pictureInService (filePath) {
+          this.$uploadFile(filePath).then(res => {
+            this.giftPictures.push(res.data.url)
           })
         },
         deleteGiftPic (index) {
           this.giftPictures.splice(index, 1)
         },
-        radioChange (e) {
-          this.drawRule = e.mp.detail.value
+        openTypeChange () {
+          if (this.drawRule === 'timed') {
+            this.drawRule = 'fullParticipant'
+          } else {
+            this.drawRule = 'timed'
+          }
+          this.radioCheck = !this.radioCheck
         },
         check (str) {
           str = str.toString()
@@ -307,9 +318,6 @@
           }
           this.dateTime = this.pickerDate + ':00'
         },
-        fullParticipantNum (e) {
-          this.peopleNum = e.mp.detail.value
-        },
         MultiPickerChange (e) {
           if (e.mp.detail.value[0] === 0) {
             if (e.mp.detail.value[1] < this.initIndexMulPicker[1]) {
@@ -335,7 +343,8 @@
           this.share = !this.share
         },
         navToUper () {
-          this.$switchTab('/pages/baseCreateActivity/createActivities')
+          this.$navigateTo('/pages/baseCreateActivity/createActivities')
+          this.clearData()
         },
         dataHandle () {
           this.prizeEndTime = new Date(this.dateTime).getTime() + 3000
@@ -355,36 +364,74 @@
             jsonArr.push({'picUrl': this.giftPictures[i]})
           }
           this.jsonString = JSON.stringify(jsonArr)
-        },
-        createActivity () {
-          this.dataHandle()
-          if (this.giftItems[0].metadata.url === '') {
+          if (this.giftItems[0].metadata.image === '') {
             this.giftItems[0].metadata.image = this.giftImgSrc[0]
           }
-          CreatePersonalActivity.createActivity({
-            sellerId: 'system',
-            owner: {id: this.userInfo.id, nickName: this.userInfo.nickName, avatar: this.userInfo.avatar},
-            type: 'PERSONAL_LUCKY_DRAW',
-            description: this.prizeDescription,
-            endTime: this.prizeEndTime,
-            items: this.giftItems,
-            media: this.mediaData,
-            metadata: {
+          if (this.drawRule === 'timed') {
+            this.requestMetadata = {
               drawRule: this.drawRule,
               urls: this.jsonString,
               isShare: this.isShare,
-              prizeExplainText: this.prizeExplainText,
               endTimeString: this.pickerDate,
+              edition: 'baseEdition'
+            }
+          } else {
+            this.requestMetadata = {
+              drawRule: this.drawRule,
+              urls: this.jsonString,
+              isShare: this.isShare,
               participantsNum: this.peopleNum,
-              edition: 'uperEdition'
+              edition: 'baseEdition'
             }
-          }).then(res => {
-            this.$navigateTo(`/pages/activitiesDetails/index?id=${res.data.id}`)
-            this.mediaData = []
-            if (this.showAttention) {
-              this.showAttention = !this.showAttention
-            }
-          })
+          }
+        },
+        createActivity () {
+          this.dataHandle()
+          if (this.activityId) {
+            CreatePersonalActivity.putActivity({
+              id: this.activityId,
+              request: {
+                description: this.prizeDescription,
+                endTime: this.prizeEndTime,
+                items: this.giftItems,
+                media: this.mediaData,
+                metadata: this.requestMetadata
+              }
+            }).then(res => {
+              console.log(res)
+            })
+          } else {
+            CreatePersonalActivity.createActivity({
+              sellerId: 'system',
+              owner: {id: this.userInfo.id, nickName: this.userInfo.nickName, avatar: this.userInfo.avatar},
+              type: 'PERSONAL_LUCKY_DRAW',
+              description: this.prizeDescription,
+              endTime: this.prizeEndTime,
+              items: this.giftItems,
+              media: this.mediaData,
+              metadata: this.requestMetadata
+            }).then(res => {
+              this.$navigateTo(`/pages/activitiesDetails/index?id=${res.data.id}`)
+            })
+          }
+          this.mediaData = []
+          this.clearData()
+          if (this.showAttention) {
+            this.showAttention = !this.showAttention
+          }
+        },
+        clearData () {
+          this.giftPictures = []
+          this.giftImgSrc = ['https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg']
+          this.itemName = []
+          this.itemNum = []
+          this.prizeDescription = ''
+          this.peopleNum = ''
+          this.radioCheck = true
+          this.prizeExplainText = ''
+          this.isShare = false
+          this.drawRule = 'timed'
+          this.giftList = [true]
         },
         hideAttentionModal () {
           if (this.showAttention) {
@@ -392,10 +439,6 @@
           }
         },
         createButton () {
-          if (this.peopleNumInput === 'null') {
-            this.$showToast('请输入开奖人数!')
-            return
-          }
           if (this.itemName.length < this.giftList.length) {
             this.$showToast('请输入奖品名称!')
             return
@@ -405,6 +448,10 @@
             return
           }
           if (this.drawRule === 'fullParticipant') {
+            if (!this.peopleNum) {
+              this.$showToast('请输入开奖人数!')
+              return
+            }
             const openNum = parseInt(this.peopleNum)
             let giftTotalNum = 0
             this.itemNum.forEach(element => {
@@ -425,7 +472,7 @@
             append: 'BET_NUM'
           }).then(res => {
             if (res.code === 0) {
-              console.log(res.data)
+              this.giftImgSrc = []
               res.data.items.forEach(item => {
                 this.giftImgSrc.push(item.metadata.image)
                 this.itemName.push(item.name)
@@ -438,7 +485,6 @@
               res.data.metadata.urls.forEach(element => {
                 this.giftPictures.push(element.url)
               })
-    
               this.drawRule = res.data.metadata.drawRule
               this.isShare = res.data.metadata.isShare
               this.prizeDescription = res.data.description
@@ -460,13 +506,6 @@
       onShow () {
         if (this.activityId) {
           this.getPersonalActivity(this.activityId)
-        } else {
-          this.giftPictures = []
-          this.giftImgSrc = ['https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg']
-          this.itemName = []
-          this.itemNum = []
-          this.prizeDescription = ''
-          this.peopleNum = ''
         }
         this.userInfo = this.$getStorageSync('userInfo')
         this.getNowDate()

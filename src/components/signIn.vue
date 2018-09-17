@@ -1,19 +1,18 @@
 <template>
- <div :class ="{model:true, showModel : isModel}">
-  <div :class="{signIn:true, showModel : isModel}" >
-    <img :class="{ transform: isModel }" src="/static/img/light.png" />
-    <div class="sign">
-      <img src="/static/img/signIn.png" />
-      <div class="goldBean">
-        <img src="/static/img/goldBean.png" />
+  <div class="model" v-if='isModel'>
+    <div class="signIn">
+      <div class="cen">
+        <div class="title">
+          — 签到 —
+        </div>
+        <img src="https://oss.qianbaocard.org/20180914/768b41f939f24ea5af400df8beb04a02.png">
+        <div class='explain'>
+          签到第2天
+        </div>
+        <button @tap.stop="bindgetuserinfo" type="">签到</button>
       </div>
-      <button class="signButton" open-type='getUserInfo' @getuserinfo="bindgetuserinfo">
-        签到领金豆
-      </button>
     </div>
   </div>
-</div>
-
 </template>
 
 <script>
@@ -92,149 +91,54 @@
 
 <style scoped>
   @import '../common/less/util.less';
-
-  @keyframes myfirst {
-   from {
-     transform: rotate(0deg);
-     -webkit-transform: rotate(0deg);
-     /* Safari and Chrome */
-   }
-   to {
-     transform: rotate(180deg);
-     -webkit-transform: rotate(180deg);
-     /* Safari and Chrome */
-   }
- }
-
- .showModel {
-   transform: scale3d(1, 1, 1)!important;
-   opacity: 1!important;
-   pointer-events:auto!important;
- }
- .model {
-   pointer-events:none;
-   position: fixed;
-   top: 0;
-   left: 0;
-   bottom: 0;
-   right: 0;
-   background: RGBA(0, 0, 0, 0.6);
-   opacity:0;
-   transition: opacity 2s;
-   z-index: 101;
-   .welfare {
-     top: 150*@1;
-     width: 280*@2;
-     height: 345*@2;
-     margin: auto;
-     position: relative;
-     >img {
-       width: 100%;
-       height: 100%;
-     }
-     >div {
-       position: absolute;
-       bottom: 0;
-       width: 100%;
-       >div {
-         text-align: center;
-         position: relative;
-         >div {
-           width: 100%;
-           font-size: 30*@2;
-           font-weight: bold;
-           font-family: helvetica;
-           text-align: center;
-           background: -webkit-linear-gradient(top, RGBA(255, 236, 164, 1), RGBA(252, 241, 85, 1));
-           /* 背景色渐变 */
-           -webkit-background-clip: text;
-           /* 规定背景的划分区域 */
-           color: transparent;
-           position: absolute;
-         }
-         >span {
-           font-size: 30*@2;
-           text-shadow: 0 1*@1 2*@2 RGBA(0, 0, 0, 0.2);
-         }
-       }
-       >span {
-         color: RGBA(252, 239, 128, 1);
-         font-size: 32*@1;
-         line-height: 45*@1;
-         text-align: center;
-         display: inline-block;
-         width: 100%;
-         margin: 44*@1 auto 41*@1;
-       }
-       button {
-         background: RGBA(243, 185, 19, 1);
-         height: 80*@1;
-         width: 402*@1;
-         color: #fff;
-         font-size: 32*@1;
-         box-shadow: 10*@1 2*@1 20*@1 RGBA(206, 35, 10, 0.6);
-         margin-bottom: 56*@1;
-       }
-     }
-   }
-   .signIn {
-     transform: scale3d(0, 0, 0);
-     transition: transform 1s;
-     width: 319*@2;
-     height: 319*@2;
-     position: absolute;
-     top: 0;
-     bottom: 0;
-     left: 0;
-     right: 0;
-     margin: auto;
-     >img {
-       position: absolute;
-       width: 100%;
-       height: 100%;
-       animation-delay:1s;
-       animation: myfirst 1.5s;
-       -webkit-animation: myfirst 1.5s;
-       animation-iteration-count:infinite;
-       -webkit-animation-iteration-count:infinite; /*Safari and
-       Chrome*/
-       animation-timing-function:linear;
-       -webkit-animation-timing-function:linear; /* Safari and Chrome */
-       /* Safari 与 Chrome */
-     }
-     >.sign {
-       width: 160*@2;
-       height: 120*@2;
-       position: relative;
-       top: 100*@2;
-       margin: auto;
-       img {
-         width: 100%;
-         height: 100%;
-       }
-       .signButton {
-         width: 132*@2;
-         height: 40*@2;
-         background: -webkit-linear-gradient(top, #FF484E, #FF2D34);
-         color: #fff;
-         font-size: 16*@2;
-         margin-top: 10*@2;
-         box-shadow: 2*22 4*@2 #B3191E;
-         transition: width 2s;
-         -webkit-transition: width 2s;
-         /* Safari */
-       }
-       .goldBean {
-         height: 80*@1;
-         width: 79*@1;
-         position: absolute;
-         top: 0;
-         bottom: 0;
-         left: 0;
-         right: 0;
-         margin: auto;
-       }
-     }
-   }
- }
+  .model{
+    position: fixed;
+    top:0;
+    left:0;
+    bottom: 0;
+    right:0;
+    background: RGBA(0, 0, 0, 0.6);
+    z-index: 199999;
+  }
+  .signIn{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 260*@2;
+    transform:translate(-50%, -50%);
+    box-sizing: border-box;
+    border-width: 76*@2 10*@2 10*@2;
+    border-style: solid;
+    border-color: transparent;
+    -webkit-border-image:url(https://oss.qianbaocard.org/20180914/7b0e9c5fc57f482c97d47c34c541b03c.png) 152 20 20 stretch;
+  }
+  .cen{
+    margin: -52*@2 0 0;
+    text-align: center;
+    .title{
+      font-size: 18*@2;
+    }
+    >img{
+      width: 108*@2;
+      height: 106*@2;
+      margin-top: 35*@2;
+    }
+    .explain{
+      color: RGBA(240, 145, 66, 1);
+      font-size: 18*@2;
+      margin-top: 35*@2;
+    }
+    button {
+      margin-top: 20*@2;
+      margin-bottom: 10*@2;
+      width: 180*@2;
+      height: 40*@2;
+      line-height: 40*@2;
+      font-size: 16*@2;
+      font-family:PingFangSC-Regular;
+      background: RGBA(243, 185, 19, 1);
+      color: RGBA(255, 255, 255, 1);
+      border-radius: 2*@2;
+    }
+  }
 </style>
