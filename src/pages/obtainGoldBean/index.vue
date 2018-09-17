@@ -122,6 +122,7 @@
   } from '@/utils'
   import DailyFootprintsService from '@/services/dailyFootprintsService'
   import ScoreRulesService from '@/services/scoreRulesService'
+  import BindPhoneService from '@/services/bindPhoneService'
   import share from '@/common/js/share.js'
   import getMeScores from '@/common/js/getMeScores.js'
   import MeScoresService from '@/services/meScoresService.js'
@@ -159,6 +160,12 @@
       },
       getPhoneNumber (e) {
         console.log(e.mp.detail)
+        return BindPhoneService.post({
+          encryptedData: e.mp.detail.encryptedData,
+          iv: e.mp.detail.iv
+        }).then(res => {
+          console.log(res)
+        })
       },
       getScoreRules () {
         ScoreRulesService.getList().then(res => {
