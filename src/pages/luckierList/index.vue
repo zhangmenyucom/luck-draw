@@ -3,7 +3,7 @@
         <top title='中奖者'/>
         <div class="head">
             <div class="IconDiv">
-                <img class="activityPic" :src="activity.items[0].metadata.url"/>
+                <img class="activityPic" :src="activity.items[0].metadata.image"/>
                 <div class="joinNum">参与人数<span style="color:#FDB700;">{{activity.realNum}}</span>人</div>
             </div>
             <div class="activityInfo">
@@ -59,7 +59,7 @@ export default {
         user: {},
         metadata: {rewards: [{metadata: {num: 0}}]}
       }],
-      activity: {realNum: 0, media: [ 'url' ]},
+      activity: {realNum: 0, media: [ 'url' ], items: [{metadata: {image: ''}}]},
       getAddressNum: 0,
       copyData: '',
       emailId: '',

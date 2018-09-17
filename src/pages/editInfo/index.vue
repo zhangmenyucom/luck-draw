@@ -46,9 +46,9 @@
 </a>
 <a v-else href="/pages/mobile/index" class="bd">
   <div class="list_l">手机号 <span>+{{rule.mobile}} <img src='/static/img/goldBean.png'></span></div>
-  <div class="list_r"> 去绑定
+  <button class="list_r"> 去绑定
     <i class="arrow icon iconfont icon-huise"></i>
-  </div>
+  </button>
 </a>
 <li v-if="userInfo.location" class="bd" >
   <div class="list_l">地址</div>

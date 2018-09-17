@@ -319,10 +319,14 @@
         mta.Event.stat('share', {
           'method': '抽奖详情页分享'
         })
+        console.log(this.activitie)
+        if (this.activitie.owner.id !== this.$getStorageSync('userInfo').id) {
+          if (this.activitie.metadata.isShare === 'false') {
+            this.$showToast('该活动不允许参与者分享！')
+            return
+          }
+        }
         this.display = !this.display
-        mta.Event.stat('share', {
-          'method': '抽奖详情页分享'
-        })
       },
       getBean () {
         this.$setStorageSync('getBeanMethod', '抽奖详情-赚金豆')

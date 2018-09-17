@@ -49,7 +49,6 @@ export default {
             participant.rule = participant.num === 0 ? participant.metadata.endTimeString + '开奖' : '满' + participant.num + '开奖'
             return participant
           })
-          console.log(participantList)
           this.participantList = participantList
         }
       })

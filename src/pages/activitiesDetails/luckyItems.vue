@@ -12,7 +12,7 @@
     <div class="list">
       <drawList :list="list" />
     </div>
-    <a :href="'/pages/drawList/index?id='+ activitie.id"  v-if="list.length > 3">
+    <a :href="'/pages/luckierList/index?id='+ activitie.id"  v-if="list.length > 3">
       查看更多<img src="/static/img/right.png" alt="">
     </a>
   </div>

@@ -69,13 +69,6 @@ module.exports = [{
     backgroundColor: '#fff'
   }
 }, {
-  path: 'pages/imgDownload/index',
-  config: {
-    navigationBarTitleText: '炫耀一下',
-    disableScroll: true,
-    backgroundColor: '#00000000'
-  }
-}, {
   path: 'pages/makePicture/index',
   config: {
     navigationBarTitleText: '生成分享图',

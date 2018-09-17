@@ -29,7 +29,6 @@ export default {
   },
   methods: {
     saveFile () {
-      console.log(1)
       this.$downloadFile(this.url).then(res => {
         this.$saveImageToPhotosAlbum(res.tempFilePath).then(res => {
           this.$showToast('已保存至相册')
@@ -200,7 +199,7 @@ export default {
         if (data.metadata.drawRule === 'timed') {
         const date = new Date(data.endTime)
         data.endTimeDay = `${date.getMonth() + 1}月${date.getUTCDate()}日`
-        data.endTimeHours = `${date.getUTCHours() + 1}:${date.getUTCMinutes()}分`
+        data.endTimeHours = `${date.getHours() + 1}:${date.getMinutes()}分`
         creatRule.elementContent = data.endTimeDay + data.endTimeHours + '开奖'
         } else if (data.metadata.drawRule === 'fullTicket') {
           creatRule.elementContent = '满' + data.metadata.ticketsNum + '金豆开奖'
@@ -212,7 +211,7 @@ export default {
           this.bgUrl = 'https://oss.qianbaocard.com/20180912/c45dced1f0564763a949c9067c209584.png'
           creatRule.y = 721
           items.push(creatRule)
-        } else if (data.items.length === 2) {
+        } else if (data.items.length >= 2) {
           let secondPrize = {
             sn: '1010',
             relativeSn: '',

@@ -40,9 +40,9 @@
           {{rule.mobile}} <img src="/static/img/goldBean.png" alt=""> <text>/&nbsp;次</text> &nbsp;&nbsp;
         </div>
         <div class="right" @click="bindPhone" style="padding:10px 0 10px 0">
-          <a v-if="!userInfo.contactNumber" href="/pages/mobile/index">
+          <button v-if="!userInfo.contactNumber" href="/pages/mobile/index" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">
             去绑定
-          </a>
+          </button>
           <div v-else class='complete'>
             已完成
           </div>
@@ -156,6 +156,9 @@
     methods: {
       fail (err) {
         console.log('err', err)
+      },
+      getPhoneNumber (e) {
+        console.log(e.mp.detail)
       },
       getScoreRules () {
         ScoreRulesService.getList().then(res => {
