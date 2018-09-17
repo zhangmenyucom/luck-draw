@@ -7,73 +7,79 @@
       <div class="activitiesDetails" >
         <swiper class='swiper' autoplay circular display-multiple-items>
           <swiper-item v-for="(item, i) in activitie.items" :key="i">
-            <img mode='aspectFit' :src="item.metadata.image">
-          </swiper-item>
-        </swiper>
-        <div class="name antialiased">
-          <div v-for="(item, i) in activitie.items">
-            <text>「奖品{{i+1}}」</text>{{item.name}}&nbsp;<span>X&nbsp;{{item.metadata.num}} {{state}}</span>
-          </div>
+          <img mode='aspectFit' :src="item.metadata.image">
+        </swiper-item>
+      </swiper>
+      <div class="name antialiased">
+        <div v-for="(item, i) in activitie.items">
+          <text>「奖品{{i+1}}」</text>{{item.name}}&nbsp;<span>X&nbsp;{{item.metadata.num}} {{state}}</span>
         </div>
-        <!-- 活动信息及状态 -->
-        <div class="activitieInfo">
-          <div v-if="activitie.metadata.drawRule == 'fullTicket'" class='state'>满<text>{{activitie.metadata.ticketsNum * activitie.metadata.price}}</text>金豆自动开奖，剩余<text>{{(activitie.metadata.ticketsNum-activitie.betNum)*activitie.metadata.price}}</text>金豆</div>
-          <div v-if="activitie.metadata.drawRule == 'fullParticipant'" class='state'>满<text>{{activitie.metadata.participantsNum}}</text>人开奖，剩余<text>{{activitie.metadata.participantsNum-activitie.betNum}}</text>人</div>
-          <div v-if="activitie.metadata.drawRule == 'timed'" class='state'>{{activitie.endTimeDay}}<text>{{activitie.endTimeHours}}</text>开奖</div>
-          <div v-if='activitie.metadata.price' class="info">
-            {{activitie.metadata.price}}<img src='/static/img/goldBean.png' class="" />参与
-          </div>
+      </div>
+      <!-- 活动信息及状态 -->
+      <div class="activitieInfo">
+        <div v-if="activitie.metadata.drawRule == 'fullTicket'" class='state'>满<text>{{activitie.metadata.ticketsNum * activitie.metadata.price}}</text>金豆自动开奖，剩余<text>{{(activitie.metadata.ticketsNum-activitie.betNum)*activitie.metadata.price}}</text>金豆</div>
+        <div v-if="activitie.metadata.drawRule == 'fullParticipant'" class='state'>满<text>{{activitie.metadata.participantsNum}}</text>人开奖，剩余<text>{{activitie.metadata.participantsNum-activitie.betNum}}</text>人</div>
+        <div v-if="activitie.metadata.drawRule == 'timed'" class='state'>{{activitie.endTimeDay}}<text>{{activitie.endTimeHours}}</text>开奖</div>
+        <div v-if='activitie.metadata.price' class="info">
+          {{activitie.metadata.price}}<img src='/static/img/goldBean.png' class="" />参与
         </div>
+      </div>
 
-        <div class="c">
-          <img src="https://oss.qianbaocard.org/20180914/7b0e9c5fc57f482c97d47c34c541b03c.png" />
-         </div>
-        <!-- 活动信息及状态end -->
+      <div class="c">
+        <img src="https://oss.qianbaocard.org/20180914/7b0e9c5fc57f482c97d47c34c541b03c.png" />
+      </div>
+      <!-- 活动信息及状态end -->
+      <!-- 编辑 -->
+      <div class="edit" v-if='participantTotal == 0 && activitie.owner.id == userInfo.id' >
+        <a :href="activitie.metadata.edition === 'baseEdition'?'/pages/baseCreateActivity/createActivities?id='+activitie.id:'/pages/createActivities/createActivities?id='+activitie.id">
+          编辑抽奖
+        </a>
+      </div>
+      <!-- 编辑结束 -->
+      <!-- 赞助商 -->
 
-        <!-- 赞助商 -->
+      <div class="hint" v-if="activitie.metadata.hasSponsor == 'true' || activitie.type == 'PERSONAL_LUCKY_DRAW'">
+        <span>{{activitie.type == "PERSONAL_LUCKY_DRAW" ? '抽奖发起人' : '赞助商'}}</span>
+        <div v-if='activitie.metadata.hasSponsor' class="">
+          <span class='bold'>{{activitie.metadata.sponsor.appName}}</span>
+          <i class='icon iconfont icon-xiaochengxu' />
+          <i class='icon iconfont icon-xuanzedizhi gray' />
+        </div>
+        <div v-else>
+          <img :src="activitie.owner.avatar" />
+          {{activitie.owner.nickName}}
+        </div>
+      </div>
+      <!-- 赞助商结束 -->
+      <!-- 我发起的活动 可以看到中奖者信息 -->
+      <div class="participantMe" v-if="activitie.type == 'PERSONAL_LUCKY_DRAW' && state >= 5">
+        <a :href="'/pages/luckierList/index?id=' + activitie.id" class="participantInfo">
+          查看中奖者收货信息（{{addressExistTotal}}/{{ticketsTotal}}） <i class ='icon iconfont icon-xuanzedizhi' />
+        </a>
+        <div class="explain">
+          抽奖开奖后，请根据中奖人联系信息于7日内发奖，<br />
+          若中奖人不满足发奖品要求时，建议短信告知.
+        </div>
+      </div>
+      <!-- 我发起的活动 可以看到中奖者信息 结束 -->
+      <!-- 奖品详情 -->
+      <div class="description">
+        {{activitie.description}}
+      </div>
+      <div class="mediaInfo" v-if="mediaInfoimg.length > 0">
+        <img mode='widthFix' v-for='(item, i) in mediaInfoimg' :src="item.url">
+      </div>
+      <!-- 奖品详情结束 -->
 
-        <div class="hint" v-if="activitie.metadata.hasSponsor == 'true' || activitie.type == 'PERSONAL_LUCKY_DRAW'">
-          <span>{{activitie.type == "PERSONAL_LUCKY_DRAW" ? '抽奖发起人' : '赞助商'}}</span>
-          <div v-if='activitie.metadata.hasSponsor' class="">
-            <span class='bold'>{{activitie.metadata.sponsor.appName}}</span>
-            <i class='icon iconfont icon-xiaochengxu' />
-            <i class='icon iconfont icon-xuanzedizhi gray' />
-          </div>
-          <div v-else>
-            <img :src="activitie.owner.avatar" />
-            {{activitie.owner.nickName}}
-          </div>
-        </div>
-        <!-- 赞助商结束 -->
-        <!-- 我发起的活动 可以看到中奖者信息 -->
-        <div class="participantMe" v-if="activitie.type == 'PERSONAL_LUCKY_DRAW' && state >= 5">
-          <a :href="'/pages/luckierList/index?id=' + activitie.id" class="participantInfo">
-            查看中奖者收货信息（{{addressExistTotal}}/{{ticketsTotal}}） <i class ='icon iconfont icon-xuanzedizhi' />
-          </a>
-          <div class="explain">
-            抽奖开奖后，请根据中奖人联系信息于7日内发奖，<br />
-            若中奖人不满足发奖品要求时，建议短信告知.
-          </div>
-        </div>
-        <!-- 我发起的活动 可以看到中奖者信息 结束 -->
-        <!-- 奖品详情 -->
-        <div class="description">
-          {{activitie.description}}
-        </div>
-        <div class="mediaInfo" v-if="mediaInfoimg.length > 0">
-          <img mode='widthFix' v-for='(item, i) in mediaInfoimg' :src="item.url">
-        </div>
-        <!-- 奖品详情结束 -->
-
+      <!-- 开奖后 -->
+      <openingPrizeAfter v-if='state >= 5' :participants="participants" :state="state" :activitie="activitie" />
         <!-- 开奖后 -->
-        <openingPrizeAfter v-if='state >= 5' :participants="participants" :state="state" :activitie="activitie" />
-        <!-- 开奖后 -->
 
-          <!-- 中奖名单 -->
-          <luckyitems v-if='state >= 5' :list='luckyItemList' :activitie = 'activitie' />
-            <!-- 中奖名单结束 -->
-            <!-- 抽奖按钮 -->
-            <luckDraw v-if='state >= 0 && state <= 3' :state = 'state' :participants='participants' :activitie = 'activitie' :modifyState= 'modifyState' :bets='bets'/>
+        <!-- 中奖名单 -->
+        <luckyitems v-if='state >= 5' :list='luckyItemList' :activitie = 'activitie' />
+          <!-- 中奖名单结束 -->
+          <!-- 抽奖按钮 -->
+          <luckDraw v-if='state >= 0 && state <= 3' :state = 'state' :participants='participants' :activitie = 'activitie' :modifyState= 'modifyState' :bets='bets'/>
             <!-- 抽奖按钮结束 -->
             <!-- 参加列表 -->
             <div class="participant" v-if="participantTotal>0">
@@ -93,11 +99,6 @@
               <div>
                 <a href="/pages/baseCreateActivity/createActivities" class="button button-o">
                   发起抽奖
-                </a>
-              </div>
-              <div v-if='participantTotal == 0 && activitie.owner.id == userInfo.id' >
-                <a :href="activitie.metadata.edition === 'baseEdition'?'/pages/baseCreateActivity/createActivities?id='+activitie.id:'/pages/createActivities/createActivities?id='+activitie.id" class="button button-o">
-                  编辑
                 </a>
               </div>
               <div v-if="state <= 3" >
@@ -216,61 +217,61 @@
       </div>
     </template>
 
-<script>
-  import load from '@/components/loading'
-  import meIntegral from '@/components/meIntegral'
-  import headPortrait from '@/components/headPortrait'
-  import signIn from '@/components/signIn'
-  import top from '@/components/top'
-  import luckyitems from './luckyItems'
-  import luckDraw from './luckDraw'
-  import openingPrizeAfter from './openingPrizeAfter'
-  import FootprintsActivities from '@/services/footprintsActivities'
-  import ActivitiesService from '@/services/activitiesService'
-  import ParticipantsService from '@/services/participantsService'
-  import {
-    getUserInfo
-  } from '@/utils'
-  import MeScoresService from '@/services/meScoresService.js'
-  import TwoCodeService from '@/services/twoCodeService.js'
-  import getMeScores from '@/common/js/getMeScores.js'
-  const mta = require('@/common/js/mta_analysis.js')
-  export default {
-    data () {
-      return {
-        isFree: false,
-        isShow: true,
-        id: '',
-        score: 0,
-        participantList: [],
-        participantTotal: 0,
-        luckyList: [],
-        activitie: {
-          owner: {},
-          endTimeDay: '',
-          endTimeHours: '',
-          id: '',
-          metadata: {
-            ticketsNum: 0,
-            drawRule: ''
-          },
-          items: [{
-            metadata: {}
-          }],
-          media: [{
-            url: ''
-          }],
-          type: ''
-        },
-        prize: {
-          metadata: {
-            num: 0
-          }
-        },
-        participants: {
-          tickets: []
-        },
-        isModal: false,
+    <script>
+      import load from '@/components/loading'
+      import meIntegral from '@/components/meIntegral'
+      import headPortrait from '@/components/headPortrait'
+      import signIn from '@/components/signIn'
+      import top from '@/components/top'
+      import luckyitems from './luckyItems'
+      import luckDraw from './luckDraw'
+      import openingPrizeAfter from './openingPrizeAfter'
+      import FootprintsActivities from '@/services/footprintsActivities'
+      import ActivitiesService from '@/services/activitiesService'
+      import ParticipantsService from '@/services/participantsService'
+      import {
+        getUserInfo
+      } from '@/utils'
+      import MeScoresService from '@/services/meScoresService.js'
+      import TwoCodeService from '@/services/twoCodeService.js'
+      import getMeScores from '@/common/js/getMeScores.js'
+      const mta = require('@/common/js/mta_analysis.js')
+      export default {
+        data () {
+          return {
+            isFree: false,
+            isShow: true,
+            id: '',
+            score: 0,
+            participantList: [],
+            participantTotal: 0,
+            luckyList: [],
+            activitie: {
+              owner: {},
+              endTimeDay: '',
+              endTimeHours: '',
+              id: '',
+              metadata: {
+                ticketsNum: 0,
+                drawRule: ''
+              },
+              items: [{
+                metadata: {}
+              }],
+              media: [{
+                url: ''
+              }],
+              type: ''
+            },
+            prize: {
+              metadata: {
+                num: 0
+              }
+            },
+            participants: {
+              tickets: []
+            },
+            isModal: false,
         ticketsNum: 1, // 当前用户下注数
         ticketsTotal: 0, // 所有用户下注总数
         addressExistTotal: 0, // 填写过地址的总数
@@ -297,7 +298,7 @@
         // 1 Bets 下注
         // 2 ParticipateIn 参与过
         // 3 重新下注
-        // 3.1 已经满注
+        // 3.1 已经满注 等待开奖
         // 5 未中奖
         // 6 已中奖
         // 7 已添加地址
@@ -394,15 +395,15 @@
             this.participateBet = parseInt(this.score / parseInt(this.activitie.metadata.price))
           }
         })
-      },
-      modifyTicketsNum (e) {
-        const type = e.target.dataset.type
-        let newTicketsNum
-        if (type === 'add') {
-          newTicketsNum = this.ticketsNum + 1
-        } else {
-          newTicketsNum = this.ticketsNum - 1
-        }
+},
+modifyTicketsNum (e) {
+  const type = e.target.dataset.type
+  let newTicketsNum
+  if (type === 'add') {
+    newTicketsNum = this.ticketsNum + 1
+  } else {
+    newTicketsNum = this.ticketsNum - 1
+  }
         // 开始判断是否可添加
         const surplusTicketsNum = parseInt(this.activitie.metadata.ticketsNum) - parseInt(this.betNum) // 活动剩余注数
         const price = this.activitie.metadata.price // 每注需要金豆
@@ -552,61 +553,61 @@
       // setTimeout(() => {
       //   this.state = 2
       // }, 1000)
-      this.ticketsNum = 1
-      mta.Page.init()
-      let from = options.method
-      if (this.$getStorageSync('scene') === 1014) {
-        from = '模板消息'
-      } else if (this.$getStorageSync('scene') === 1007 || this.$getStorageSync('scene') === 1008) {
-        from = '好友分享'
-      }
-      mta.Event.stat('lucky_draw', {
-        'activityname': options.name,
-        'from': from
-      })
-    },
-    onHide () {
-      getMeScores.end()
-    },
-    onUnload () {
-      getMeScores.end()
-    },
-    onShow () {
-      this.isAnimation = false
-      const userInfo = getUserInfo()
-      if (userInfo.id) {
-        this.signInCB()
-      }
-      this.isLoad()
-      this.userInfo = userInfo
-      this.display = false
-    },
-    onShareAppMessage () {
-      const introductionImageUrl = this.activitie.media.filter(media => media.layout === 'INTRODUCTION')[0]
-      const _this = this
-      return {
-        title: this.activitie.description || this.activitie.name,
-        path: `pages/activitiesDetails/index?id=${this.activitie.id}`,
-        imageUrl: introductionImageUrl && `${introductionImageUrl.url}?x-oss-process=image/resize,w_200,limit_0,m_fill`,
-        success (res) {
-          if (res) {
-            FootprintsActivities.add({
-              type: 'SHARE',
-              target: {
-                type: 'VINCI_CC_FOOTPRINT',
-                id: _this.activitie.id,
-                name: _this.activitie.name
-              }
-            }).then((res) => {
-              if (res.code === 0) {
-                _this.$showToast('分享成功')
-              }
-            })
+this.ticketsNum = 1
+mta.Page.init()
+let from = options.method
+if (this.$getStorageSync('scene') === 1014) {
+  from = '模板消息'
+} else if (this.$getStorageSync('scene') === 1007 || this.$getStorageSync('scene') === 1008) {
+  from = '好友分享'
+}
+mta.Event.stat('lucky_draw', {
+  'activityname': options.name,
+  'from': from
+})
+},
+onHide () {
+  getMeScores.end()
+},
+onUnload () {
+  getMeScores.end()
+},
+onShow () {
+  this.isAnimation = false
+  const userInfo = getUserInfo()
+  if (userInfo.id) {
+    this.signInCB()
+  }
+  this.isLoad()
+  this.userInfo = userInfo
+  this.display = false
+},
+onShareAppMessage () {
+  const introductionImageUrl = this.activitie.media.filter(media => media.layout === 'INTRODUCTION')[0]
+  const _this = this
+  return {
+    title: this.activitie.description || this.activitie.name,
+    path: `pages/activitiesDetails/index?id=${this.activitie.id}`,
+    imageUrl: introductionImageUrl && `${introductionImageUrl.url}?x-oss-process=image/resize,w_200,limit_0,m_fill`,
+    success (res) {
+      if (res) {
+        FootprintsActivities.add({
+          type: 'SHARE',
+          target: {
+            type: 'VINCI_CC_FOOTPRINT',
+            id: _this.activitie.id,
+            name: _this.activitie.name
           }
-        }
+        }).then((res) => {
+          if (res.code === 0) {
+            _this.$showToast('分享成功')
+          }
+        })
       }
     }
   }
+}
+}
 </script>
 <style scoped>
  @import './index.less';

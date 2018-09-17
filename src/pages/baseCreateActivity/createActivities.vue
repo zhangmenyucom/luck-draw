@@ -320,7 +320,7 @@
         createActivity () {
           this.dataHandle()
           if (this.activityId) {
-            CreatePersonalActivity.putActivity({
+            ActivitiesService.up({
               id: this.activityId,
               request: {
                 description: this.prizeDescription,
@@ -333,7 +333,7 @@
               console.log(res)
             })
           } else {
-            CreatePersonalActivity.createActivity({
+            CreatePersonalActivity.add({
               sellerId: 'system',
               owner: {id: this.userInfo.id, nickName: this.userInfo.nickName, avatar: this.userInfo.avatar},
               type: 'PERSONAL_LUCKY_DRAW',
