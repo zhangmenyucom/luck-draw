@@ -40,11 +40,12 @@ export default class ext {
     }
   }
 
-  static showToast (title) {
+  static showToast (title, icon, img) {
     if (this.isWx) {
       wx.showToast({
         title,
-        icon: 'none',
+        icon: icon || 'none',
+        image: img || '',
         duration: 2000
       })
     }

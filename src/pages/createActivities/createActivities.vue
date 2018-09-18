@@ -44,11 +44,11 @@
                 <div class="weui-cell weui-cell_access border-middle">
                     <div class="weui-cell__bd">开奖方式</div>
                     <div class="weui-cell__ft">
-                      <div class="radioDiv div-marginR" @tap="openTypeChange">
+                      <div class="radioDiv div-marginR" @tap="openByTime">
                         <img class="radioIcon" :src="radioCheck ? '/static/img/radio1.png' : '/static/img/radio2.png'" />
                         <span class="radioText">到时间</span>
                       </div>
-                      <div class="radioDiv" @tap="openTypeChange">
+                      <div class="radioDiv" @tap="openByPeople">
                         <img class="radioIcon" :src="!radioCheck ? '/static/img/radio1.png' : '/static/img/radio2.png'" />
                         <span class="radioText">满人数</span>
                       </div>
@@ -154,6 +154,7 @@
           if (e.mp.currentTarget.dataset.name === 'itemName') {
             const itemNameIndex = e.mp.currentTarget.dataset.index
             this.giftItems[itemNameIndex].name = e.mp.detail.value
+            this.giftItems.id = itemNameIndex
           }
           if (e.mp.currentTarget.dataset.name === 'itemNum') {
             const itemNumIndex = e.mp.currentTarget.dataset.index
@@ -211,13 +212,17 @@
         deleteGiftPic (index) {
           this.giftPictures.splice(index, 1)
         },
-        openTypeChange () {
-          if (this.drawRule === 'timed') {
-            this.drawRule = 'fullParticipant'
-          } else {
-            this.drawRule = 'timed'
+        openByPeople () {
+          this.drawRule = 'fullParticipant'
+          if (this.radioCheck) {
+            this.radioCheck = !this.radioCheck
           }
-          this.radioCheck = !this.radioCheck
+        },
+        openByTime () {
+          this.drawRule = 'timed'
+          if (!this.radioCheck) {
+            this.radioCheck = !this.radioCheck
+          }
         },
         check (str) {
           str = str.toString()
@@ -348,7 +353,7 @@
         },
         dataHandle () {
           this.prizeEndTime = new Date(this.dateTime).getTime() + 3000
-          this.giftImgSrc.map((item) => {
+          this.giftPictures.map((item) => {
             this.mediaData.push({
               'type': 'IMAGE',
               'url': item,
@@ -358,47 +363,57 @@
               'order': 0
             })
           })
-          let jsonArr = []
-          if (!this.giftPictures.length) return
-          for (let i = 0; i < this.giftPictures.length; i++) {
-            jsonArr.push({'picUrl': this.giftPictures[i]})
-          }
-          this.jsonString = JSON.stringify(jsonArr)
           if (this.giftItems[0].metadata.image === '') {
             this.giftItems[0].metadata.image = this.giftImgSrc[0]
           }
           if (this.drawRule === 'timed') {
             this.requestMetadata = {
               drawRule: this.drawRule,
-              urls: this.jsonString,
               isShare: this.isShare,
               endTimeString: this.pickerDate,
-              edition: 'baseEdition'
+              edition: 'uperEdition',
+              prizeExplainText: this.prizeExplainText
             }
           } else {
             this.requestMetadata = {
               drawRule: this.drawRule,
-              urls: this.jsonString,
               isShare: this.isShare,
               participantsNum: this.peopleNum,
-              edition: 'baseEdition'
+              edition: 'uperEdition',
+              prizeExplainText: this.prizeExplainText
             }
           }
         },
+        promiseAll () {
+          const create1 = CreatePersonalActivity.putActivity({
+                              id: this.activityId,
+                              request: {
+                                description: this.prizeDescription,
+                                endTime: this.prizeEndTime,
+                                media: this.mediaData
+                              }
+                            })
+            const create2 = CreatePersonalActivity.postItems({
+                              id: this.activityId,
+                              itemsData: this.giftItems
+                            })
+            const create3 = CreatePersonalActivity.postMetadata({
+                              id: this.activityId,
+                              metadataData: this.requestMetadata
+                            })
+            Promise.all([create1, create2, create3]).then(res => {
+              console.log(res)
+              this.$hideLoading()
+              this.$showToast('修改成功！')
+            })
+        },
         createActivity () {
+          this.$showLoading()
           this.dataHandle()
           if (this.activityId) {
-            CreatePersonalActivity.putActivity({
-              id: this.activityId,
-              request: {
-                description: this.prizeDescription,
-                endTime: this.prizeEndTime,
-                items: this.giftItems,
-                media: this.mediaData,
-                metadata: this.requestMetadata
-              }
-            }).then(res => {
+            CreatePersonalActivity.deleteItems(this.activityId).then(res => {
               console.log(res)
+              return this.promiseAll()
             })
           } else {
             CreatePersonalActivity.createActivity({
@@ -411,6 +426,8 @@
               media: this.mediaData,
               metadata: this.requestMetadata
             }).then(res => {
+              this.$hideLoading()
+              this.$showToast('发起成功！')
               this.$navigateTo(`/pages/activitiesDetails/index?id=${res.data.id}`)
             })
           }
@@ -471,6 +488,7 @@
             id,
             append: 'BET_NUM'
           }).then(res => {
+            console.log(res)
             if (res.code === 0) {
               this.giftImgSrc = []
               res.data.items.forEach(item => {
@@ -481,10 +499,6 @@
               for (let i = 0; i < res.data.items.length - 1; i++) {
                 this.giftList.push(true)
               }
-              res.data.metadata.urls = JSON.parse(res.data.metadata.urls)
-              res.data.metadata.urls.forEach(element => {
-                this.giftPictures.push(element.url)
-              })
               this.drawRule = res.data.metadata.drawRule
               this.isShare = res.data.metadata.isShare
               this.prizeDescription = res.data.description
@@ -502,8 +516,7 @@
       },
       onLoad (options) {
         this.activityId = options.id
-      },
-      onShow () {
+        this.clearData()
         if (this.activityId) {
           this.getPersonalActivity(this.activityId)
         }

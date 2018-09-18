@@ -1,5 +1,5 @@
 <template>
-  <div v-if =" activitie.metadata && activitie.metadata.drawRule !== 'timed'"  :class="{luckDraw:true, luckDraws:state == 2}">
+  <div v-if =" activitie.metadata && activitie.metadata.drawRule !== 'timed'"  :class="{luckDraw:true, luckDraws:state >= 2}">
     <div class="prize">
       <div>
         <div class='bold antialiased'>
@@ -18,9 +18,12 @@
     <div class="prize">
       <div>
         <div class='bold antialiased'>
-          <form  v-if="activitie.metadata.drawRule == 'fullTicket'"  :data-state="state + 1" @tab.stop = "modifyState">
-            <button >加注</button>
-            <span class='tickets' >已下{{participants.tickets.length * activitie.metadata.price}}金豆</span>
+          <form  v-if="activitie.metadata.drawRule == 'fullTicket'"  :data-state="state + 1" @submit.stop = "modifyState">
+            <button form-type = "submit" >
+              加注
+              <span class='tickets' >已下{{participants.tickets.length * activitie.metadata.price}}金豆</span>
+            </button>
+
           </form>
           <form v-else>
             <button  open-type="share" >分享加速</button>
@@ -43,7 +46,7 @@
     </div>
   </div>
   <!-- 按日期开奖 -->
-  <div v-else :class="{'luckDraw-t':true, 'luckDraws-t':state == 2}">
+  <div v-else :class="{'luckDraw-t':true, 'luckDraws-t':state >= 2}">
     <div class="c"></div>
     <div class="date" v-if='state == 2'>已参与，{{activitie.endTimeDay}} {{activitie.endTimeHours}}开奖</div>
     <div class="prize">
@@ -75,9 +78,13 @@
 </script>
 <style scoped>
   @import '../../common/less/util.less';
+  form, button {
+    position: relative;
+    z-index: 100
+  }
   .tickets{
     font-size: 10*@2;
-    margin:10*@2 -20*@2 0;
+    margin:-5*@2 -20*@2;
     display: inline-block;
     text-align: center;
   }
@@ -117,6 +124,11 @@
     65%   {transform: scale(1)}
     100%   {transform: scale(1.2)}
   }
+  @keyframes prizeAnimation {
+    0%   {transform: scale(0.9)}
+    50%   {transform: scale(1)}
+    100%   {transform: scale(0.9)}
+  }
   .date{
     color: RGBA(67, 67, 67, 1);
     font-size: 14*@2;
@@ -130,11 +142,8 @@
       transition:all 0.7s linear 0.5s;
       width: 100*@2;
       height: 100*@2;
-      background: -webkit-linear-gradient(RGBA(255, 151, 94, 0.3), RGBA(255, 50, 72, 0.3));
-      /* Safari 5.1 - 6.0 */
-      border-radius: 55*@2;
+      position: relative;
       margin: 16*@2 auto;
-
       >div {
        width: 90*@2;
        height: 90*@2;
@@ -212,15 +221,23 @@
   .circular:nth-child(4){
     transform: rotate(( 180deg));
   }
+  .prize::after{
+    content:" ";
+    position:absolute;
+    width: 100%;
+    height: 100%;
+    top:0;
+    bottom:0;
+    background: -webkit-linear-gradient(RGBA(255, 151, 94, 0.3), RGBA(255, 50, 72, 0.3));
+    border-radius: 55*@2;
+    animation: prizeAnimation 1s ease-in forwards infinite;
+  }
   .prize {
-   width: 100*@2;
-   height: 100*@2;
-   background: -webkit-linear-gradient(RGBA(255, 151, 94, 0.3), RGBA(255, 50, 72, 0.3));
-   /* Safari 5.1 - 6.0 */
-   border-radius: 55*@2;
-   margin: 24*@2 auto;
-
-   >div {
+    position: relative;
+    width: 100*@2;
+    height: 100*@2;
+    margin: 24*@2 auto;
+    >div {
      width: 90*@2;
      height: 90*@2;
      background: -webkit-linear-gradient(RGBA(255, 151, 94, 1), RGBA(255, 50, 72, 1));
@@ -279,8 +296,12 @@
   .prize:nth-child(3),.prize:nth-child(5),.circular:nth-child(2),.circular:nth-child(4){
     opacity: 1;
   }
+  .prize:nth-child(1)::after, .prize:nth-child(5)::after {
+    animation: none;
+  }
   .prize:nth-child(3){
     transform: scale(1);
+
   }
   .circular {
     >div{

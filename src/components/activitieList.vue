@@ -5,15 +5,6 @@
     </div>
     <a v-if='onDraw.length > 0' class="list" v-for="(item , i) in onDraw" :href="item.url" :key="i">
       <img mode='aspectFit' :src='item.items[0].metadata.image'>
-      <!-- <img mode='aspectFit' src='https://oss.qianbaocard.org/20180816/4802d958a0a54dbb8f0928d1e7f19141.jpg'> -->
-      <!-- <div class="prompt antialiased">
-        <div class="left">
-        剩余<span>{{0+item.metadata.ticketsNum-item.betNum}}</span> 注
-        </div>
-        <div class="right">
-          |  满{{item.metadata.ticketsNum}}注开奖
-        </div>
-      </div> -->
       <div class="name antialiased">
         [ 奖品 ]&nbsp;&nbsp;{{item.items[0].name}}
       </div>
@@ -105,7 +96,7 @@
   }
 }
 .list{
-  padding: 32*@1 15*@2 16*@2;
+  padding: 32*@1 15*@2 37*@2;
   background: #FFFFFF;
   margin-bottom: 18*@1;
 }
@@ -114,13 +105,12 @@
   line-height: 48rpx;
   font-family: PingFangSC-Semibold;
   font-weight:600;
+  background-color: rgba(255,255,255,1);
   color:rgba(67,67,67,1);
   padding-top: 46*@2;
   padding-left: 10*@2;
-  padding-bottom: 10*@2;
   display: flex;
-  margin-bottom: 10*@2;
-  color: RGBA(254, 76, 82, 1);
+  color: rgba(67,67,67,1);
   i{
     color: #FE4C52;
     margin-left: 16*@1;
@@ -146,12 +136,12 @@
 img {
   width: 345*@2;
   height: 170*@2;
-  margin-top: 15*@2;
 }
 .name{
   font-size: 16*@2;
   line-height: 20*@2;
-  margin-top: 16*@2;
+  margin-top: 12*@2;
+  margin-bottom:4*@2;
   font-family:PingFangSC-Semibold;
   font-weight:600;
   color:rgba(67,67,67,1);
@@ -163,6 +153,7 @@ img {
   color:rgba(102,102,102,1);
   font-family: PingFangSC-Regular;
   font-size: 14*@2;
+  float: left;
   /*font-weight:400;*/
    span{
     font-size:14*@2;
@@ -180,6 +171,7 @@ img {
   font-family:PingFangSC-Semibold;
   font-weight:600;
   color:rgba(253,183,0,1);
+  float: left;
   margin-right: 8px;
 }
 .button{

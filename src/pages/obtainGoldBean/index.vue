@@ -270,17 +270,6 @@
     onLoad () {
       mta.Page.init()
       this.$setStorageSync('signIn', false)
-      // wx.navigateToMiniProgram({
-      //   appId: `wxfb7be0751102cf64`,
-      //   fail (err) {
-      //     console.log('err', err)
-      //   }
-      // })
-      // Footprints.add().then((res) => {
-      //   if (res.code === 0) {
-      //     this.appId = res.data.target.id
-      //   }
-      // })
     },
     onShow () {
       const userInfo = getUserInfo()
