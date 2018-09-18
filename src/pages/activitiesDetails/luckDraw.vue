@@ -1,5 +1,5 @@
 <template>
-  <div v-if =" activitie.metadata && activitie.metadata.drawRule !== 'timed'"  :class="{luckDraw:true, luckDraws:state == 2}">
+  <div v-if =" activitie.metadata && activitie.metadata.drawRule !== 'timed'"  :class="{luckDraw:true, luckDraws:state >= 2}">
     <div class="prize">
       <div>
         <div class='bold antialiased'>
@@ -46,7 +46,7 @@
     </div>
   </div>
   <!-- 按日期开奖 -->
-  <div v-else :class="{'luckDraw-t':true, 'luckDraws-t':state == 2}">
+  <div v-else :class="{'luckDraw-t':true, 'luckDraws-t':state >= 2}">
     <div class="c"></div>
     <div class="date" v-if='state == 2'>已参与，{{activitie.endTimeDay}} {{activitie.endTimeHours}}开奖</div>
     <div class="prize">
