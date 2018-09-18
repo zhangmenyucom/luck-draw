@@ -66,7 +66,7 @@
             // 对比今天是否签到
             const lastSignInTime = scoreCounters.lastOperationTime
             if (!lastSignInTime) return false
-              const newDate = new Date()
+            const newDate = new Date()
             const date = parseInt(newDate.getFullYear() + '' + this.check(newDate.getMonth() + 1) + this.check(newDate.getDate()), 10)
             if (date > parseInt(lastSignInTime)) {
               return false
