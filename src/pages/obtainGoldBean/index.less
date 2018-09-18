@@ -14,14 +14,16 @@
   .list {
     padding:15*@2 15*@2 0 15*@2;
     >div {
-      height: 72*@2;
+      // height: 72*@2;
       >div {
         color: RGBA(243, 185, 19, 1);
         font-size: 12*@2;
-        >img {
-          width: 9*@2;
-          height: 9*@2;
-          margin-right: 3*@1;
+        .expalin {
+          >img {
+            width: 9*@2;
+            height: 9*@2;
+            margin-right: 3*@1;
+          }
         }
         >i {
           font-size: 35*@2;
@@ -92,7 +94,7 @@
         padding-top: 13*@2;
         display: flex;
         .opacity {
-          opacity: 0.5;
+          opacity: 0.3;
         }
         >div {
           flex: 1;
@@ -146,4 +148,11 @@
       }
     }
   }
+}
+.noBean {
+  height: 56px;
+  line-height: 56px;
+}
+.hasBean {
+  padding:10px 0 10px 0;
 }

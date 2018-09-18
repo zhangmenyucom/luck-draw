@@ -32,14 +32,14 @@
         <div class="left icon">
           <i class="icon iconfont icon-bangdingshoujihao" :style="{color:'RGBA(255, 151, 58, 1)'}"></i>
         </div>
-        <div class="left" style="padding:10px 0 10px 0">
+        <div class="left" :class="userInfo.contactNumber ? 'noBean' : 'hasBean'">
           <span class='title'>
             绑定手机号
           </span>
           <br />
-          {{rule.mobile}} <img src="/static/img/goldBean.png" alt=""> &nbsp;&nbsp;
+          <div class="expalin" v-if="!userInfo.contactNumber">{{rule.mobile}} <img src="/static/img/goldBean.png" alt=""> &nbsp;&nbsp;</div>
         </div>
-        <div class="right" @click="bindPhone" style="padding:10px 0 10px 0">
+        <div class="right" @click="bindPhone" :class="{noBean:userInfo.contactNumber}">
           <button v-if="!userInfo.contactNumber" href="/pages/mobile/index" open-type="getPhoneNumber" @getphonenumber="getPhoneNumber">
             去绑定
           </button>
@@ -53,14 +53,14 @@
         <div class="left icon">
           <i class="icon iconfont icon-wanshanziliao"></i>
         </div>
-        <div class="left" style="padding:10px 0 10px 0">
+        <div class="left" :class="(userInfo.contactNumber && userInfo.location && userInfo.birthday) ? 'noBean' : 'hasBean'">
           <span class='title'>
             完善资料
           </span>
           <br />
-          {{rule.total}} <img src="/static/img/goldBean.png" alt=""> &nbsp;&nbsp;
+          <div class="expalin" v-if="!(userInfo.contactNumber && userInfo.location && userInfo.birthday)">{{rule.total}} <img src="/static/img/goldBean.png" alt=""> &nbsp;&nbsp;</div>
         </div>
-        <div class="right" tyle="padding:10px 0 10px 0">
+        <div class="right" :class="{noBean:(userInfo.contactNumber && userInfo.location && userInfo.birthday)}">
           <a v-if="!(userInfo.contactNumber && userInfo.location && userInfo.birthday)" href="/pages/editInfo/index" @click="complete">
             去完善
           </a>
@@ -71,6 +71,8 @@
         <div class="c"></div>
       </div>
     </div>
+    <div class="headInterval">
+    </div>
     <div class="classify">
       日常任务
     </div>
@@ -79,14 +81,13 @@
         <div class="left icon">
           <i class="icon iconfont icon-fenxiang" :style="{color:'RGBA(107, 200, 50, 1)'}"></i>
         </div>
-        <div class="left" style="padding:10px 0 10px 0">
+        <div class="left" :class="!(shareRule.maxStep > shareNumber) ? 'noBean' : 'hasBean'">
           <span class='title'>
             分享微信群
           </span>
           <br />
-          {{shareRule.base}}<img src="/static/img/goldBean.png" alt=""><text>/&nbsp;次</text> &nbsp;&nbsp;
+          <div class="expalin" v-if="shareRule.maxStep > shareNumber">{{shareRule.base}}<img src="/static/img/goldBean.png" alt=""><text>/&nbsp;次</text> &nbsp;&nbsp;</div>
         </div>
-
         <button @tap="shareWx" v-if="shareRule.maxStep > shareNumber" open-type="share">领取 {{shareNumber}}/{{(shareRule.maxStep - shareNumber)<0?0:(shareRule.maxStep)}}</button>
         <div v-else class='complete'>
           今日已领完
@@ -102,7 +103,7 @@
             {{item.title}}
           </span>
           <br />
-          {{item.score}}<img src="/static/img/goldBean.png" alt=""><text>/&nbsp;次</text> &nbsp;&nbsp;
+          <div class="expalin">{{item.score}}<img src="/static/img/goldBean.png" alt=""> &nbsp;&nbsp;</div>
         </div>
         <navigator target='miniProgram' :app-id="item.appId" @error='fail' @success="() => toXcx(item.appId)">{{shareRule.maxStep > shareNumber ? '领取' : '今日已领完'}}</navigator>
         <div class="c"></div>
@@ -164,18 +165,30 @@
           encryptedData: e.mp.detail.encryptedData,
           iv: e.mp.detail.iv
         }).then(res => {
-          console.log(res)
+          if (res.code === 0) {
+            this.$setStorageSync('contactNumber', res.data.contactNumber)
+          }
         })
       },
       getScoreRules () {
         ScoreRulesService.getList().then(res => {
           if (res.code === 0) {
+            console.log(res)
             const rule = JSON.parse(res.data.filter(data => data.type === 4)[0] ? res.data.filter(data => data.type === 4)[0].rule : {})
             rule.total = Object.values(rule).reduce((total, num) => parseInt(total, 10) + parseInt(num, 10))
-
+            if (this.userInfo.contactNumber) {
+              rule.total -= parseInt(rule.mobile)
+            } else if (this.userInfo.location) {
+              rule.total -= parseInt(rule.area)
+            } else if (this.userInfo.birthday) {
+              rule.total -= parseInt(rule.birthday)
+            } else if (this.userInfo.gender) {
+              rule.total -= parseInt(rule.gender)
+            }
             const shareRule = JSON.parse(res.data.filter(data => data.type === 3)[0] ? res.data.filter(data => data.type === 3)[0].rule : {})
             const advertiseRule = JSON.parse(res.data.filter(data => data.type === 6)[0] ? res.data.filter(data => data.type === 6)[0].rule : {})
             this.advertiseRule = advertiseRule
+            console.log('广告积分', this.advertiseRule)
             this.rule = rule
             this.shareRule = shareRule
             const number = this.scoreCounters.number > 7 ? this.scoreCounters.number - 7 : 0 // 需要展示的第一天
@@ -216,7 +229,7 @@
         this.display = !this.display
       },
       toXcx (id) {
-        console.log(id)
+        // console.log(id)
         Footprints.add(id).then((res) => {
           if (res.code === 0) {
             this.appId = res.data.target.id
