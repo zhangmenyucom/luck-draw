@@ -160,8 +160,7 @@
         console.log('err', err)
       },
       getPhoneNumber (e) {
-        console.log(e.mp.detail)
-        return BindPhoneService.post({
+        return BindPhoneService.add({
           encryptedData: e.mp.detail.encryptedData,
           iv: e.mp.detail.iv
         }).then(res => {
@@ -173,7 +172,6 @@
       getScoreRules () {
         ScoreRulesService.getList().then(res => {
           if (res.code === 0) {
-            console.log(res)
             const rule = JSON.parse(res.data.filter(data => data.type === 4)[0] ? res.data.filter(data => data.type === 4)[0].rule : {})
             rule.total = Object.values(rule).reduce((total, num) => parseInt(total, 10) + parseInt(num, 10))
             if (this.userInfo.contactNumber) {
@@ -188,7 +186,6 @@
             const shareRule = JSON.parse(res.data.filter(data => data.type === 3)[0] ? res.data.filter(data => data.type === 3)[0].rule : {})
             const advertiseRule = JSON.parse(res.data.filter(data => data.type === 6)[0] ? res.data.filter(data => data.type === 6)[0].rule : {})
             this.advertiseRule = advertiseRule
-            console.log('广告积分', this.advertiseRule)
             this.rule = rule
             this.shareRule = shareRule
             const number = this.scoreCounters.number > 7 ? this.scoreCounters.number - 7 : 0 // 需要展示的第一天

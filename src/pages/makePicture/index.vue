@@ -37,7 +37,7 @@ export default {
     },
     getPicture (data) {
       let creat = {
-        sn: '1008',
+        sn: '1009',
         relativeSn: '',
         xelementLayoutType: 'CENTER',
         yelementLayoutType: 'ABSOLUTELY',
@@ -56,7 +56,7 @@ export default {
         }
       }
       let creatRule = {
-        sn: '1009',
+        sn: '1010',
         relativeSn: '',
         xelementLayoutType: 'CENTER',
         yelementLayoutType: 'ABSOLUTELY',
@@ -185,11 +185,23 @@ export default {
             fontSize: 24
           },
           color: {
-            r: 67,
-            g: 67,
-            b: 67,
+            r: 255,
+            g: 255,
+            b: 255,
             a: 1
           }
+        },
+        {
+          sn: '1008',
+          relativeSn: '',
+          xelementLayoutType: 'ABSOLUTELY',
+          yelementLayoutType: 'ABSOLUTELY',
+          elementContent: 'https://oss.qianbaocard.com/20180918/4948be7a3ca6451a8eda67a04bc71930.png',
+          elementMediaType: 'IMG',
+          x: 420,
+          y: 330,
+          height: 56,
+          width: 176
         }
       ]
       this.bgUrl = 'https://oss.qianbaocard.com/20180912/c45dced1f0564763a949c9067c209584.png'
@@ -213,7 +225,7 @@ export default {
           items.push(creatRule)
         } else if (data.items.length >= 2) {
           let secondPrize = {
-            sn: '1010',
+            sn: '1011',
             relativeSn: '',
             xelementLayoutType: 'CENTER',
             yelementLayoutType: 'ABSOLUTELY',
@@ -224,7 +236,7 @@ export default {
             width: 550
           }
           let secondPrizeName = {
-            sn: '1011',
+            sn: '1012',
             relativeSn: '',
             xelementLayoutType: 'CENTER',
             yelementLayoutType: 'ABSOLUTELY',
@@ -261,7 +273,7 @@ export default {
         items[5].y = 917
         items.push(creat)
       }
-      MakePictureService.getPicture({
+      MakePictureService.add({
         backgroundUrl: this.bgUrl,
         items
       }).then((res) => {
