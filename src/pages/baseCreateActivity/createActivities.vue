@@ -14,11 +14,11 @@
                 <div class="weui-cell weui-cell_access border-middle">
                     <div class="weui-cell__bd">开奖方式</div>
                     <div class="weui-cell__ft">
-                      <div class="radioDiv div-marginR" @tap="openTypeChange">
+                      <div class="radioDiv div-marginR" @tap="openByTime">
                         <img class="radioIcon" :src="radioCheck ? '/static/img/radio1.png' : '/static/img/radio2.png'" />
                         <span class="radioText">到时间</span>
                       </div>
-                      <div class="radioDiv" @tap="openTypeChange">
+                      <div class="radioDiv" @tap="openByPeople">
                         <img class="radioIcon" :src="!radioCheck ? '/static/img/radio1.png' : '/static/img/radio2.png'" />
                         <span class="radioText">满人数</span>
                       </div>
@@ -137,13 +137,17 @@
           this.giftImgSrc[index] = src
           this.giftItems[index].metadata.image = src
         },
-        openTypeChange () {
-          if (this.drawRule === 'timed') {
-            this.drawRule = 'fullParticipant'
-          } else {
-            this.drawRule = 'timed'
+        openByPeople () {
+          this.drawRule = 'fullParticipant'
+          if (this.radioCheck) {
+            this.radioCheck = !this.radioCheck
           }
-          this.radioCheck = !this.radioCheck
+        },
+        openByTime () {
+          this.drawRule = 'timed'
+          if (!this.radioCheck) {
+            this.radioCheck = !this.radioCheck
+          }
         },
         check (str) {
           str = str.toString()
@@ -263,6 +267,7 @@
           this.isShare = e.mp.detail.value
         },
         navToUper () {
+          this.$setStorageSync('topscene', 'createActivities')
           if (this.activityId) {
             this.$navigateTo('/pages/createActivities/createActivities?id=' + this.activityId)
           } else {
@@ -280,7 +285,7 @@
         },
         dataHandle () {
           this.prizeEndTime = new Date(this.dateTime).getTime() + 3000
-          this.giftImgSrc.map((item) => {
+          this.giftPictures.map((item) => {
             this.mediaData.push({
               'type': 'IMAGE',
               'url': item,
@@ -290,19 +295,12 @@
               'order': 0
             })
           })
-          let jsonArr = []
-          if (!this.giftPictures.length) return
-          for (let i = 0; i < this.giftPictures.length; i++) {
-            jsonArr.push({'picUrl': this.giftPictures[i]})
-          }
-          this.jsonString = JSON.stringify(jsonArr)
           if (this.giftItems[0].metadata.url === '') {
             this.giftItems[0].metadata.image = this.giftImgSrc[0]
           }
           if (this.drawRule === 'timed') {
             this.requestMetadata = {
               drawRule: this.drawRule,
-              urls: this.jsonString,
               isShare: this.isShare,
               endTimeString: this.pickerDate,
               edition: 'baseEdition'
@@ -310,7 +308,6 @@
           } else {
             this.requestMetadata = {
               drawRule: this.drawRule,
-              urls: this.jsonString,
               isShare: this.isShare,
               participantsNum: this.peopleNum,
               edition: 'baseEdition'
@@ -318,6 +315,7 @@
           }
         },
         createActivity () {
+          this.$showLoading()
           this.dataHandle()
           if (this.activityId) {
             CreatePersonalActivity.putActivity({
@@ -331,6 +329,8 @@
               }
             }).then(res => {
               console.log(res)
+              this.$hideLoading()
+              this.$showToast('修改成功！')
             })
           } else {
             CreatePersonalActivity.createActivity({
@@ -343,6 +343,8 @@
               media: this.mediaData,
               metadata: this.requestMetadata
             }).then(res => {
+              this.$hideLoading()
+              this.$showToast('发起成功！')
               this.$navigateTo(`/pages/activitiesDetails/index?id=${res.data.id}`)
             })
           }
