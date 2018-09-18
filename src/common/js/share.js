@@ -4,13 +4,12 @@ import ext from '@/ext/ext'
 export default (cb) => () => ({
   ...config.share,
   success (res) {
-    console.log('res', res)
     if (!res) return
     FootprintsActivities.add({
       type: 'SHARE'
     }).then((res) => {
       if (res.code === 0) {
-        ext.showToast('分享成功')
+        ext.showToast('分享成功', '', '/static/img/goldBean.png')
         if (cb) {
           cb()
         }

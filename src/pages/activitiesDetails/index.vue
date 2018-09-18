@@ -7,73 +7,79 @@
       <div class="activitiesDetails" >
         <swiper class='swiper' autoplay circular display-multiple-items>
           <swiper-item v-for="(item, i) in activitie.items" :key="i">
-            <img mode='aspectFit' :src="item.metadata.image">
-          </swiper-item>
-        </swiper>
-        <div class="name antialiased">
-          <div v-for="(item, i) in activitie.items">
-            <text>「奖品{{i+1}}」</text>{{item.name}}&nbsp;<span>X&nbsp;{{item.metadata.num}} {{state}}</span>
-          </div>
+          <img mode='aspectFit' :src="item.metadata.image">
+        </swiper-item>
+      </swiper>
+      <div class="name antialiased">
+        <div v-for="(item, i) in activitie.items">
+          <text>「奖品{{i+1}}」</text>{{item.name}}&nbsp;<span>X&nbsp;{{item.metadata.num}} {{state}}</span>
         </div>
-        <!-- 活动信息及状态 -->
-        <div class="activitieInfo">
-          <div v-if="activitie.metadata.drawRule == 'fullTicket'" class='state'>满<text>{{activitie.metadata.ticketsNum * activitie.metadata.price}}</text>金豆自动开奖，剩余<text>{{(activitie.metadata.ticketsNum-activitie.betNum)*activitie.metadata.price}}</text>金豆</div>
-          <div v-if="activitie.metadata.drawRule == 'fullParticipant'" class='state'>满<text>{{activitie.metadata.participantsNum}}</text>人开奖，剩余<text>{{activitie.metadata.participantsNum-activitie.betNum}}</text>人</div>
-          <div v-if="activitie.metadata.drawRule == 'timed'" class='state'>{{activitie.endTimeDay}}<text>{{activitie.endTimeHours}}</text>开奖</div>
-          <div v-if='activitie.metadata.price' class="info">
-            {{activitie.metadata.price}}<img src='/static/img/goldBean.png' class="" />参与
-          </div>
+      </div>
+      <!-- 活动信息及状态 -->
+      <div class="activitieInfo">
+        <div v-if="activitie.metadata.drawRule == 'fullTicket'" class='state'>满<text>{{activitie.metadata.ticketsNum * activitie.metadata.price}}</text>金豆自动开奖，剩余<text>{{(activitie.metadata.ticketsNum-activitie.betNum)*activitie.metadata.price}}</text>金豆</div>
+        <div v-if="activitie.metadata.drawRule == 'fullParticipant'" class='state'>满<text>{{activitie.metadata.participantsNum}}</text>人开奖，剩余<text>{{activitie.metadata.participantsNum-activitie.betNum}}</text>人</div>
+        <div v-if="activitie.metadata.drawRule == 'timed'" class='state'>{{activitie.endTimeDay}}<text>{{activitie.endTimeHours}}</text>开奖</div>
+        <div v-if='activitie.metadata.price' class="info">
+          {{activitie.metadata.price}}<img src='/static/img/goldBean.png' class="" />参与
         </div>
+      </div>
 
-        <div class="c">
-          <img src="https://oss.qianbaocard.org/20180914/7b0e9c5fc57f482c97d47c34c541b03c.png" />
-         </div>
-        <!-- 活动信息及状态end -->
+      <div class="c">
+        <img src="https://oss.qianbaocard.org/20180914/7b0e9c5fc57f482c97d47c34c541b03c.png" />
+      </div>
+      <!-- 活动信息及状态end -->
+      <!-- 编辑 -->
+      <div class="edit" v-if='participantTotal == 0 && activitie.owner.id == userInfo.id' >
+        <a :href="activitie.metadata.edition === 'baseEdition'?'/pages/baseCreateActivity/createActivities?id='+activitie.id:'/pages/createActivities/createActivities?id='+activitie.id">
+          编辑抽奖
+        </a>
+      </div>
+      <!-- 编辑结束 -->
+      <!-- 赞助商 -->
 
-        <!-- 赞助商 -->
+      <div class="hint" v-if="activitie.metadata.hasSponsor == 'true' || activitie.type == 'PERSONAL_LUCKY_DRAW'">
+        <span>{{activitie.type == "PERSONAL_LUCKY_DRAW" ? '抽奖发起人' : '赞助商'}}</span>
+        <div v-if='activitie.metadata.hasSponsor' class="">
+          <span class='bold'>{{activitie.metadata.sponsor.appName}}</span>
+          <i class='icon iconfont icon-xiaochengxu' />
+          <i class='icon iconfont icon-xuanzedizhi gray' />
+        </div>
+        <div v-else>
+          <img :src="activitie.owner.avatar" />
+          {{activitie.owner.nickName}}
+        </div>
+      </div>
+      <!-- 赞助商结束 -->
+      <!-- 我发起的活动 可以看到中奖者信息 -->
+      <div class="participantMe" v-if="activitie.type == 'PERSONAL_LUCKY_DRAW' && state >= 5">
+        <a :href="'/pages/luckierList/index?id=' + activitie.id" class="participantInfo">
+          查看中奖者收货信息（{{addressExistTotal}}/{{ticketsTotal}}） <i class ='icon iconfont icon-xuanzedizhi' />
+        </a>
+        <div class="explain">
+          抽奖开奖后，请根据中奖人联系信息于7日内发奖，<br />
+          若中奖人不满足发奖品要求时，建议短信告知.
+        </div>
+      </div>
+      <!-- 我发起的活动 可以看到中奖者信息 结束 -->
+      <!-- 奖品详情 -->
+      <div class="description">
+        {{activitie.description}}
+      </div>
+      <div class="mediaInfo" v-if="mediaInfoimg.length > 0">
+        <img mode='widthFix' v-for='(item, i) in mediaInfoimg' :src="item.url">
+      </div>
+      <!-- 奖品详情结束 -->
 
-        <div class="hint" v-if="activitie.metadata.hasSponsor == 'true' || activitie.type == 'PERSONAL_LUCKY_DRAW'">
-          <span>{{activitie.type == "PERSONAL_LUCKY_DRAW" ? '抽奖发起人' : '赞助商'}}</span>
-          <div v-if='activitie.metadata.hasSponsor' class="">
-            <span class='bold'>{{activitie.metadata.sponsor.appName}}</span>
-            <i class='icon iconfont icon-xiaochengxu' />
-            <i class='icon iconfont icon-xuanzedizhi gray' />
-          </div>
-          <div v-else>
-            <img :src="activitie.owner.avatar" />
-            {{activitie.owner.nickName}}
-          </div>
-        </div>
-        <!-- 赞助商结束 -->
-        <!-- 我发起的活动 可以看到中奖者信息 -->
-        <div class="participantMe" v-if="activitie.type == 'PERSONAL_LUCKY_DRAW' && state >= 5">
-          <a :href="'/pages/luckierList/index?id=' + activitie.id" class="participantInfo">
-            查看中奖者收货信息（{{addressExistTotal}}/{{ticketsTotal}}） <i class ='icon iconfont icon-xuanzedizhi' />
-          </a>
-          <div class="explain">
-            抽奖开奖后，请根据中奖人联系信息于7日内发奖，<br />
-            若中奖人不满足发奖品要求时，建议短信告知.
-          </div>
-        </div>
-        <!-- 我发起的活动 可以看到中奖者信息 结束 -->
-        <!-- 奖品详情 -->
-        <div class="description">
-          {{activitie.description}}
-        </div>
-        <div class="mediaInfo" v-if="mediaInfoimg.length > 0">
-          <img mode='widthFix' v-for='(item, i) in mediaInfoimg' :src="item.url">
-        </div>
-        <!-- 奖品详情结束 -->
-
+      <!-- 开奖后 -->
+      <openingPrizeAfter v-if='state >= 5' :participants="participants" :state="state" :activitie="activitie" />
         <!-- 开奖后 -->
-        <openingPrizeAfter v-if='state >= 5' :participants="participants" :state="state" :activitie="activitie" />
-        <!-- 开奖后 -->
 
-          <!-- 中奖名单 -->
-          <luckyitems v-if='state >= 5' :list='luckyItemList' :activitie = 'activitie' />
-            <!-- 中奖名单结束 -->
-            <!-- 抽奖按钮 -->
-            <luckDraw v-if='state >= 0 && state <= 3' :state = 'state' :participants='participants' :activitie = 'activitie' :modifyState= 'modifyState' :bets='bets'/>
+        <!-- 中奖名单 -->
+        <luckyitems v-if='state >= 5' :list='luckyItemList' :activitie = 'activitie' />
+          <!-- 中奖名单结束 -->
+          <!-- 抽奖按钮 -->
+          <luckDraw v-if='state >= 0 && state <= 3' :state = 'state' :participants='participants' :activitie = 'activitie' :modifyState= 'modifyState' :bets='bets'/>
             <!-- 抽奖按钮结束 -->
             <!-- 参加列表 -->
             <div class="participant" v-if="participantTotal>0">
@@ -95,114 +101,16 @@
                   发起抽奖
                 </a>
               </div>
-              <div v-if='participantTotal == 0 && activitie.owner.id == userInfo.id' >
-                <a :href="activitie.metadata.edition === 'baseEdition'?'/pages/baseCreateActivity/createActivities?id='+activitie.id:'/pages/createActivities/createActivities?id='+activitie.id" class="button button-o">
-                  编辑
-                </a>
-              </div>
               <div v-if="state <= 3" >
                 <button class="button" @click="share">
                   分享领金豆
                 </button>
               </div>
             </div>
-            <!-- <div v-else class='bottom'>
-              <div v-if="state <= 3" >
-                <button class="button" @click="share">
-                  分享抽奖
-                </button>
-              </div>
-            </div> -->
             <!-- 底部结束 -->
 
             <!-- 弹出层 -->
-            <div class="modal" @tap="hideModal" v-if="isModal && (state === 1 || state === 3 || (participants.id && (state === 5 || state === 6)) || isLookAtTheLuckyNumber || isFree)">
-              <div class="content" @tap.stop="">
-                <div class="title">
-                  —— {{isFree ? '提示' : (state < 5 ? '下注' : '开奖结果')}} ——
-                </div>
-                <div class="modalFree" v-if="isFree">
-                  <img src="/static/img/lightModal.png">
-                  <span>1.钱包抽奖助手作为提供发起及参与抽奖的平台，不对第三方发起人行为承担责任，活动奖品均由发起者提供发放</span>
-                  <span>2.钱包抽奖助手会在法律范围内尽可能地规范、督促用户遵守相关法律和平台使用规则。营造良好的平台使用环境，感谢支持</span>
-                </div>
-                <div v-else>
-                  <!-- 投注 -->
-                  <div class="betting" v-if="state == 1 || state == 3">
-                    <div class="operation">
-                      <div data-type = "reduce" @tap.stop="modifyTicketsNum">
-                        -
-                      </div>
-                      <div>
-                        {{ticketsNum}}
-                      </div>
-                      <div  data-type = "add" @tap.stop="modifyTicketsNum">
-                        +
-                      </div>
-                    </div>
-                    <span class="record">
-                      {{activitie.metadata.price}} 金豆/注 <br />
-                      你有{{score}}金豆
-                      <!-- 本次还可以下注 {{participateBet}} 次 -->
-                    </span>
-                    <form report-submit @submit.stop = "bets">
-                      <button class="button" form-type = "submit">
-                        下注
-                      </button>
-                    </form>
-                  </div>
-                  <!-- 投注结束 -->
-                  <!-- 开奖 -->
-                  <div class="prizeM" v-if="participants.id && (state == 5 || state == 6)">
-                    <!-- participants -->
-                    <img :src="participants.user.avatar">
-                    <div class="userName">
-                      {{participants.user.nickName}}
-                    </div>
-                    <div class="goodsName" v-if="state == 6" >
-                      <div v-for="(item, i) in participants.rewards">
-                        奖品{{i+1}}：{{item.name}}
-                      </div>
-                    </div>
-                    <!-- 中奖 -->
-                    <div>
-                      <div class="tips">
-                        {{state == 6 ? "恭喜，大奖是你的了" : '这次没中奖，送你点别的'}}
-                      </div>
-                      <div class="navigateP" >
-                        <a  :href="'/pages/takePrize/index?id='+participants.id" v-if="state == 6" class="navigate o-navigate">
-                          领取奖品
-                        </a>
-                        <a v-if="state == 6" class="navigate" @tap="()=>toMakeImg(true)">
-                          炫耀一下
-                        </a>
-                        <a open-type="switchTab" href='/pages/index/index' v-if="state == 5" class="navigate">
-                          去看看
-                        </a>
-                      </div>
-                    </div>
-                    <!-- 中奖结束 -->
-                    <!-- 中奖者名单 -->
-                    <luckyitems :list='luckyItemList' :activitie = 'activitie' />
-                    <!-- 中奖者名单结束 -->
-                  </div>
-                  <!-- 开奖结束 -->
-                  <!-- 提示 -->
-                  <div class="point" v-if="false">
-                    <div>
-                      还差<span>4</span>金豆<br />可分享至微信群获得金豆
-                    </div>
-                    <button class="button">
-                      去分享
-                    </button>
-                    <span>
-                      还剩4次分享机会
-                    </span>
-                  </div>
-                  <!-- 提示结束 -->
-                </div>
-              </div>
-            </div>
+              <model :modifyState='modifyState' :bets='bets' :toMakeImg='toMakeImg' :score = 'score' :participants='participants' :activitie = 'activitie' :state.sync = 'state' :isFree= 'isFree' :oldState= 'oldState'  />
             <!-- 弹出层结束 -->
           </div>
         </div>
@@ -224,6 +132,7 @@
   import top from '@/components/top'
   import luckyitems from './luckyItems'
   import luckDraw from './luckDraw'
+  import model from './model'
   import openingPrizeAfter from './openingPrizeAfter'
   import FootprintsActivities from '@/services/footprintsActivities'
   import ActivitiesService from '@/services/activitiesService'
@@ -285,7 +194,6 @@
           }
         },
         isAnimation: false,
-        isLookAtTheLuckyNumber: false,
         miniappId: 'qianbaocard_mkt',
         display: false,
         activity: '',
@@ -297,7 +205,7 @@
         // 1 Bets 下注
         // 2 ParticipateIn 参与过
         // 3 重新下注
-        // 3.1 已经满注
+        // 3.1 已经满注 等待开奖
         // 5 未中奖
         // 6 已中奖
         // 7 已添加地址
@@ -315,7 +223,8 @@
       meIntegral,
       luckyitems,
       openingPrizeAfter,
-      luckDraw
+      luckDraw,
+      model
     },
     methods: {
       share () {
@@ -367,10 +276,6 @@
             if (res.data.metadata.ticketsNum) {
               res.data.metadata.ticketsNum = parseInt(res.data.metadata.ticketsNum)
             }
-            // this.prize = res.data.items[0]
-            // this.activitie = res.data
-            // this.activity = JSON.stringify(res.data)
-            // this.betNum = res.data.betNum
 
             // 转化需要注数的数据类型
             res.data.metadata.ticketsNum = res.data.metadata.ticketsNum && parseInt(res.data.metadata.ticketsNum)
@@ -398,22 +303,6 @@
             this.participateBet = parseInt(this.score / parseInt(this.activitie.metadata.price))
           }
         })
-      },
-      modifyTicketsNum (e) {
-        const type = e.target.dataset.type
-        let newTicketsNum
-        if (type === 'add') {
-          newTicketsNum = this.ticketsNum + 1
-        } else {
-          newTicketsNum = this.ticketsNum - 1
-        }
-        // 开始判断是否可添加
-        const surplusTicketsNum = parseInt(this.activitie.metadata.ticketsNum) - parseInt(this.betNum) // 活动剩余注数
-        const price = this.activitie.metadata.price // 每注需要金豆
-        const totalTicketsNum = newTicketsNum * price // 需要金豆数
-        if (newTicketsNum > 0 && this.score >= totalTicketsNum && surplusTicketsNum >= newTicketsNum) {
-          this.ticketsNum = newTicketsNum
-        }
       },
       modifyState (e) {
         const state = typeof e === 'number' ? e : parseInt(e.target.dataset.state, 10)
@@ -525,17 +414,7 @@
           }
         })
       },
-      hideModal () {
-        if (this.isFree) {
-          this.isFree = false
-          return false
-        }
-        if (this.state === 3 || this.state === 1) {
-          this.state = this.oldState
-        }
-        this.ticketsNum = 1
-        this.isModal = false
-      },
+
       chooseAddress () {
         this.$navigateTo('/pages/takePrize/index?id=' + this.activitie.id)
       },
@@ -554,7 +433,7 @@
       this.state = 0
       this.display = true
       // setTimeout(() => {
-      //   this.state = 2
+      //   this.state = 6
       // }, 1000)
       this.ticketsNum = 1
       mta.Page.init()
