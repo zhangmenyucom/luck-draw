@@ -107,103 +107,10 @@
                 </button>
               </div>
             </div>
-            <!-- <div v-else class='bottom'>
-              <div v-if="state <= 3" >
-                <button class="button" @click="share">
-                  分享抽奖
-                </button>
-              </div>
-            </div> -->
             <!-- 底部结束 -->
 
             <!-- 弹出层 -->
-            <div class="modal" @tap="hideModal" v-if="isModal && (state === 1 || state === 3 || (participants.id && (state === 5 || state === 6)) || isLookAtTheLuckyNumber || isFree)">
-              <div class="content" @tap.stop="">
-                <div class="title">
-                  —— {{isFree ? '提示' : (state < 5 ? '下注' : '开奖结果')}} ——
-                </div>
-                <div class="modalFree" v-if="isFree">
-                  <img src="/static/img/lightModal.png">
-                  <span>1.钱包抽奖助手作为提供发起及参与抽奖的平台，不对第三方发起人行为承担责任，活动奖品均由发起者提供发放</span>
-                  <span>2.钱包抽奖助手会在法律范围内尽可能地规范、督促用户遵守相关法律和平台使用规则。营造良好的平台使用环境，感谢支持</span>
-                </div>
-                <div v-else>
-                  <!-- 投注 -->
-                  <div class="betting" v-if="state == 1 || state == 3">
-                    <div class="operation">
-                      <div data-type = "reduce" @tap.stop="modifyTicketsNum">
-                        -
-                      </div>
-                      <div>
-                        {{ticketsNum}}
-                      </div>
-                      <div  data-type = "add" @tap.stop="modifyTicketsNum">
-                        +
-                      </div>
-                    </div>
-                    <span class="record">
-                      {{activitie.metadata.price}} 金豆/注 <br />
-                      你有{{score}}金豆
-                      <!-- 本次还可以下注 {{participateBet}} 次 -->
-                    </span>
-                    <form report-submit @submit.stop = "bets">
-                      <button class="button" form-type = "submit">
-                        下注
-                      </button>
-                    </form>
-                  </div>
-                  <!-- 投注结束 -->
-                  <!-- 开奖 -->
-                  <div class="prizeM" v-if="participants.id && (state == 5 || state == 6)">
-                    <!-- participants -->
-                    <img :src="participants.user.avatar">
-                    <div class="userName">
-                      {{participants.user.nickName}}
-                    </div>
-                    <div class="goodsName" v-if="state == 6" >
-                      <div v-for="(item, i) in participants.rewards">
-                        奖品{{i+1}}：{{item.name}}
-                      </div>
-                    </div>
-                    <!-- 中奖 -->
-                    <div>
-                      <div class="tips">
-                        {{state == 6 ? "恭喜，大奖是你的了" : '这次没中奖，送你点别的'}}
-                      </div>
-                      <div class="navigateP" >
-                        <a  :href="'/pages/takePrize/index?id='+participants.id" v-if="state == 6" class="navigate o-navigate">
-                          领取奖品
-                        </a>
-                        <a v-if="state == 6" class="navigate" @tap="()=>toMakeImg(true)">
-                          炫耀一下
-                        </a>
-                        <a open-type="switchTab" href='/pages/index/index' v-if="state == 5" class="navigate">
-                          去看看
-                        </a>
-                      </div>
-                    </div>
-                    <!-- 中奖结束 -->
-                    <!-- 中奖者名单 -->
-                    <luckyitems :list='luckyItemList' :activitie = 'activitie' />
-                    <!-- 中奖者名单结束 -->
-                  </div>
-                  <!-- 开奖结束 -->
-                  <!-- 提示 -->
-                  <div class="point" v-if="false">
-                    <div>
-                      还差<span>4</span>金豆<br />可分享至微信群获得金豆
-                    </div>
-                    <button class="button">
-                      去分享
-                    </button>
-                    <span>
-                      还剩4次分享机会
-                    </span>
-                  </div>
-                  <!-- 提示结束 -->
-                </div>
-              </div>
-            </div>
+              <model :modifyState='modifyState' :bets='bets' :toMakeImg='toMakeImg' :score = 'score' :participants='participants' :activitie = 'activitie' :state.sync = 'state' :isFree= 'isFree' :oldState= 'oldState'  />
             <!-- 弹出层结束 -->
           </div>
         </div>
@@ -217,61 +124,62 @@
       </div>
     </template>
 
-    <script>
-      import load from '@/components/loading'
-      import meIntegral from '@/components/meIntegral'
-      import headPortrait from '@/components/headPortrait'
-      import signIn from '@/components/signIn'
-      import top from '@/components/top'
-      import luckyitems from './luckyItems'
-      import luckDraw from './luckDraw'
-      import openingPrizeAfter from './openingPrizeAfter'
-      import FootprintsActivities from '@/services/footprintsActivities'
-      import ActivitiesService from '@/services/activitiesService'
-      import ParticipantsService from '@/services/participantsService'
-      import {
-        getUserInfo
-      } from '@/utils'
-      import MeScoresService from '@/services/meScoresService.js'
-      import TwoCodeService from '@/services/twoCodeService.js'
-      import getMeScores from '@/common/js/getMeScores.js'
-      const mta = require('@/common/js/mta_analysis.js')
-      export default {
-        data () {
-          return {
-            isFree: false,
-            isShow: true,
-            id: '',
-            score: 0,
-            participantList: [],
-            participantTotal: 0,
-            luckyList: [],
-            activitie: {
-              owner: {},
-              endTimeDay: '',
-              endTimeHours: '',
-              id: '',
-              metadata: {
-                ticketsNum: 0,
-                drawRule: ''
-              },
-              items: [{
-                metadata: {}
-              }],
-              media: [{
-                url: ''
-              }],
-              type: ''
-            },
-            prize: {
-              metadata: {
-                num: 0
-              }
-            },
-            participants: {
-              tickets: []
-            },
-            isModal: false,
+<script>
+  import load from '@/components/loading'
+  import meIntegral from '@/components/meIntegral'
+  import headPortrait from '@/components/headPortrait'
+  import signIn from '@/components/signIn'
+  import top from '@/components/top'
+  import luckyitems from './luckyItems'
+  import luckDraw from './luckDraw'
+  import model from './model'
+  import openingPrizeAfter from './openingPrizeAfter'
+  import FootprintsActivities from '@/services/footprintsActivities'
+  import ActivitiesService from '@/services/activitiesService'
+  import ParticipantsService from '@/services/participantsService'
+  import {
+    getUserInfo
+  } from '@/utils'
+  import MeScoresService from '@/services/meScoresService.js'
+  import TwoCodeService from '@/services/twoCodeService.js'
+  import getMeScores from '@/common/js/getMeScores.js'
+  const mta = require('@/common/js/mta_analysis.js')
+  export default {
+    data () {
+      return {
+        isFree: false,
+        isShow: true,
+        id: '',
+        score: 0,
+        participantList: [],
+        participantTotal: 0,
+        luckyList: [],
+        activitie: {
+          owner: {},
+          endTimeDay: '',
+          endTimeHours: '',
+          id: '',
+          metadata: {
+            ticketsNum: 0,
+            drawRule: ''
+          },
+          items: [{
+            metadata: {}
+          }],
+          media: [{
+            url: ''
+          }],
+          type: ''
+        },
+        prize: {
+          metadata: {
+            num: 0
+          }
+        },
+        participants: {
+          tickets: []
+        },
+        isModal: false,
         ticketsNum: 1, // 当前用户下注数
         ticketsTotal: 0, // 所有用户下注总数
         addressExistTotal: 0, // 填写过地址的总数
@@ -286,7 +194,6 @@
           }
         },
         isAnimation: false,
-        isLookAtTheLuckyNumber: false,
         miniappId: 'qianbaocard_mkt',
         display: false,
         activity: '',
@@ -316,7 +223,8 @@
       meIntegral,
       luckyitems,
       openingPrizeAfter,
-      luckDraw
+      luckDraw,
+      model
     },
     methods: {
       share () {
@@ -364,10 +272,6 @@
             if (res.data.metadata.ticketsNum) {
               res.data.metadata.ticketsNum = parseInt(res.data.metadata.ticketsNum)
             }
-            // this.prize = res.data.items[0]
-            // this.activitie = res.data
-            // this.activity = JSON.stringify(res.data)
-            // this.betNum = res.data.betNum
 
             // 转化需要注数的数据类型
             res.data.metadata.ticketsNum = res.data.metadata.ticketsNum && parseInt(res.data.metadata.ticketsNum)
@@ -395,22 +299,6 @@
             this.participateBet = parseInt(this.score / parseInt(this.activitie.metadata.price))
           }
         })
-},
-modifyTicketsNum (e) {
-  const type = e.target.dataset.type
-  let newTicketsNum
-  if (type === 'add') {
-    newTicketsNum = this.ticketsNum + 1
-  } else {
-    newTicketsNum = this.ticketsNum - 1
-  }
-        // 开始判断是否可添加
-        const surplusTicketsNum = parseInt(this.activitie.metadata.ticketsNum) - parseInt(this.betNum) // 活动剩余注数
-        const price = this.activitie.metadata.price // 每注需要金豆
-        const totalTicketsNum = newTicketsNum * price // 需要金豆数
-        if (newTicketsNum > 0 && this.score >= totalTicketsNum && surplusTicketsNum >= newTicketsNum) {
-          this.ticketsNum = newTicketsNum
-        }
       },
       modifyState (e) {
         const state = typeof e === 'number' ? e : parseInt(e.target.dataset.state, 10)
@@ -522,17 +410,7 @@ modifyTicketsNum (e) {
           }
         })
       },
-      hideModal () {
-        if (this.isFree) {
-          this.isFree = false
-          return false
-        }
-        if (this.state === 3 || this.state === 1) {
-          this.state = this.oldState
-        }
-        this.ticketsNum = 1
-        this.isModal = false
-      },
+
       chooseAddress () {
         this.$navigateTo('/pages/takePrize/index?id=' + this.activitie.id)
       },
@@ -551,63 +429,63 @@ modifyTicketsNum (e) {
       this.state = 0
       this.display = true
       // setTimeout(() => {
-      //   this.state = 2
+      //   this.state = 6
       // }, 1000)
-this.ticketsNum = 1
-mta.Page.init()
-let from = options.method
-if (this.$getStorageSync('scene') === 1014) {
-  from = '模板消息'
-} else if (this.$getStorageSync('scene') === 1007 || this.$getStorageSync('scene') === 1008) {
-  from = '好友分享'
-}
-mta.Event.stat('lucky_draw', {
-  'activityname': options.name,
-  'from': from
-})
-},
-onHide () {
-  getMeScores.end()
-},
-onUnload () {
-  getMeScores.end()
-},
-onShow () {
-  this.isAnimation = false
-  const userInfo = getUserInfo()
-  if (userInfo.id) {
-    this.signInCB()
-  }
-  this.isLoad()
-  this.userInfo = userInfo
-  this.display = false
-},
-onShareAppMessage () {
-  const introductionImageUrl = this.activitie.media.filter(media => media.layout === 'INTRODUCTION')[0]
-  const _this = this
-  return {
-    title: this.activitie.description || this.activitie.name,
-    path: `pages/activitiesDetails/index?id=${this.activitie.id}`,
-    imageUrl: introductionImageUrl && `${introductionImageUrl.url}?x-oss-process=image/resize,w_200,limit_0,m_fill`,
-    success (res) {
-      if (res) {
-        FootprintsActivities.add({
-          type: 'SHARE',
-          target: {
-            type: 'VINCI_CC_FOOTPRINT',
-            id: _this.activitie.id,
-            name: _this.activitie.name
+      this.ticketsNum = 1
+      mta.Page.init()
+      let from = options.method
+      if (this.$getStorageSync('scene') === 1014) {
+        from = '模板消息'
+      } else if (this.$getStorageSync('scene') === 1007 || this.$getStorageSync('scene') === 1008) {
+        from = '好友分享'
+      }
+      mta.Event.stat('lucky_draw', {
+        'activityname': options.name,
+        'from': from
+      })
+    },
+    onHide () {
+      getMeScores.end()
+    },
+    onUnload () {
+      getMeScores.end()
+    },
+    onShow () {
+      this.isAnimation = false
+      const userInfo = getUserInfo()
+      if (userInfo.id) {
+        this.signInCB()
+      }
+      this.isLoad()
+      this.userInfo = userInfo
+      this.display = false
+    },
+    onShareAppMessage () {
+      const introductionImageUrl = this.activitie.media.filter(media => media.layout === 'INTRODUCTION')[0]
+      const _this = this
+      return {
+        title: this.activitie.description || this.activitie.name,
+        path: `pages/activitiesDetails/index?id=${this.activitie.id}`,
+        imageUrl: introductionImageUrl && `${introductionImageUrl.url}?x-oss-process=image/resize,w_200,limit_0,m_fill`,
+        success (res) {
+          if (res) {
+            FootprintsActivities.add({
+              type: 'SHARE',
+              target: {
+                type: 'VINCI_CC_FOOTPRINT',
+                id: _this.activitie.id,
+                name: _this.activitie.name
+              }
+            }).then((res) => {
+              if (res.code === 0) {
+                _this.$showToast('分享成功')
+              }
+            })
           }
-        }).then((res) => {
-          if (res.code === 0) {
-            _this.$showToast('分享成功')
-          }
-        })
+        }
       }
     }
   }
-}
-}
 </script>
 <style scoped>
  @import './index.less';

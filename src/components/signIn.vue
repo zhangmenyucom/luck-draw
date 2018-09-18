@@ -7,9 +7,9 @@
         </div>
         <img src="https://oss.qianbaocard.org/20180914/768b41f939f24ea5af400df8beb04a02.png">
         <div class='explain'>
-          签到第2天
+          签到第{{number+1}}天
         </div>
-        <button @tap.stop="bindgetuserinfo" type="">签到</button>
+        <button @tap.stop="bindgetuserinfo" type="">领取{{signInRule}}金豆</button>
       </div>
     </div>
   </div>
@@ -18,6 +18,7 @@
 <script>
   import FootprintsActivities from '@/services/footprintsActivities'
   import DailyFootprintsService from '@/services/dailyFootprintsService'
+  import ScoreRulesService from '@/services/scoreRulesService'
   import { getUserInfo } from '@/utils'
   export default {
     props: [`isLogin`],
@@ -33,10 +34,11 @@
     },
     data () {
       return {
-        isModel: false
+        isModel: false,
+        number: 0, // 连续签到天数
+        signInRule: 0 // 签到获取的积分
       }
     },
-
     methods: {
       bindgetuserinfo (e) {
         FootprintsActivities.add({
@@ -44,6 +46,14 @@
         }).then((res) => {
           if (res.code === 0) {
             this.isModel = false
+          }
+        })
+      },
+      getScoreRules (number) {
+        ScoreRulesService.getList().then((res) => {
+          if (res.code === 0) {
+            const goldBeanRules = JSON.parse(res.data.filter((rule) => rule.type === 2)[0].rule)
+            this.signInRule = parseInt(goldBeanRules.base) + ((number) > parseInt(goldBeanRules.maxStep) ? parseInt(goldBeanRules.maxStep) : (number)) * parseInt(goldBeanRules.stepAdd)
           }
         })
       },
@@ -56,6 +66,7 @@
           type: 'SIGN_IN'
         }).then(res => {
           if (res.code === 0 && res.data.length > 0) {
+            this.getScoreRules(res.data[0].number)
             const scoreCounters = res.data[0]
             const oldScoreCounters = this.$getStorageSync('scoreCounters')
             if (oldScoreCounters.number !== scoreCounters) {
@@ -63,6 +74,8 @@
             }
             // 记录最新签到信息
             this.scoreCounters = scoreCounters
+            // 记录连续签到天数
+            this.number = scoreCounters.number
             // 对比今天是否签到
             const lastSignInTime = scoreCounters.lastOperationTime
             if (!lastSignInTime) return false
