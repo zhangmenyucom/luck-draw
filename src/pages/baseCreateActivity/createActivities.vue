@@ -429,8 +429,12 @@
       onShow () {
         const cutPicIndex = this.$getStorageSync('cutPicIndex')
         const cutImageSrc = this.$getStorageSync('cutImageSrc')
-        this.giftImgSrc[cutPicIndex] = cutImageSrc
-        this.giftItems[cutPicIndex].metadata.image = cutPicIndex
+        if (cutPicIndex) {
+          this.$removeStorage('cutPicIndex')
+          this.$removeStorage('cutImageSrc')
+          this.giftImgSrc[cutPicIndex] = cutImageSrc
+          this.giftItems[cutPicIndex].metadata.image = cutPicIndex
+        }
       }
     }
 </script>
