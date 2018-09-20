@@ -38,7 +38,7 @@
         border-radius: 14*@1;
     }
     .emailTitle {
-        margin-top: 42*@1;
+        padding-top: 42*@1;
         margin-left:174*@1;
         font-size:32*@1;
         font-family:PingFangSC-Regular;
@@ -46,7 +46,7 @@
         color:rgba(51,51,51,1);
     }
     .attention {
-        margin-top: 18*@1;
+        margin-top: 16*@1;
         margin-left:88*@1;
         font-size:28*@1;
         font-family:PingFangSC-Regular;
@@ -67,10 +67,9 @@
     }
     .button {
         position: absolute;
-        bottom: 0;
+        bottom: -20*@1;
         width:540*@1;
         height:100*@1;
-        border-top: 1*@1 solid rgba(220,222,227,1);
         background:rgba(255,255,255,1);
         border-radius:0*@1 0*@1 14*@1 14*@1;
     }
@@ -80,7 +79,8 @@
         font-weight:400;
         color:rgba(137,137,137,1);
         display: inline-block;
-        border-right: 1*@1 solid rgba(220,222,227,1);
+        border: 1*@1 solid rgba(220,222,227,1);
+        border-radius:0*@1 0*@1 0*@1 14*@1;
         height: 100*@1;
         width: 270*@1;
         text-align: center;
@@ -91,6 +91,8 @@
         font-family:PingFangSC-Regular;
         font-weight:400;
         color:rgba(16,142,233,1);
+        border: 1*@1 solid rgba(220,222,227,1);
+        border-radius:0*@1 0*@1 14*@1 0*@1;
         display: inline-block;
         height: 100*@1;
         width: 270*@1;

@@ -57,7 +57,8 @@
           items: [{metadata: {image: ''}}],
           metadata: {drawRule: ''}
         }],
-        willLuckDraw: []
+        willLuckDraw: [],
+        userId: ''
       }
     },
     onPullDownRefresh () {
@@ -95,7 +96,8 @@
         ActivitiesService.getList({
           type: 'PLATFORM_LUCKY_DRAW',
           status: 'CREATED',
-          append: 'BET_NUM',
+          append: ['BET_NUM', 'PARTICIPATED'],
+          userId: this.userId,
           startTimeLt: date, // 过滤未到时间活动
           pageNum,
           pageSize
@@ -156,6 +158,7 @@
     onShow () {
       const userInfo = getUserInfo()
       if (userInfo.id) {
+        this.userId = userInfo.id
         setTimeout((data) => {
           this.isLogin = true
         }, 500)
