@@ -7,12 +7,10 @@
 
 <script>
 import meActivitieList from '@/components/meActivitieList'
-// import ParticipantsService from '@/services/participantsService'
 import PersonalActivity from '@/services/createPersonalActivity'
 import { formatDate } from '@/utils'
 import share from '@/common/js/share.js'
 import top from '@/components/top'
-
 export default {
   data () {
     return {
@@ -21,7 +19,10 @@ export default {
       participantList: [],
       onPullDownRefresh: false,
       complete: false,
-      type: 'lucky'
+      type: 'PERSONAL_LUCKY_DRAW',
+      arr: [1, 2, 3, 4],
+      pageCount: 25,
+      initPage: 1
     }
   },
   onPullDownRefresh () {
@@ -31,6 +32,9 @@ export default {
     meActivitieList,
     top
   },
+  onReachBottom () {
+    this.getActivity(this.type, this.pageNum)
+  },
   methods: {
     pullDownRefresh () {
       this.pageNum = 1
@@ -38,18 +42,30 @@ export default {
       this.complete = false
       this.getActivity()
     },
-    getActivity (type = 'PERSONAL_LUCKY_DRAW') {
-      PersonalActivity.getAcitivity(type).then((res) => {
+    getActivity (type = 'PERSONAL_LUCKY_DRAW', pageNum = 1, pageSize = 20) {
+      if (this.complete) return false
+      PersonalActivity.getList({
+        type,
+        pageNum,
+        pageSize
+      }).then((res) => {
         if (res.code === 0) {
+          const oldParticipantList = !this.onPullDownRefresh ? this.participantList : []
           const participantList = res.data.map((participant) => {
             participant.name = participant.items[0].name
             participant.url = participant.items[0].metadata.url
             participant.owner = participant.owner
             participant.time = formatDate(new Date(participant.createdTime), 'yy/mm/dd HH:mm:ss')
-            participant.rule = participant.num === 0 ? participant.metadata.endTimeString + '开奖' : '满' + participant.num + '开奖'
+            participant.rule = participant.metadata.drawRule === 'timed' ? formatDate(new Date(participant.endTime), 'yy/mm/dd HH:mm:ss') + '开奖' : '满' + participant.items[0].metadata.num + '人开奖'
             return participant
           })
-          this.participantList = participantList
+          if (this.onPullDownRefresh) {
+              this.onPullDownRefresh = false
+              this.$stopPullDownRefresh()
+            }
+          this.pageNum++
+          this.participantList = [...oldParticipantList, ...participantList]
+          if (this.participantList.length >= res.total) this.complete = true
         }
       })
     }
@@ -68,5 +84,15 @@ export default {
   .list{
     min-height: 100vh;
     background: #fff;
+  }
+  .page-wrap {
+    width: 100%;
+    text-align: center;
+    display: flex;
+    >ul {
+    }
+    >li {
+      flex:1
+    }
   }
 </style>

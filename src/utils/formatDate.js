@@ -25,7 +25,7 @@ const formatDate = (date, str) => {
   console.log(typeof mat.D)
   if (str.indexOf(':') > -1) {
     mat.Y = mat.Y.toString().substr(2, 2)
-    return mat.Y + '/' + mat.M + '/' + mat.D + ' ' + mat.H + ':' + mat.m + ':' + mat.s
+    return mat.Y + '/' + mat.M + '/' + mat.D + ' ' + mat.H + ':' + mat.m
   }
   if (str.indexOf('/') > -1) {
     return mat.Y + '/' + mat.M + '/' + mat.D + ' ' + mat.H + '/' + mat.m + '/' + mat.s

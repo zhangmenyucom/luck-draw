@@ -356,7 +356,6 @@ export default {
     this.twoCode = options.twoCode
     this.activity = []
     this.activity = JSON.parse(options.activity)
-    console.log(this.activity)
     this.getPicture(this.activity)
     this.$showLoading()
   },
