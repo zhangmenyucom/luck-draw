@@ -56,7 +56,7 @@ export default {
     }
   },
   components: {
-      top
+    top
   },
   methods: {
     loadImage () {
@@ -94,12 +94,12 @@ export default {
       })
     },
     cancleCut () {
-        this.$setStorageSync('topscene', 'createActivities')
-        if (this.edition === 'uperEdition') {
-          this.$navigateTo('/pages/createActivities/createActivities')
-        } else {
-          this.$navigateTo('/pages/baseCreateActivity/createActivities')
-        }
+      this.$setStorageSync('topscene', 'createActivities')
+      if (this.edition === 'uperEdition') {
+        this.$navigateTo('/pages/createActivities/createActivities')
+      } else {
+        this.$navigateTo('/pages/baseCreateActivity/createActivities')
+      }
     },
     getFilePathRect () {
       let _this = this

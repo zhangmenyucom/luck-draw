@@ -291,7 +291,7 @@
             }
           }
         },
-         promiseAll () {
+        promiseAll () {
           console.log('2', this.mediaData)
           const create1 = ActivitiesService.putActivity({
             id: this.activityId,
