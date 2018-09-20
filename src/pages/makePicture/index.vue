@@ -124,7 +124,7 @@ export default {
           relativeSn: '',
           xelementLayoutType: 'CENTER',
           yelementLayoutType: 'ABSOLUTELY',
-          elementContent: '[ 奖品 ]  ' + data.items[0].name,
+          elementContent: '[ 奖品1 ]  ' + data.items[0].name,
           elementMediaType: 'TEXT',
           y: 663,
           font: {
@@ -175,10 +175,22 @@ export default {
           relativeSn: '',
           xelementLayoutType: 'ABSOLUTELY',
           yelementLayoutType: 'ABSOLUTELY',
+          elementContent: 'https://oss.qianbaocard.com/20180918/4948be7a3ca6451a8eda67a04bc71930.png',
+          elementMediaType: 'IMG',
+          x: 420,
+          y: 330,
+          height: 56,
+          width: 176
+        },
+        {
+          sn: '1008',
+          relativeSn: '',
+          xelementLayoutType: 'ABSOLUTELY',
+          yelementLayoutType: 'ABSOLUTELY',
           elementContent: '抽奖助手 赞助',
           elementMediaType: 'TEXT',
           x: 432,
-          y: 342,
+          y: 367,
           font: {
             name: 'PingFangSC',
             elementFontStyle: 0,
@@ -190,18 +202,6 @@ export default {
             b: 255,
             a: 1
           }
-        },
-        {
-          sn: '1008',
-          relativeSn: '',
-          xelementLayoutType: 'ABSOLUTELY',
-          yelementLayoutType: 'ABSOLUTELY',
-          elementContent: 'https://oss.qianbaocard.com/20180918/4948be7a3ca6451a8eda67a04bc71930.png',
-          elementMediaType: 'IMG',
-          x: 420,
-          y: 330,
-          height: 56,
-          width: 176
         }
       ]
       this.bgUrl = 'https://oss.qianbaocard.com/20180912/c45dced1f0564763a949c9067c209584.png'
@@ -224,45 +224,106 @@ export default {
           creatRule.y = 721
           items.push(creatRule)
         } else if (data.items.length >= 2) {
-          let secondPrize = {
-            sn: '1011',
-            relativeSn: '',
-            xelementLayoutType: 'CENTER',
-            yelementLayoutType: 'ABSOLUTELY',
-            elementContent: data.items[1].metadata.image ? data.items[1].metadata.image : data.items[0].metadata.url,
-            elementMediaType: 'IMG',
-            y: 703,
-            height: 275,
-            width: 550
-          }
-          let secondPrizeName = {
-            sn: '1012',
-            relativeSn: '',
-            xelementLayoutType: 'CENTER',
-            yelementLayoutType: 'ABSOLUTELY',
-            elementContent: '[ 奖品 ]  ' + data.items[1].name,
-            elementMediaType: 'TEXT',
-            y: 1060,
-            font: {
+          this.bgUrl = 'https://oss.qianbaocard.com/20180912/58ceabb9c6df4067acdfe6c7a2f70954.png'
+          data.items.forEach(function (item, index) {
+            let obj = {}
+            obj.sn = index
+            obj.xelementLayoutType = 'CENTER'
+            obj.yelementLayoutType = 'ABSOLUTELY'
+            obj.elementContent = '[奖品' + (index + 2) + '] ' + item.name
+            obj.y = 621 + parseInt((index + 2) * 42)
+            obj.elementMediaType = 'TEXT'
+            obj.font = {
               name: '黑体',
               elementFontStyle: 0,
               fontSize: 34
-            },
-            color: {
+            }
+            obj.color = {
               r: 67,
               g: 67,
               b: 67,
               a: 1
             }
-          }
-          this.bgUrl = 'https://oss.qianbaocard.com/20180912/58ceabb9c6df4067acdfe6c7a2f70954.png'
-          items.push(secondPrize)
-          items.push(secondPrizeName)
+            items.push(obj)
+          })
           items[4].y = 1166
           items[5].y = 1372
           creatRule.creatRule = 1318
           creatRule.y = 1118
-          items.push(creatRule)
+          console.log(items)
+        //   let secondPrize = [
+        //     {
+        //       sn: '1011',
+        //       relativeSn: '',
+        //       xelementLayoutType: 'CENTER',
+        //       yelementLayoutType: 'ABSOLUTELY',
+        //       elementContent: data.items[1].metadata.image ? data.items[1].metadata.image : data.items[0].metadata.url,
+        //       elementMediaType: 'IMG',
+        //       y: 703,
+        //       height: 275,
+        //       width: 550
+        //     },
+        //     {
+        //       sn: '1012',
+        //       relativeSn: '',
+        //       xelementLayoutType: 'CENTER',
+        //       yelementLayoutType: 'ABSOLUTELY',
+        //       elementContent: '[ 奖品 ]  ' + data.items[1].name,
+        //       elementMediaType: 'TEXT',
+        //       y: 1060,
+        //       font: {
+        //         name: '黑体',
+        //         elementFontStyle: 0,
+        //         fontSize: 34
+        //       },
+        //       color: {
+        //         r: 67,
+        //         g: 67,
+        //         b: 67,
+        //         a: 1
+        //       }
+        //     },
+        //     {
+        //     sn: '1013',
+        //     relativeSn: '',
+        //     xelementLayoutType: 'ABSOLUTELY',
+        //     yelementLayoutType: 'ABSOLUTELY',
+        //     elementContent: 'https://oss.qianbaocard.com/20180918/4948be7a3ca6451a8eda67a04bc71930.png',
+        //     elementMediaType: 'IMG',
+        //     x: 420,
+        //     y: 727,
+        //     height: 56,
+        //     width: 176
+        //   },
+        //   {
+        //     sn: '1014',
+        //     relativeSn: '',
+        //     xelementLayoutType: 'ABSOLUTELY',
+        //     yelementLayoutType: 'ABSOLUTELY',
+        //     elementContent: '抽奖助手 赞助',
+        //     elementMediaType: 'TEXT',
+        //     x: 432,
+        //     y: 764,
+        //     font: {
+        //       name: 'PingFangSC',
+        //       elementFontStyle: 0,
+        //       fontSize: 24
+        //     },
+        //     color: {
+        //       r: 255,
+        //       g: 255,
+        //       b: 255,
+        //       a: 1
+        //     }
+        //   }
+        //   ]
+        //   this.bgUrl = 'https://oss.qianbaocard.com/20180912/58ceabb9c6df4067acdfe6c7a2f70954.png'
+        //   items = items.concat(secondPrize)
+        //   items[4].y = 1166
+        //   items[5].y = 1372
+        //   creatRule.creatRule = 1318
+        //   creatRule.y = 1118
+        //   items.push(creatRule)
         }
       }
       // 中奖
