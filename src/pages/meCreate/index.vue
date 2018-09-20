@@ -39,7 +39,7 @@ export default {
       this.getActivity()
     },
     getActivity (type = 'PERSONAL_LUCKY_DRAW') {
-      PersonalActivity.getAcitivity(type).then((res) => {
+      PersonalActivity.getList(type).then((res) => {
         if (res.code === 0) {
           const participantList = res.data.map((participant) => {
             participant.name = participant.items[0].name
