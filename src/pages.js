@@ -118,4 +118,11 @@ module.exports = [{
     enablePullDownRefresh: true,
     backgroundColor: '#00000000'
   }
+}, {
+  path: '/pages/cutImage/index',
+  config: {
+    navigationBarTitleText: '裁剪图片',
+    enablePullDownRefresh: false,
+    backgroundColor: '#00000000'
+  }
 }]

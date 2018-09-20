@@ -36,7 +36,7 @@
                         <div v-if="index<luckyItems.length-1" class="solidDiv"></div>
                     </div>
                 </div>
-                <div class="foot" >
+                <div class="foot" v-if="activity.owner.id === userInfo.id">
                     <button class="btn" @tap="copyAll">复制全部</button>
                     <button class="btn btn2" @tap="sendToEmail">发送邮箱</button>
                 </div>
@@ -63,7 +63,8 @@ export default {
       getAddressNum: 0,
       copyData: '',
       emailId: '',
-      showEmailModal: false
+      showEmailModal: false,
+      userInfo: {}
     }
   },
   components: {
@@ -140,7 +141,8 @@ export default {
   },
   onLoad (data) {
     this.getParticipants(data.id)
-    this.getActivities(data.id)
+    this.getActivities('5b9f48b6711eae70f07aef4f')
+    this.userInfo = this.$getStorageSync('userInfo')
   },
   onShareAppMessage: share()
 }

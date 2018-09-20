@@ -149,7 +149,7 @@
         this.$navigateTo('../commonQuestion/index')
       },
       getActivity (type = 'PERSONAL_LUCKY_DRAW') {
-        PersonalActivity.getAcitivity(type).then((res) => {
+        PersonalActivity.getList(type).then((res) => {
           if (res.code === 0) {
             this.meCreateNum = res.data.length
           }

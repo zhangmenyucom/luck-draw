@@ -1,16 +1,25 @@
 <template>
     <div class="page">
         <top title="新建抽奖" />
-        <div v-if="!addPic">
-            <div v-for="(item,index) in giftList" :key="index">
+        <div>
+            <div :style="index>0?'margin-top: 8px;':''" v-for="(item,index) in giftList" :key="index">
                 <addGiftComp :addGiftPic="addGiftPic" :showCanvas="giftList[index]"
                 :giftImgSrc="giftImgSrc[index]" :index="index" :deleteGiftList="deleteGiftList"
                 :inputText="inputText"
                 :itemName="itemName" :itemNum="itemNum" :getImage="getImage" />
             </div>
             <div class="addGift_div">
-                <div class="add_gift" @click="addGift">
-                    <div>+添加奖项</div>
+                <div v-if="giftList.length===1" class="add_gift" @click="addGift">
+                    <span style="font-size:36rpx;">+</span><span>添加奖项</span>
+                </div>
+                <div v-else class="double_div">
+                    <div class="delete_gift" @tap="deleteGiftList(giftList.length-1)">
+                        <img src="/static/img/dustbin.png" style="width:28rpx;height:28rpx;vertical-align:middle;">
+                        <span style="vertical-align:middle;">删除</span>
+                    </div>
+                    <div class="added_gift" @click="addGift">
+                        <span style="font-size:36rpx;">+</span><span>添加奖项</span>
+                    </div>
                 </div>
             </div>
             <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
@@ -19,7 +28,7 @@
                     <span class="weui-cell__ft" style="font-size:12px;font-family:PingFangSC-Regular;font-weight:400;color:rgba(153,153,153,1);">{{prizeTextLength}}/100</span>
                 </div>
                 <div class="weui-cell weui-cell_access">
-                    <textarea class="weui-cell__bd" placeholder="请输入" maxlength="100" auto-height="true" data-name="prizeExplain" v-model="prizeExplainText" @input="inputText"></textarea>
+                    <textarea class="weui-cell__bd" placeholder="请输入" maxlength="100" auto-height="true" :value="prizeExplainText" data-name="prizeExplain" @input="inputText"></textarea>
                 </div>
             </div>
             <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
@@ -28,16 +37,18 @@
                     <span class="weui-cell__ft" style="font-size:12px;font-family:PingFangSC-Regular;font-weight:400;color:rgba(153,153,153,1);">{{giftTextLength}}/100</span>
                 </div>
                 <div class="turnLine">
-                    <img src="../../../static/img/addPrizePic.png" class="addPicture" @click="addPicture" />
                     <div v-for="(item, index) in giftPictures" :key="index" class="showPicDiv">
-                      <img :src="item" style="width:110px;height:55px;vertical-align:top;">
+                      <img :src="item" mode="widthFix" style="width:690rpx;vertical-align:top;">
                       <div class="deleteIconDiv" @click="deleteGiftPic(index)">
                         <img src="../../../static/img/delete.png" class="deleteIcon" />
                       </div>
                     </div>
+                    <div class="add_pic border-middle" @click="addPicture">
+                        <span style="font-size:36rpx;">+</span><span>添加图片</span>
+                    </div>
                 </div>
                 <div class="weui-cell weui-cell_access">
-                    <textarea class="weui-cell__bd" placeholder="请输入" v-model="prizeDescription" maxlength="100" auto-height="true" data-name="giftExplain" @input="inputText"></textarea>
+                    <textarea class="weui-cell__bd" placeholder="请输入" :value="prizeDescription" maxlength="100" auto-height="true" data-name="giftExplain" @input="inputText"></textarea>
                 </div>
             </div>
             <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
@@ -45,11 +56,11 @@
                     <div class="weui-cell__bd">开奖方式</div>
                     <div class="weui-cell__ft">
                       <div class="radioDiv div-marginR" @tap="openByTime">
-                        <img class="radioIcon" :src="radioCheck ? '/static/img/radio1.png' : '/static/img/radio2.png'" />
+                        <img class="radioIcon" :src=" drawRule == 'timed' ? '/static/img/radio1.png' : '/static/img/radio2.png'" />
                         <span class="radioText">到时间</span>
                       </div>
                       <div class="radioDiv" @tap="openByPeople">
-                        <img class="radioIcon" :src="!radioCheck ? '/static/img/radio1.png' : '/static/img/radio2.png'" />
+                        <img class="radioIcon" :src="drawRule !== 'timed' ? '/static/img/radio1.png' : '/static/img/radio2.png'" />
                         <span class="radioText">满人数</span>
                       </div>
                     </div>
@@ -62,14 +73,17 @@
                     <div class="weui-cell__ft weui-cell__ft_in-access" style="font-size: 0"></div>
                 </div>
                 <div v-if="drawRule === 'fullParticipant'" class="weui-cell weui-cell_access">
-                    <div class="weui-cell__bd">开奖人数 <span style="color: red">*</span></div>
+                    <div class="weui-cell__bd">
+                      <div>开奖人数 <span style="color: red">*</span></div>
+                      <div class="cant_full">未满人数七天后自动开奖</div>
+                    </div>
                     <input type="number" placeholder="数量" v-model="peopleNum" class="weui-cell__ft" style="color:black;display: inline;vertical-align: middle;" />
                     <span class="weui-cell__ft" style="margin-left:5px;vertical-align: middle;">人</span>
                 </div>
             </div>
             <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
                 <div class="weui-cell weui-cell_access" style="padding:5px 0">
-                    <div class="weui-cell__bd">允许参与者分享</div>
+                    <div @tap="shareWarn" class="weui-cell__bd"><span style="vertival-align:middle;margin-right:6rpx;">允许参与者分享</span><img style="width:28rpx;height:28rpx;vertical-align:middle;" src="/static/img/warnIcon.png" /></div>
                     <switch class="weui-cell__ft" @change="switchChange" :checked="isShare" style="transform:scale(0.9);position:relative;left:10px" />
                 </div>
             </div>
@@ -77,9 +91,6 @@
             <div class="weui-cells weui-cells_after-title" style="margin-top: 48px;padding:8px 15px;">
                 <div class="createActivities" @click="createButton">发起抽奖</div>
             </div>
-        </div>
-        <div v-if="addPic">
-          <chooseImage :showImage="showImage" :picIndex="picIndex" :picIndexSrc="picIndexSrc" :imageSrc="imageSrc" />
         </div>
          <createAttention v-if="showAttention" :createActivity="createActivity" :hideAttentionModal="hideAttentionModal" />
          <allowedShare v-if="share" :knowShare="knowShare" />
@@ -99,14 +110,10 @@
       data () {
         return {
           dateTime: '',
-          radioCheck: true,
           giftList: [true],
-          addPic: false,
           prizeExplainText: '',
           showCanvas: false,
           giftImgSrc: ['https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg'],
-          picIndex: 0,
-          picIndexSrc: '',
           prizeTextLength: 0,
           giftTextLength: 0,
           giftPictures: [],
@@ -128,7 +135,7 @@
           itemName: [],
           itemNum: [],
           peopleNum: '',
-          giftItems: [{id: 'system', name: '', metadata: {url: '', num: 0}}],
+          giftItems: [{id: 'system', name: '', metadata: {image: '', num: 0}}],
           prizeEndTime: 0,
           jsonString: '',
           mediaData: [],
@@ -143,21 +150,34 @@
         createAttention,
         allowedShare
       },
+      // watch: {
+      //   prizeDescription: (e) => {
+      //     this.giftTextLength = e.length
+      //     console.log(this.giftTextLength)
+      //   },
+      //   prizeExplainText: (e) => {
+      //     this.prizeTextLength = e.length
+      //     console.log(this.prizeTextLength)
+      //   }
+      // },
       methods: {
         inputText (e) {
           if (e.mp.currentTarget.dataset.name === 'prizeExplain') {
             this.prizeTextLength = e.mp.detail.value.length
+            this.prizeExplainText = e.mp.detail.value
           }
           if (e.mp.currentTarget.dataset.name === 'giftExplain') {
             this.giftTextLength = e.mp.detail.value.length
+            this.prizeDescription = e.mp.detail.value
           }
           if (e.mp.currentTarget.dataset.name === 'itemName') {
             const itemNameIndex = e.mp.currentTarget.dataset.index
+            this.itemName[itemNameIndex] = e.mp.detail.value
             this.giftItems[itemNameIndex].name = e.mp.detail.value
-            this.giftItems.id = itemNameIndex
           }
           if (e.mp.currentTarget.dataset.name === 'itemNum') {
             const itemNumIndex = e.mp.currentTarget.dataset.index
+            this.itemNum[itemNumIndex] = e.mp.detail.value
             this.giftItems[itemNumIndex].metadata.num = e.mp.detail.value
           }
         },
@@ -168,12 +188,10 @@
           this.giftItems.push({id: 'system', name: '', metadata: {image: 'https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg', num: 0}})
           this.giftImgSrc.push('https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg')
         },
-        getImage (index, picIndexSrc) {
+        getImage (index) {
           this.$chooseImage().then(res => {
             this.imageSrc = res.tempFilePaths[0]
-            this.addPic = !this.addPic
-            this.picIndex = index
-            this.picIndexSrc = picIndexSrc
+            this.$navigateTo('/pages/cutImage/index?imgSrc=' + res.tempFilePaths[0] + '&picIndex=' + index + '&edition=uperEdition')
           })
         },
         deleteGiftList (index) {
@@ -191,14 +209,6 @@
             this.giftItems.splice(index, 1)
           }
         },
-        showImage (src, index) {
-          this.addPic = !this.addPic
-          if (this.giftList[index]) {
-            this.giftList[index] = !this.giftList[index]
-          }
-          this.giftImgSrc[index] = src
-          this.giftItems[index].metadata.image = src
-        },
         addPicture () {
           this.$chooseImage().then(res => {
             return this.pictureInService(res.tempFilePaths[0])
@@ -207,6 +217,9 @@
         pictureInService (filePath) {
           this.$uploadFile(filePath).then(res => {
             this.giftPictures.push(res.data.url)
+          }).catch(err => {
+            console.log(err)
+            this.$showToast('图片上传失败！请稍后再试...')
           })
         },
         deleteGiftPic (index) {
@@ -214,15 +227,9 @@
         },
         openByPeople () {
           this.drawRule = 'fullParticipant'
-          if (this.radioCheck) {
-            this.radioCheck = !this.radioCheck
-          }
         },
         openByTime () {
           this.drawRule = 'timed'
-          if (!this.radioCheck) {
-            this.radioCheck = !this.radioCheck
-          }
         },
         check (str) {
           str = str.toString()
@@ -340,7 +347,9 @@
         },
         switchChange (e) {
           this.isShare = e.mp.detail.value
-          if (e.mp.detail.value) {
+        },
+        shareWarn () {
+          if (!this.share) {
             this.share = !this.share
           }
         },
@@ -348,20 +357,21 @@
           this.share = !this.share
         },
         navToUper () {
+          this.$setStorageSync('topscene', 'createActivities')
           this.$navigateTo('/pages/baseCreateActivity/createActivities')
           this.clearData()
         },
         dataHandle () {
           this.prizeEndTime = new Date(this.dateTime).getTime() + 3000
-          this.giftPictures.map((item) => {
-            this.mediaData.push({
+          const mediaData = this.giftPictures.map((item) => {
+            return {
               'type': 'IMAGE',
               'url': item,
               'layout': 'INTRODUCTION',
               'title': '',
               'text': '',
               'order': 0
-            })
+            }
           })
           if (this.giftItems[0].metadata.image === '') {
             this.giftItems[0].metadata.image = this.giftImgSrc[0]
@@ -383,9 +393,10 @@
               prizeExplainText: this.prizeExplainText
             }
           }
+          this.mediaData = mediaData
         },
         promiseAll () {
-          const create1 = CreatePersonalActivity.putActivity({
+          const create1 = ActivitiesService.putActivity({
             id: this.activityId,
             request: {
               description: this.prizeDescription,
@@ -393,30 +404,47 @@
               media: this.mediaData
             }
           })
-          const create2 = CreatePersonalActivity.postItems({
+
+          const create2 = ActivitiesService.postItems({
             id: this.activityId,
             itemsData: this.giftItems
           })
-          const create3 = CreatePersonalActivity.postMetadata({
-            id: this.activityId,
-            metadataData: this.requestMetadata
-          })
+          const create3 = this.metadataService()
           Promise.all([create1, create2, create3]).then(res => {
-            console.log(res)
             this.$hideLoading()
             this.$showToast('修改成功！')
+            this.$navigateBack(1)
+            this.clearData()
           })
+        },
+        metadataService () {
+          if (this.drawRule === 'timed') {
+            ActivitiesService.deleteMetadata({
+              id: this.activityId,
+              key: 'participantsNum'
+            })
+          } else {
+            ActivitiesService.deleteMetadata({
+              id: this.activityId,
+              key: 'endTimeString'
+            })
+          }
+          for (const key in this.requestMetadata) {
+            ActivitiesService.postMetadata({
+              id: this.activityId,
+              metadataData: {'key': key, 'value': this.requestMetadata[key]}
+            })
+          }
         },
         createActivity () {
           this.$showLoading()
           this.dataHandle()
           if (this.activityId) {
-            CreatePersonalActivity.deleteItems(this.activityId).then(res => {
-              console.log(res)
+            ActivitiesService.deleteItems(this.activityId).then(res => {
               return this.promiseAll()
             })
           } else {
-            CreatePersonalActivity.createActivity({
+            CreatePersonalActivity.add({
               sellerId: 'system',
               owner: {id: this.userInfo.id, nickName: this.userInfo.nickName, avatar: this.userInfo.avatar},
               type: 'PERSONAL_LUCKY_DRAW',
@@ -429,10 +457,9 @@
               this.$hideLoading()
               this.$showToast('发起成功！')
               this.$navigateTo(`/pages/activitiesDetails/index?id=${res.data.id}`)
+              this.clearData()
             })
           }
-          this.mediaData = []
-          this.clearData()
           if (this.showAttention) {
             this.showAttention = !this.showAttention
           }
@@ -444,11 +471,11 @@
           this.itemNum = []
           this.prizeDescription = ''
           this.peopleNum = ''
-          this.radioCheck = true
           this.prizeExplainText = ''
           this.isShare = false
           this.drawRule = 'timed'
           this.giftList = [true]
+          this.mediaData = []
         },
         hideAttentionModal () {
           if (this.showAttention) {
@@ -484,11 +511,10 @@
           }
         },
         getPersonalActivity (id) {
-          ActivitiesService.get({
+          CreatePersonalActivity.get({
             id,
             append: 'BET_NUM'
           }).then(res => {
-            console.log(res)
             if (res.code === 0) {
               this.giftImgSrc = []
               res.data.items.forEach(item => {
@@ -499,15 +525,16 @@
               for (let i = 0; i < res.data.items.length - 1; i++) {
                 this.giftList.push(true)
               }
+              res.data.media.forEach(mediaData => {
+                this.giftPictures.push(mediaData.url)
+              })
               this.drawRule = res.data.metadata.drawRule
               this.isShare = res.data.metadata.isShare
               this.prizeDescription = res.data.description
               this.prizeExplainText = res.data.metadata.prizeExplainText
               if (res.data.metadata.drawRule === 'timed') {
-                this.radioCheck = true
                 this.pickerDate = res.data.metadata.endTimeString
               } else {
-                this.radioCheck = false
                 this.peopleNum = res.data.metadata.participantsNum
               }
             }
@@ -515,13 +542,23 @@
         }
       },
       onLoad (options) {
-        this.activityId = options.id
         this.clearData()
-        if (this.activityId) {
+        this.getNowDate()
+        if (options.id) {
+          this.activityId = options.id
           this.getPersonalActivity(this.activityId)
         }
         this.userInfo = this.$getStorageSync('userInfo')
-        this.getNowDate()
+      },
+      onShow () {
+        const cutPicIndex = this.$getStorageSync('cutPicIndex')
+        const cutImageSrc = this.$getStorageSync('cutImageSrc')
+        if (cutPicIndex) {
+          this.$removeStorage('cutPicIndex')
+          this.$removeStorage('cutImageSrc')
+          this.giftImgSrc[cutPicIndex] = cutImageSrc
+          this.giftItems[cutPicIndex].metadata.image = cutPicIndex
+        }
       }
     }
 </script>
