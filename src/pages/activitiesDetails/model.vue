@@ -28,7 +28,7 @@
           你有{{score}}金豆
           <!-- 本次还可以下注 {{participateBet}} 次 -->
         </span>
-        <form report-submit @submit.stop = "bets">
+        <form :data-ticketsNum='ticketsNum' report-submit @submit.stop = "bets">
           <button class="button" form-type = "submit">
             下注
           </button>
@@ -131,7 +131,7 @@
         const surplusTicketsNum = parseInt(this.activitie.metadata.ticketsNum) - parseInt(this.activitie.betNum) // 活动剩余注数
         const price = this.activitie.metadata.price // 每注需要金豆
         const totalTicketsNum = newTicketsNum * price // 需要金豆数
-  
+
         if (newTicketsNum > 0 && this.score >= totalTicketsNum && surplusTicketsNum >= newTicketsNum) {
           this.ticketsNum = newTicketsNum
         }

@@ -7,7 +7,7 @@
       <div class="activitiesDetails" >
         <swiper class='swiper' autoplay circular display-multiple-items>
           <swiper-item v-for="(item, i) in activitie.items" :key="i">
-          <img mode='aspectFit' :src="item.metadata.image">
+          <img mode='aspectFill' :src="item.metadata.image">
         </swiper-item>
       </swiper>
       <div class="name antialiased">
@@ -18,8 +18,11 @@
       <!-- 活动信息及状态 -->
       <div class="activitieInfo">
         <div v-if="activitie.metadata.drawRule == 'fullTicket'" class='state'>满<text>{{activitie.metadata.ticketsNum * activitie.metadata.price}}</text>金豆自动开奖，剩余<text>{{(activitie.metadata.ticketsNum-activitie.betNum)*activitie.metadata.price}}</text>金豆</div>
-        <div v-if="activitie.metadata.drawRule == 'fullParticipant'" class='state'>满<text>{{activitie.metadata.participantsNum}}</text>人开奖，剩余<text>{{activitie.metadata.participantsNum-activitie.betNum}}</text>人</div>
+
+        <div v-if="activitie.metadata.drawRule == 'fullParticipant'" class='state'>满<text>{{activitie.metadata.participantsNum}}</text>人开奖，剩余<text>{{activitie.metadata.participantsNum-activitie.realNum}}</text>人</div>
+
         <div v-if="activitie.metadata.drawRule == 'timed'" class='state'>{{activitie.endTimeDay}}<text>{{activitie.endTimeHours}}</text>开奖</div>
+
         <div v-if='activitie.metadata.price' class="info">
           {{activitie.metadata.price}}<img src='/static/img/goldBean.png' class="" />参与
         </div>
@@ -30,15 +33,15 @@
       </div>
       <!-- 活动信息及状态end -->
       <!-- 编辑 -->
-      <div class="edit" v-if='participantTotal == 0 && activitie.owner.id == userInfo.id' >
+      <div class="edit" v-if="participantTotal == 0 && activitie.status == 'CREATED' && activitie.owner.id == userInfo.id" >
         <a :href="activitie.metadata.edition === 'baseEdition'?'/pages/baseCreateActivity/createActivities?id='+activitie.id:'/pages/createActivities/createActivities?id='+activitie.id">
           编辑抽奖
         </a>
       </div>
       <!-- 编辑结束 -->
-      <!-- 赞助商 -->
 
-      <div class="hint" v-if="activitie.metadata.hasSponsor == 'true' || activitie.type == 'PERSONAL_LUCKY_DRAW'">
+      <!-- 赞助商 -->
+      <a class="hint" v-if="activitie.metadata.hasSponsor == 'true' || activitie.type == 'PERSONAL_LUCKY_DRAW'">
         <span>{{activitie.type == "PERSONAL_LUCKY_DRAW" ? '抽奖发起人' : '赞助商'}}</span>
         <div v-if='activitie.metadata.hasSponsor' class="">
           <span class='bold'>{{activitie.metadata.sponsor.appName}}</span>
@@ -49,10 +52,11 @@
           <img :src="activitie.owner.avatar" />
           {{activitie.owner.nickName}}
         </div>
-      </div>
+      </a>
       <!-- 赞助商结束 -->
+
       <!-- 我发起的活动 可以看到中奖者信息 -->
-      <div class="participantMe" v-if="activitie.type == 'PERSONAL_LUCKY_DRAW' && state >= 5">
+      <div class="participantMe" v-if="activitie.type == 'PERSONAL_LUCKY_DRAW' && state >= 5 && participantTotal > 0">
         <a :href="'/pages/luckierList/index?id=' + activitie.id" class="participantInfo">
           查看中奖者收货信息（{{addressExistTotal}}/{{ticketsTotal}}） <i class ='icon iconfont icon-xuanzedizhi' />
         </a>
@@ -76,10 +80,11 @@
         <!-- 开奖后 -->
 
         <!-- 中奖名单 -->
-        <luckyitems v-if='state >= 5' :list='luckyItemList' :activitie = 'activitie' />
+        <luckyitems v-if='state >= 5 && luckyItemList.length > 0' :list='luckyItemList' :activitie = 'activitie' />
           <!-- 中奖名单结束 -->
           <!-- 抽奖按钮 -->
-          <luckDraw v-if='state >= 0 && state <= 3' :state = 'state' :participants='participants' :activitie = 'activitie' :modifyState= 'modifyState' :bets='bets'/>
+
+          <luckDraw v-if='state >= 0 && state <= 3.1' :state = 'state' :participants='participants' :activitie = 'activitie' :modifyState= 'modifyState' :bets='bets'/>
             <!-- 抽奖按钮结束 -->
             <!-- 参加列表 -->
             <div class="participant" v-if="participantTotal>0">
@@ -90,19 +95,19 @@
             </div>
             <!-- 参加列表结束 -->
             <!-- 免责说明 -->
-            <div v-if="activitie.type !== 'PLATFORM_LUCKY_DRAW'" class="free" @tap='() => {this.isFree = !this.isFree; this.isModal = true}'>
+            <div v-if="activitie.type !== 'PLATFORM_LUCKY_DRAW'" class="free" @tap='() => {this.isFree = true; this.isModal = true}'>
               点此查看免责说明
             </div>
             <!-- 免责说明结束 -->
             <!-- 底部 -->
             <div class='bottom'>
               <div>
-                <a href="/pages/baseCreateActivity/createActivities" class="button button-o">
+                <a href="/pages/baseCreateActivity/createActivities" class="button">
                   发起抽奖
                 </a>
               </div>
               <div v-if="state <= 3" >
-                <button class="button" @click="share">
+                <button class="button button-o" @click="share">
                   分享领金豆
                 </button>
               </div>
@@ -110,7 +115,7 @@
             <!-- 底部结束 -->
 
             <!-- 弹出层 -->
-              <model :modifyState='modifyState' :bets='bets' :toMakeImg='toMakeImg' :score = 'score' :participants='participants' :activitie = 'activitie' :state.sync = 'state' :isFree= 'isFree' :oldState= 'oldState'  />
+              <model :luckyItemList='luckyItemList' :modifyState='modifyState' :bets='bets' :toMakeImg='toMakeImg' :score = 'score' :participants='participants' :activitie = 'activitie' :state.sync = 'state' :isFree= 'isFree' :oldState= 'oldState'  />
             <!-- 弹出层结束 -->
           </div>
         </div>
@@ -272,18 +277,34 @@
           append: 'BET_NUM'
         }).then((res) => {
           if (res.code === 0) {
-            console.log(res.data)
+            if (res.data.metadata.sponsor) {
+              res.data.metadata.sponsor = JSON.parse(res.data.metadata.sponsor)
+            }
+
             if (res.data.metadata.ticketsNum) {
               res.data.metadata.ticketsNum = parseInt(res.data.metadata.ticketsNum)
             }
 
             // 转化需要注数的数据类型
             res.data.metadata.ticketsNum = res.data.metadata.ticketsNum && parseInt(res.data.metadata.ticketsNum)
-            // 判断是否满注
-            if (res.data.metadata.ticketsNum === res.data.betNum) {
-              this.modifyState(3.1)
-            }
 
+            // 判断是否待开奖
+            switch (res.data.metadata.drawRule) {
+              case 'fullTicket':
+                if (parseInt(res.data.metadata.ticketsNum) === res.data.betNum) {
+                  this.modifyState(3.1)
+                }
+                break
+              case 'fullParticipant':
+                if (parseInt(res.data.metadata.participantsNum) === res.data.realNum) {
+                  this.modifyState(3.1)
+                }
+                break
+              default:
+                if (new Date(res.data.endTime).getTime() <= new Date().getTime()) {
+                  this.modifyState(3.1)
+                }
+            }
             // 判断活动状态
             if (res.data.status === 'REWARDED') { // 活动已结束
               this.modifyState(5)
@@ -313,11 +334,14 @@
             return false
           }
         }
-        if (state > this.state) {
-          this.isModal = true
-          this.oldState = this.state
-          this.state = state
-        }
+        setTimeout(() => {
+          if (state > this.state) {
+            this.isModal = true
+            this.oldState = this.state
+            // 等待子组件调整
+            this.state = state
+          }
+        }, 100)
       },
       getParticipants (activityId) {
         const userInfo = getUserInfo()
@@ -348,7 +372,6 @@
               data.nickName = data.user.nickName
               return data
             }).slice(0, 9)
-
             this.participantTotal = res.total
           }
         })
@@ -393,7 +416,7 @@
         ParticipantsService.add({
           activityId: activitie.id,
           scene: 'MEMBER_JOIN_LUCKY_DRAW',
-          ticketsNum: this.ticketsNum,
+          ticketsNum: e.target.dataset.ticketsnum ? e.target.dataset.ticketsnum : this.ticketsNum,
           sellerId: 'system',
           user,
           metadata: {
@@ -459,10 +482,12 @@
       const userInfo = getUserInfo()
       if (userInfo.id) {
         this.signInCB()
+        this.isLoad()
+        this.userInfo = userInfo
+        this.display = false
+      } else {
+        this.$navigateTo('/pages/login/index')
       }
-      this.isLoad()
-      this.userInfo = userInfo
-      this.display = false
     },
     onShareAppMessage () {
       const introductionImageUrl = this.activitie.media.filter(media => media.layout === 'INTRODUCTION')[0]

@@ -36,7 +36,7 @@
                         <div v-if="index<luckyItems.length-1" class="solidDiv"></div>
                     </div>
                 </div>
-                <div class="foot">
+                <div class="foot" >
                     <button class="btn" @tap="copyAll">复制全部</button>
                     <button class="btn btn2" @tap="sendToEmail">发送邮箱</button>
                 </div>

@@ -3,42 +3,36 @@
     <div class='state'>
       正在抽奖<i class="icon iconfont icon-Fillx"></i>
     </div>
-    <a v-if='onDraw.length > 0' class="list" v-for="(item , i) in onDraw" :href="item.url" :key="i">
-      <img mode='aspectFit' :src='item.items[0].metadata.image'>
-      <div class="name antialiased">
-        [ 奖品 ]&nbsp;&nbsp;{{item.items[0].name}}
-      </div>
-
-      <div v-if="item.metadata.drawRule === 'fullTicket'">
-        <span class="joined" v-if="item.metadata.participated">
-          <img style="width:23rpx;height:23rpx;margin-right:3px;" src="/static/img/Combined Shape.png" />
-          已参与 <span style="margin-left:8px;">|</span>
-        </span>
-        <span class="goldBean">
-          <!-- <img src='/static/img/goldBean.png'>
-          <text class='bold'>
-            &nbsp;&nbsp;{{item.metadata.price}} 金豆 1 注
-          </text> -->
-          满<span >{{item.metadata.ticketsNum * item.metadata.price}}</span>金豆开奖
-          <!-- <span>
-            ¥8799
-          </span> -->
-        </span>
-        <div class="fullGoldBean">
-          {{item.metadata.price}}
-          <img src='/static/img/goldBean.png'/>参与
-        </div>
-      </div>
-      <div v-if="item.metadata.drawRule === 'timed'" style="margin-top: 5rpx;">
-          <span class="joined" v-if="item.metadata.participated">
-            <img style="width:23rpx;height:23rpx;margin-right:3px;" src="/static/img/Combined Shape.png" />
-            已参与 <span style="margin-left:8px;">|</span>
-          </span>
-          <span class="goldBean">
-            {{item.endTimeDay}}<span style="color:red">{{item.endTimeHours}}</span>开奖
-          </span>
-      </div>
-      <div v-if="item.metadata.drawRule === 'fullParticipant'" style="margin-top: 5rpx;">
+    <form :data-index='i' report-submit v-for="(item, i) in onDraw" :key='i' @submit='formSubmit'>
+      <button form-type='submit' >
+        <a v-if='onDraw.length > 0' class="list" :key="i">
+          <img mode='aspectFill' :src='item.items[0].metadata.image'>
+          <div class="name antialiased">
+            [ 奖品 ]&nbsp;&nbsp;{{item.items[0].name}}
+          </div>
+          <div v-if="item.metadata.drawRule === 'fullTicket'">
+            <span class="joined" v-if="item.metadata.participated">
+              <img style="width:23rpx;height:23rpx;margin-right:3px;" src="/static/img/Combined Shape.png" />
+              已参与 <span style="margin-left:8px;">|</span>
+            </span>
+            <span class="goldBean">
+              满<span >{{item.metadata.ticketsNum * item.metadata.price}}</span>金豆开奖
+            </span>
+            <div class="fullGoldBean">
+              {{item.metadata.price}}
+              <img src='/static/img/goldBean.png'/>参与
+            </div>
+          </div>
+          <div v-if="item.metadata.drawRule === 'timed'" style="margin-top: 5rpx;">
+            <span class="joined" v-if="item.metadata.participated">
+              <img style="width:23rpx;height:23rpx;margin-right:3px;" src="/static/img/Combined Shape.png" />
+              已参与 <span style="margin-left:8px;">|</span>
+            </span>
+            <span class="goldBean">
+              {{item.endTimeDay}}<span style="color:red">{{item.endTimeHours}}</span>开奖
+            </span>
+          </div>
+          <div v-if="item.metadata.drawRule === 'fullParticipant'" style="margin-top: 5rpx;">
             <span class="joined" v-if="item.metadata.participated">
               <img style="width:23rpx;height:23rpx;margin-right:3px;" src="/static/img/Combined Shape.png" />
               已参与 <span style="margin-left:8px;">|</span>
@@ -46,8 +40,10 @@
             <span class="goldBean">
               满<span style="color:red">{{item.metadata.participantsNum}}</span>人开奖
             </span>
-      </div>
-    </a>
+          </div>
+        </a>
+      </button>
+    </form>
     <div class="v" v-if='onDraw.length === 0'>
       <img mode='widthFix' src="/static/img/v.png" />
       <br />
@@ -61,7 +57,13 @@
 <script>
   export default {
     name: 'activitieList',
-    props: ['onDraw', 'willDraw']
+    props: ['onDraw', 'willDraw'],
+    methods: {
+      formSubmit (e) {
+        const url = this.onDraw[e.target.dataset.index].url
+        this.$navigateTo(url)
+      }
+    }
   }
 </script>
 
@@ -148,14 +150,14 @@ img {
   text-overflow:ellipsis;
   white-space:nowrap;
   overflow:hidden;
+  text-align: left;
 }
 .goldBean{
   color:rgba(102,102,102,1);
   font-family: PingFangSC-Regular;
   font-size: 14*@2;
   float: left;
-  /*font-weight:400;*/
-   span{
+  span{
     font-size:14*@2;
     line-height: 17*@2;
     color: #434343;
@@ -174,27 +176,12 @@ img {
   float: left;
   margin-right: 8px;
 }
-.button{
-  padding:24*@2;
-  >div{
-    background: #CCCCCC;
-    color: #fff;
-    border-radius: 2*@2;
-    height: 40*@2;
-    width: 201*@2;
-    line-height: 40*@2;
-    margin: auto;
-    text-align: center;
-    font-size: 16*@2
-  }
-  button{
-    border-radius: 2*@2;
-    background: #FE4C52;
-    width: 201*@2;
-    height: 40*@2;
-    color: #FFFFFF;
-    font-size: 16*@2;
-
-  }
+form button{
+  width: 100%;
+  height: auto;
+  padding: 0;
+  font-size: 0;
+  line-height: 0;
+  background: transparent!important;
 }
 </style>

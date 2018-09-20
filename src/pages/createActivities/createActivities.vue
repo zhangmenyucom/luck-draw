@@ -386,26 +386,26 @@
         },
         promiseAll () {
           const create1 = CreatePersonalActivity.putActivity({
-                              id: this.activityId,
-                              request: {
-                                description: this.prizeDescription,
-                                endTime: this.prizeEndTime,
-                                media: this.mediaData
-                              }
-                            })
-            const create2 = CreatePersonalActivity.postItems({
-                              id: this.activityId,
-                              itemsData: this.giftItems
-                            })
-            const create3 = CreatePersonalActivity.postMetadata({
-                              id: this.activityId,
-                              metadataData: this.requestMetadata
-                            })
-            Promise.all([create1, create2, create3]).then(res => {
-              console.log(res)
-              this.$hideLoading()
-              this.$showToast('修改成功！')
-            })
+            id: this.activityId,
+            request: {
+              description: this.prizeDescription,
+              endTime: this.prizeEndTime,
+              media: this.mediaData
+            }
+          })
+          const create2 = CreatePersonalActivity.postItems({
+            id: this.activityId,
+            itemsData: this.giftItems
+          })
+          const create3 = CreatePersonalActivity.postMetadata({
+            id: this.activityId,
+            metadataData: this.requestMetadata
+          })
+          Promise.all([create1, create2, create3]).then(res => {
+            console.log(res)
+            this.$hideLoading()
+            this.$showToast('修改成功！')
+          })
         },
         createActivity () {
           this.$showLoading()
