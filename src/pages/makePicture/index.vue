@@ -197,10 +197,10 @@ export default {
       if (data.owner.id === this.$getStorageSync('userInfo').id) {
         items.push(creat)
         if (data.metadata.drawRule === 'timed') {
-        const date = new Date(data.endTime)
-        data.endTimeDay = `${date.getMonth() + 1}月${date.getUTCDate()}日`
-        data.endTimeHours = `${date.getHours() + 1}:${date.getMinutes()}分`
-        creatRule.elementContent = data.endTimeDay + data.endTimeHours + '开奖'
+          const date = new Date(data.endTime)
+          data.endTimeDay = `${date.getMonth() + 1}月${date.getUTCDate()}日`
+          data.endTimeHours = `${date.getHours() + 1}:${date.getMinutes()}分`
+          creatRule.elementContent = data.endTimeDay + data.endTimeHours + '开奖'
         } else if (data.metadata.drawRule === 'fullTicket') {
           creatRule.elementContent = '满' + data.metadata.ticketsNum + '金豆开奖'
         } else if (data.metadata.drawRule === 'fullParticipant') {

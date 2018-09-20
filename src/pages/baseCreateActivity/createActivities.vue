@@ -1,7 +1,7 @@
 <template>
     <div class="page">
         <top title="新建抽奖" />
-        <div v-if="!addPic">
+        <div>
             <div v-for="(item,index) in giftList" :key="index">
                 <addGiftComp
                 :showCanvas="giftList[index]" :giftImgSrc="giftImgSrc[index]"
@@ -15,11 +15,11 @@
                     <div class="weui-cell__bd">开奖方式</div>
                     <div class="weui-cell__ft">
                       <div class="radioDiv div-marginR" @tap="openByTime">
-                        <img class="radioIcon" :src="radioCheck ? '/static/img/radio1.png' : '/static/img/radio2.png'" />
+                        <img class="radioIcon" :src="drawRule == 'timed' ? '/static/img/radio1.png' : '/static/img/radio2.png'" />
                         <span class="radioText">到时间</span>
                       </div>
                       <div class="radioDiv" @tap="openByPeople">
-                        <img class="radioIcon" :src="!radioCheck ? '/static/img/radio1.png' : '/static/img/radio2.png'" />
+                        <img class="radioIcon" :src="drawRule !== 'timed' ? '/static/img/radio1.png' : '/static/img/radio2.png'" />
                         <span class="radioText">满人数</span>
                       </div>
                     </div>
@@ -32,7 +32,10 @@
                     <div class="weui-cell__ft weui-cell__ft_in-access" style="font-size: 0"></div>
                 </div>
                 <div v-if="drawRule === 'fullParticipant'" class="weui-cell weui-cell_access">
-                    <div class="weui-cell__bd"><div>开奖人数<span style="color: red">*</span></div></div>
+                    <div class="weui-cell__bd">
+                      <div>开奖人数 <span style="color: red">*</span></div>
+                      <div class="cant_full">未满人数七天后自动开奖</div>
+                    </div>
                     <input id="fullPeopleNum" type="number" v-model="peopleNum" placeholder="数量" class="weui-cell__ft" style="color:black;display: inline;vertical-align: middle;" />
                     <span class="weui-cell__ft" style="margin-left:5px;vertical-align: middle;">人</span>
                 </div>
@@ -41,9 +44,6 @@
             <div class="weui-cells weui-cells_after-title" style="position:fixed;bottom:0;padding:8px 15px;">
                 <div class="createActivities" @click="createButton">发起抽奖</div>
             </div>
-        </div>
-        <div v-if="addPic">
-          <chooseImage :showImage="showImage" :picIndex="picIndex" :picIndexSrc="picIndexSrc" :imageSrc="imageSrc" />
         </div>
         <createAttention v-if="showAttention" :createActivity="createActivity" :hideAttentionModal="hideAttentionModal" />
     </div>
@@ -63,7 +63,6 @@
           imageSrc: '',
           dateTime: '',
           giftList: [true],
-          addPic: false,
           showCanvas: false,
           giftImgSrc: ['https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg'],
           picIndex: 0,
@@ -89,7 +88,7 @@
           itemName: [],
           itemNum: [],
           peopleNum: '',
-          giftItems: [{id: 'system', name: '', metadata: {url: '', num: 0}}],
+          giftItems: [{id: 'system', name: '', metadata: {image: '', num: 0}}],
           prizeEndTime: 0,
           jsonString: '',
           mediaData: [],
@@ -106,48 +105,34 @@
       },
       methods: {
         inputText (e) {
-          if (e.mp.currentTarget.dataset.name === 'prizeExplain') {
-            this.prizeTextLength = e.mp.detail.value.length
-          }
-          if (e.mp.currentTarget.dataset.name === 'giftExplain') {
-            this.giftTextLength = e.mp.detail.value.length
-          }
           if (e.mp.currentTarget.dataset.name === 'itemName') {
             const itemNameIndex = e.mp.currentTarget.dataset.index
+            this.itemName[itemNameIndex] = e.mp.detail.value
             this.giftItems[itemNameIndex].name = e.mp.detail.value
           }
           if (e.mp.currentTarget.dataset.name === 'itemNum') {
             const itemNumIndex = e.mp.currentTarget.dataset.index
+            this.itemNum[itemNumIndex] = e.mp.detail.value
             this.giftItems[itemNumIndex].metadata.num = e.mp.detail.value
           }
         },
         getImage (index, picIndexSrc) {
           this.$chooseImage().then(res => {
             this.imageSrc = res.tempFilePaths[0]
-            this.addPic = !this.addPic
-            this.picIndex = index
-            this.picIndexSrc = picIndexSrc
+            this.$navigateTo('/pages/cutImage/index?imgSrc=' + res.tempFilePaths[0] + '&picIndex=' + index + '&edition=baseEdition')
           })
-        },
-        showImage (src, index) {
-          this.addPic = !this.addPic
-          if (this.giftList[index]) {
-            this.giftList[index] = !this.giftList[index]
-          }
-          this.giftImgSrc[index] = src
-          this.giftItems[index].metadata.image = src
         },
         openByPeople () {
           this.drawRule = 'fullParticipant'
-          if (this.radioCheck) {
-            this.radioCheck = !this.radioCheck
-          }
+          // if (this.radioCheck) {
+          //   this.radioCheck = !this.radioCheck
+          // }
         },
         openByTime () {
           this.drawRule = 'timed'
-          if (!this.radioCheck) {
-            this.radioCheck = !this.radioCheck
-          }
+          // if (!this.radioCheck) {
+          //   this.radioCheck = !this.radioCheck
+          // }
         },
         check (str) {
           str = str.toString()
@@ -285,16 +270,6 @@
         },
         dataHandle () {
           this.prizeEndTime = new Date(this.dateTime).getTime() + 3000
-          this.giftPictures.map((item) => {
-            this.mediaData.push({
-              'type': 'IMAGE',
-              'url': item,
-              'layout': 'COVER',
-              'title': '',
-              'text': '',
-              'order': 0
-            })
-          })
           if (this.giftItems[0].metadata.url === '') {
             this.giftItems[0].metadata.image = this.giftImgSrc[0]
           }
@@ -303,37 +278,68 @@
               drawRule: this.drawRule,
               isShare: this.isShare,
               endTimeString: this.pickerDate,
-              edition: 'baseEdition'
+              edition: 'baseEdition',
+              prizeExplainText: this.prizeExplainText
             }
           } else {
             this.requestMetadata = {
               drawRule: this.drawRule,
               isShare: this.isShare,
               participantsNum: this.peopleNum,
-              edition: 'baseEdition'
+              edition: 'baseEdition',
+              prizeExplainText: this.prizeExplainText
             }
+          }
+        },
+         promiseAll () {
+          console.log('2', this.mediaData)
+          const create1 = ActivitiesService.putActivity({
+            id: this.activityId,
+            request: {
+              description: this.prizeDescription,
+              endTime: this.prizeEndTime,
+              media: this.mediaData
+            }
+          })
+          const create2 = ActivitiesService.postItems({
+            id: this.activityId,
+            itemsData: this.giftItems
+          })
+          const create3 = this.metadataService()
+          Promise.all([create1, create2, create3]).then(res => {
+            this.$hideLoading()
+            this.$showToast('修改成功！')
+            this.$navigateBack(1)
+          })
+        },
+        metadataService () {
+          if (this.drawRule === 'timed') {
+            ActivitiesService.deleteMetadata({
+              id: this.activityId,
+              key: 'participantsNum'
+            })
+          } else {
+            ActivitiesService.deleteMetadata({
+              id: this.activityId,
+              key: 'endTimeString'
+            })
+          }
+          for (const key in this.requestMetadata) {
+            ActivitiesService.postMetadata({
+              id: this.activityId,
+              metadataData: {'key': key, 'value': this.requestMetadata[key]}
+            })
           }
         },
         createActivity () {
           this.$showLoading()
           this.dataHandle()
           if (this.activityId) {
-            CreatePersonalActivity.putActivity({
-              id: this.activityId,
-              request: {
-                description: this.prizeDescription,
-                endTime: this.prizeEndTime,
-                items: this.giftItems,
-                media: this.mediaData,
-                metadata: this.requestMetadata
-              }
-            }).then(res => {
-              console.log(res)
-              this.$hideLoading()
-              this.$showToast('修改成功！')
+            ActivitiesService.deleteItems(this.activityId).then(res => {
+              this.promiseAll()
             })
           } else {
-            CreatePersonalActivity.createActivity({
+            CreatePersonalActivity.add({
               sellerId: 'system',
               owner: {id: this.userInfo.id, nickName: this.userInfo.nickName, avatar: this.userInfo.avatar},
               type: 'PERSONAL_LUCKY_DRAW',
@@ -393,6 +399,7 @@
             append: 'BET_NUM'
           }).then(res => {
             if (res.code === 0) {
+              this.giftImgSrc = []
               res.data.items.forEach(item => {
                 this.giftImgSrc.push(item.metadata.image)
                 this.itemName.push(item.name)
@@ -411,14 +418,19 @@
         }
       },
       onLoad (options) {
-        this.activityId = options.id
-      },
-      onShow () {
-        if (this.activityId) {
+        this.clearData()
+        this.getNowDate()
+        if (options.id) {
+          this.activityId = options.id
           this.getPersonalActivity(this.activityId)
         }
         this.userInfo = this.$getStorageSync('userInfo')
-        this.getNowDate()
+      },
+      onShow () {
+        const cutPicIndex = this.$getStorageSync('cutPicIndex')
+        const cutImageSrc = this.$getStorageSync('cutImageSrc')
+        this.giftImgSrc[cutPicIndex] = cutImageSrc
+        this.giftItems[cutPicIndex].metadata.image = cutPicIndex
       }
     }
 </script>

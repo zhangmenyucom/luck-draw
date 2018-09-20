@@ -7,11 +7,11 @@
         <div class="weui-cells weui-cells_after-title" style="margin-bottom: 10px;">
             <div class="weui-cell weui-cell_access border-middle">
                 <div class="weui-cell__bd"><span>奖品名称</span><span style="color: red;">*</span></div>
-                <input type="text" id="GiftName" :data-index="index" data-name="itemName" class="weui-cell__ft" v-model="itemName[index]" style="color:black;" @input="inputText" placeholder="请输入" />
+                <input type="text" id="GiftName" :data-index="index" data-name="itemName" class="weui-cell__ft" :value="itemName[index]" style="color:black;" @input="inputText" placeholder="请输入" />
             </div>
             <div class="weui-cell weui-cell_access">
                 <div class="weui-cell__bd"><span>奖品数量</span><span style="color: red">*</span></div>
-                <input type="number" placeholder="请输入" :data-index="index" data-name="itemNum" v-model="itemNum[index]" class="weui-cell__ft" @input="inputText" style="color:black;vertical-align: middle;" />
+                <input type="number" placeholder="请输入" :data-index="index" data-name="itemNum" :value="itemNum[index]" class="weui-cell__ft" @input="inputText" style="color:black;vertical-align: middle;" />
                 <span class="weui-cell__ft" style="color:black;margin-left:5px;vertical-align: middle;">份</span>
             </div>
         </div>
