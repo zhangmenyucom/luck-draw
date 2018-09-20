@@ -19,7 +19,7 @@
     <div v-for='i in 3' />
   </div>
 </swiper-item>
-<swiper-item v-if="current >= 1">
+<swiper-item>
 <div class="circular">
   <div v-for='i in 3' />
 </div>
@@ -42,7 +42,7 @@
   <div v-for='i in 3' />
 </div>
 </swiper-item>
-    <swiper-item v-if="current >= 1">
+    <swiper-item >
     <div class="circular">
       <div v-for='i in 3' />
     </div>

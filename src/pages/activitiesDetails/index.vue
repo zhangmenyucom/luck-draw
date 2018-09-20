@@ -142,6 +142,7 @@
   import FootprintsActivities from '@/services/footprintsActivities'
   import ActivitiesService from '@/services/activitiesService'
   import ParticipantsService from '@/services/participantsService'
+  import PictureService from '@/services/pictureService.js'
   import {
     getUserInfo
   } from '@/utils'
@@ -257,6 +258,68 @@
           }
         })
       },
+      getShareImg (activitie) {
+        let text = ''
+        switch (activitie.metadata.drawRule) {
+          case 'fullTicket':
+            text = `满${activitie.metadata.ticketsNum * activitie.metadata.price}金豆自动开奖，剩余${(activitie.metadata.ticketsNum - activitie.betNum) * activitie.metadata.price}金豆`
+            break
+          case 'fullParticipant':
+            text = `满${activitie.metadata.participantsNum}人开奖，剩余${activitie.metadata.participantsNum - activitie.realNum}人`
+            break
+          case 'timed':
+            text = `${activitie.endTimeDay}-${activitie.endTimeHours}开奖`
+            break
+        }
+        const imgData = {
+          backgroundUrl: 'https://oss.qianbaocard.org/20180920/f16b013a2e3f454487b6fdbdbb419edc.jpg',
+          items: [{
+            xelementLayoutType: 'CENTER',
+            yelementLayoutType: 'ABSOLUTELY',
+            elementContent: activitie.items[0].metadata.image,
+            elementMediaType: 'IMG',
+            y: 30,
+            height: 388,
+            width: 690,
+            sn: 0
+          }, {
+            xelementLayoutType: 'ABSOLUTELY',
+            yelementLayoutType: 'ABSOLUTELY',
+            elementContent: `[奖品]${activitie.items[0].name}`,
+            elementMediaType: 'TEXT',
+            font: {
+              elementFontStyle: 1,
+              fontSize: 36
+            },
+            y: 480,
+            x: 32,
+            height: 388,
+            width: 690,
+            sn: 1
+          }, {
+            xelementLayoutType: 'ABSOLUTELY',
+            yelementLayoutType: 'ABSOLUTELY',
+            elementContent: text,
+            elementMediaType: 'TEXT',
+            y: 528,
+            x: 32,
+            font: {
+              elementFontStyle: 0,
+              fontSize: 32
+            },
+            height: 388,
+            width: 690,
+            sn: 2
+          }]
+        }
+        PictureService.add(imgData).then((res) => {
+          if (res.code === 0) {
+            console.log('res', res)
+            this.shareImg = res.data
+          }
+        })
+        // https://oss.qianbaocard.org/20180920/f16b013a2e3f454487b6fdbdbb419edc.jpg
+      },
       setClipboardData () {
         this.$setClipboardData(this.miniappId)
       },
@@ -322,6 +385,7 @@
             this.activitie = res.data
             this.betNum = res.data.betNum
             this.participateBet = parseInt(this.score / parseInt(this.activitie.metadata.price))
+            this.getShareImg(res.data)
           }
         })
       },
@@ -490,12 +554,12 @@
       }
     },
     onShareAppMessage () {
-      const introductionImageUrl = this.activitie.media.filter(media => media.layout === 'INTRODUCTION')[0]
+      // const introductionImageUrl = this.activitie.media.filter(media => media.layout === 'INTRODUCTION')[0]
       const _this = this
       return {
         title: this.activitie.description || this.activitie.name,
         path: `pages/activitiesDetails/index?id=${this.activitie.id}`,
-        imageUrl: introductionImageUrl && `${introductionImageUrl.url}?x-oss-process=image/resize,w_200,limit_0,m_fill`,
+        imageUrl: this.shareImg,
         success (res) {
           if (res) {
             FootprintsActivities.add({
