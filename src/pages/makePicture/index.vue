@@ -124,7 +124,7 @@ export default {
           relativeSn: '',
           xelementLayoutType: 'CENTER',
           yelementLayoutType: 'ABSOLUTELY',
-          elementContent: '[ 奖品1 ]  ' + data.items[0].name,
+          elementContent: '[ 奖品1 ] ' + data.items[0].name,
           elementMediaType: 'TEXT',
           y: 663,
           font: {
@@ -225,13 +225,14 @@ export default {
           items.push(creatRule)
         } else if (data.items.length >= 2) {
           this.bgUrl = 'https://oss.qianbaocard.com/20180912/58ceabb9c6df4067acdfe6c7a2f70954.png'
+          data.items.shift()
           data.items.forEach(function (item, index) {
             let obj = {}
             obj.sn = index
             obj.xelementLayoutType = 'CENTER'
             obj.yelementLayoutType = 'ABSOLUTELY'
-            obj.elementContent = '[奖品' + (index + 2) + '] ' + item.name
-            obj.y = 621 + parseInt((index + 2) * 42)
+            obj.elementContent = '[奖品' + (index + 2) + ']  ' + item.name
+            obj.y = 621 + parseInt((index + 2) * 48)
             obj.elementMediaType = 'TEXT'
             obj.font = {
               name: '黑体',
@@ -250,7 +251,7 @@ export default {
           items[5].y = 1372
           creatRule.creatRule = 1318
           creatRule.y = 1118
-          console.log(items)
+          items.push(creatRule)
         //   let secondPrize = [
         //     {
         //       sn: '1011',
