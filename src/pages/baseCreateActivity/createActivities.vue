@@ -29,15 +29,15 @@
                     <picker class="weui-cell__ft" mode="multiSelector" @change="MultiPickerChange" :value="indexMulPicker" :range="dateList">
                       {{pickerDate}}
                     </picker>
-                    <div class="weui-cell__ft weui-cell__ft_in-access" style="font-size: 0"></div>
+                    <div class="lastFlex weui-cell__ft_in-access" style="font-size: 0"></div>
                 </div>
                 <div v-if="drawRule === 'fullParticipant'" class="weui-cell weui-cell_access">
-                    <div class="weui-cell__bd">
+                    <div class="weui-cell__bd nameInput">
                       <div>开奖人数 <span style="color: red">*</span></div>
                       <div class="cant_full">未满人数七天后自动开奖</div>
                     </div>
                     <input id="fullPeopleNum" type="number" v-model="peopleNum" placeholder="数量" class="weui-cell__ft" style="color:black;display: inline;vertical-align: middle;" />
-                    <span class="weui-cell__ft" style="margin-left:5px;vertical-align: middle;">人</span>
+                    <span class="lastFlex" style="margin-left:5px;vertical-align: middle;">人</span>
                 </div>
             </div>
             <div class="uperAddActivity" @click="navToUper"><span>使用高级版&nbsp;></span></div>
@@ -109,6 +109,7 @@
             const itemNameIndex = e.mp.currentTarget.dataset.index
             this.itemName[itemNameIndex] = e.mp.detail.value
             this.giftItems[itemNameIndex].name = e.mp.detail.value
+            this.giftItems[itemNameIndex].id = itemNameIndex
           }
           if (e.mp.currentTarget.dataset.name === 'itemNum') {
             const itemNumIndex = e.mp.currentTarget.dataset.index
@@ -267,10 +268,12 @@
           this.peopleNum = ''
           this.radioCheck = true
           this.drawRule = 'timed'
+          this.activityId = ''
+          this.mediaData = []
         },
         dataHandle () {
           this.prizeEndTime = new Date(this.dateTime).getTime() + 3000
-          if (this.giftItems[0].metadata.url === '') {
+          if (this.giftItems[0].metadata.image === '') {
             this.giftItems[0].metadata.image = this.giftImgSrc[0]
           }
           if (this.drawRule === 'timed') {
@@ -278,16 +281,14 @@
               drawRule: this.drawRule,
               isShare: this.isShare,
               endTimeString: this.pickerDate,
-              edition: 'baseEdition',
-              prizeExplainText: this.prizeExplainText
+              edition: 'baseEdition'
             }
           } else {
             this.requestMetadata = {
               drawRule: this.drawRule,
               isShare: this.isShare,
               participantsNum: this.peopleNum,
-              edition: 'baseEdition',
-              prizeExplainText: this.prizeExplainText
+              edition: 'baseEdition'
             }
           }
         },
@@ -301,15 +302,22 @@
               media: this.mediaData
             }
           })
-          const create2 = ActivitiesService.postItems({
-            id: this.activityId,
-            itemsData: this.giftItems
-          })
+          const create2 = this.itemsService()
           const create3 = this.metadataService()
           Promise.all([create1, create2, create3]).then(res => {
             this.$hideLoading()
             this.$showToast('修改成功！')
             this.$navigateBack(1)
+            this.clearData()
+          })
+        },
+        itemsService () {
+          this.giftItems.forEach(giftItem => {
+            ActivitiesService.postItems({
+              id: this.activityId,
+              itemId: giftItem.id,
+              itemsData: {'metadata': giftItem.metadata, 'name': giftItem.name}
+            })
           })
         },
         metadataService () {
@@ -335,9 +343,7 @@
           this.$showLoading()
           this.dataHandle()
           if (this.activityId) {
-            ActivitiesService.deleteItems(this.activityId).then(res => {
-              this.promiseAll()
-            })
+            this.promiseAll()
           } else {
             CreatePersonalActivity.add({
               sellerId: 'system',
@@ -352,10 +358,9 @@
               this.$hideLoading()
               this.$showToast('发起成功！')
               this.$navigateTo(`/pages/activitiesDetails/index?id=${res.data.id}`)
+              this.clearData()
             })
           }
-          this.mediaData = []
-          this.clearData()
           if (this.showAttention) {
             this.showAttention = !this.showAttention
           }
@@ -433,7 +438,7 @@
           this.$removeStorage('cutPicIndex')
           this.$removeStorage('cutImageSrc')
           this.giftImgSrc[cutPicIndex] = cutImageSrc
-          this.giftItems[cutPicIndex].metadata.image = cutPicIndex
+          this.giftItems[cutPicIndex].metadata.image = cutImageSrc
         }
       }
     }

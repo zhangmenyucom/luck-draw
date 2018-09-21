@@ -135,7 +135,7 @@
           itemName: [],
           itemNum: [],
           peopleNum: '',
-          giftItems: [{id: 'system', name: '', metadata: {image: '', num: 0}}],
+          giftItems: [{id: '0', name: '', metadata: {image: '', num: 0}}],
           prizeEndTime: 0,
           jsonString: '',
           mediaData: [],
@@ -174,6 +174,7 @@
             const itemNameIndex = e.mp.currentTarget.dataset.index
             this.itemName[itemNameIndex] = e.mp.detail.value
             this.giftItems[itemNameIndex].name = e.mp.detail.value
+            this.giftItems[itemNameIndex].id = itemNameIndex
           }
           if (e.mp.currentTarget.dataset.name === 'itemNum') {
             const itemNumIndex = e.mp.currentTarget.dataset.index
@@ -185,8 +186,14 @@
           let gl = this.giftList
           gl.push(true)
           this.giftList = gl
-          this.giftItems.push({id: 'system', name: '', metadata: {image: 'https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg', num: 0}})
+          this.giftItems.push({id: gl.length - 1, name: '', metadata: {image: 'https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg', num: 0}})
           this.giftImgSrc.push('https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg')
+          if (this.activityId) {
+            ActivitiesService.addItems({
+              id: this.activityId,
+              itemsData: this.giftItems[gl.length - 1]
+            })
+          }
         },
         getImage (index) {
           this.$chooseImage().then(res => {
@@ -207,6 +214,12 @@
           }
           if (this.giftItems[index]) {
             this.giftItems.splice(index, 1)
+          }
+          if (this.activityId) {
+            ActivitiesService.deleteItems({
+              id: this.activityId,
+              itemId: index
+            })
           }
         },
         addPicture () {
@@ -376,22 +389,36 @@
           if (this.giftItems[0].metadata.image === '') {
             this.giftItems[0].metadata.image = this.giftImgSrc[0]
           }
+          const requestMetadata1 = {
+            drawRule: this.drawRule,
+            isShare: this.isShare,
+            endTimeString: this.pickerDate,
+            edition: 'uperEdition',
+            prizeExplainText: this.prizeExplainText
+          }
+          const requestMetadata2 = {
+            drawRule: this.drawRule,
+            isShare: this.isShare,
+            endTimeString: this.pickerDate,
+            edition: 'uperEdition'
+          }
+          const requestMetadata3 = {
+            drawRule: this.drawRule,
+            isShare: this.isShare,
+            participantsNum: this.peopleNum,
+            edition: 'uperEdition',
+            prizeExplainText: this.prizeExplainText
+          }
+          const requestMetadata4 = {
+            drawRule: this.drawRule,
+            isShare: this.isShare,
+            participantsNum: this.peopleNum,
+            edition: 'uperEdition'
+          }
           if (this.drawRule === 'timed') {
-            this.requestMetadata = {
-              drawRule: this.drawRule,
-              isShare: this.isShare,
-              endTimeString: this.pickerDate,
-              edition: 'uperEdition',
-              prizeExplainText: this.prizeExplainText
-            }
+            this.requestMetadata = this.prizeExplainText ? requestMetadata1 : requestMetadata2
           } else {
-            this.requestMetadata = {
-              drawRule: this.drawRule,
-              isShare: this.isShare,
-              participantsNum: this.peopleNum,
-              edition: 'uperEdition',
-              prizeExplainText: this.prizeExplainText
-            }
+            this.requestMetadata = this.prizeExplainText ? requestMetadata3 : requestMetadata4
           }
           this.mediaData = mediaData
         },
@@ -404,17 +431,22 @@
               media: this.mediaData
             }
           })
-
-          const create2 = ActivitiesService.postItems({
-            id: this.activityId,
-            itemsData: this.giftItems
-          })
+          const create2 = this.itemsService()
           const create3 = this.metadataService()
           Promise.all([create1, create2, create3]).then(res => {
             this.$hideLoading()
             this.$showToast('修改成功！')
             this.$navigateBack(1)
             this.clearData()
+          })
+        },
+        itemsService () {
+          this.giftItems.forEach(giftItem => {
+            ActivitiesService.postItems({
+              id: this.activityId,
+              itemId: giftItem.id,
+              itemsData: {'metadata': giftItem.metadata, 'name': giftItem.name}
+            })
           })
         },
         metadataService () {
@@ -429,6 +461,12 @@
               key: 'endTimeString'
             })
           }
+          if (!this.prizeExplainText) {
+            ActivitiesService.deleteMetadata({
+              id: this.activityId,
+              key: 'prizeExplainText'
+            })
+          }
           for (const key in this.requestMetadata) {
             ActivitiesService.postMetadata({
               id: this.activityId,
@@ -440,9 +478,7 @@
           this.$showLoading()
           this.dataHandle()
           if (this.activityId) {
-            ActivitiesService.deleteItems(this.activityId).then(res => {
-              return this.promiseAll()
-            })
+            this.promiseAll()
           } else {
             CreatePersonalActivity.add({
               sellerId: 'system',
@@ -475,6 +511,7 @@
           this.isShare = false
           this.drawRule = 'timed'
           this.giftList = [true]
+          this.giftItems = [{id: '0', name: '', metadata: {image: '', num: 0}}]
           this.mediaData = []
         },
         hideAttentionModal () {
@@ -517,10 +554,12 @@
           }).then(res => {
             if (res.code === 0) {
               this.giftImgSrc = []
+              this.giftItems = []
               res.data.items.forEach(item => {
                 this.giftImgSrc.push(item.metadata.image)
                 this.itemName.push(item.name)
                 this.itemNum.push(item.metadata.num)
+                this.giftItems.push(item)
               })
               for (let i = 0; i < res.data.items.length - 1; i++) {
                 this.giftList.push(true)
@@ -557,7 +596,7 @@
           this.$removeStorage('cutPicIndex')
           this.$removeStorage('cutImageSrc')
           this.giftImgSrc[cutPicIndex] = cutImageSrc
-          this.giftItems[cutPicIndex].metadata.image = cutPicIndex
+          this.giftItems[cutPicIndex].metadata.image = cutImageSrc
         }
       }
     }
