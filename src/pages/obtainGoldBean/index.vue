@@ -11,7 +11,7 @@
         </span>
         <div class="c"></div>
         <div class="record">
-          <div v-for='i in 7' :class="{opacity:(i +1 ) > scoreCounters.number}" :key="i">
+          <div v-for='i in 5' :class="{opacity:(i +1 ) > scoreCounters.number}" :key="i">
             <div class="icon">
               {{goldBean[i]}}
             </div>

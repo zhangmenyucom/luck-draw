@@ -231,7 +231,7 @@ export default {
             obj.sn = index
             obj.xelementLayoutType = 'CENTER'
             obj.yelementLayoutType = 'ABSOLUTELY'
-            obj.elementContent = '[奖品' + (index + 2) + ']  ' + item.name
+            obj.elementContent = '[ 奖品' + (index + 2) + ' ] ' + item.name
             obj.y = 621 + parseInt((index + 2) * 48)
             obj.elementMediaType = 'TEXT'
             obj.font = {

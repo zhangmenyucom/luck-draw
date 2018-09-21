@@ -25,7 +25,7 @@
         备注
       </span>
       <div class="center">
-        <textarea auto-height :disabled='isTakePrize' v-model='remarks' placeholder='请输入' name=""></textarea>
+        <textarea auto-height :disabled='!isTakePrize' v-model='remarks' placeholder='请输入' name=""></textarea>
       </div>
     </div>
     <button @tap="addAddress"  class="bottom" v-if='isTakePrize'>
