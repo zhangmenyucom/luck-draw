@@ -184,6 +184,9 @@
         },
         addGift () {
           let gl = this.giftList
+          if (gl.length === 3) {
+            return this.$showToast('活动最多支持3种奖品！')
+          }
           gl.push(true)
           this.giftList = gl
           this.giftItems.push({id: gl.length - 1, name: '', metadata: {image: 'https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg', num: 0}})
