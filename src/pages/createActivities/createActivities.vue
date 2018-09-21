@@ -24,7 +24,7 @@
             </div>
             <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
                 <div class="weui-cell weui-cell_access border-middle">
-                    <div class="weui-cell__bd">抽奖说明</div>
+                    <div class="weui-cell__bd nameInput">抽奖说明</div>
                     <span class="weui-cell__ft" style="font-size:12px;font-family:PingFangSC-Regular;font-weight:400;color:rgba(153,153,153,1);">{{prizeTextLength}}/100</span>
                 </div>
                 <div class="weui-cell weui-cell_access">
@@ -33,7 +33,7 @@
             </div>
             <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
                 <div class="weui-cell weui-cell_access border-middle">
-                    <div class="weui-cell__bd">奖品介绍</div>
+                    <div class="weui-cell__bd nameInput">奖品介绍</div>
                     <span class="weui-cell__ft" style="font-size:12px;font-family:PingFangSC-Regular;font-weight:400;color:rgba(153,153,153,1);">{{giftTextLength}}/100</span>
                 </div>
                 <div class="turnLine">
@@ -53,7 +53,7 @@
             </div>
             <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
                 <div class="weui-cell weui-cell_access border-middle">
-                    <div class="weui-cell__bd">开奖方式</div>
+                    <div class="weui-cell__bd nameInput">开奖方式</div>
                     <div class="weui-cell__ft">
                       <div class="radioDiv div-marginR" @tap="openByTime">
                         <img class="radioIcon" :src=" drawRule == 'timed' ? '/static/img/radio1.png' : '/static/img/radio2.png'" />
@@ -66,19 +66,19 @@
                     </div>
                 </div>
                 <div v-if="drawRule === 'timed'" class="weui-cell weui-cell_access">
-                    <div class="weui-cell__bd">开奖时间 <span style="color: red">*</span></div>
+                    <div class="weui-cell__bd nameInput">开奖时间 <span style="color: red">*</span></div>
                     <picker class="weui-cell__ft" mode="multiSelector" @change="MultiPickerChange" :value="indexMulPicker" :range="dateList">
                       {{pickerDate}}
                     </picker>
-                    <div class="weui-cell__ft weui-cell__ft_in-access" style="font-size: 0"></div>
+                    <div class="lastFlex weui-cell__ft_in-access" style="font-size: 0"></div>
                 </div>
                 <div v-if="drawRule === 'fullParticipant'" class="weui-cell weui-cell_access">
-                    <div class="weui-cell__bd">
+                    <div class="weui-cell__bd nameInput">
                       <div>开奖人数 <span style="color: red">*</span></div>
                       <div class="cant_full">未满人数七天后自动开奖</div>
                     </div>
                     <input type="number" placeholder="数量" v-model="peopleNum" class="weui-cell__ft" style="color:black;display: inline;vertical-align: middle;" />
-                    <span class="weui-cell__ft" style="margin-left:5px;vertical-align: middle;">人</span>
+                    <span class="lastFlex" style="margin-left:5px;vertical-align: middle;">人</span>
                 </div>
             </div>
             <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
@@ -184,6 +184,9 @@
         },
         addGift () {
           let gl = this.giftList
+          if (gl.length === 3) {
+            return this.$showToast('活动最多支持3种奖品！')
+          }
           gl.push(true)
           this.giftList = gl
           this.giftItems.push({id: gl.length - 1, name: '', metadata: {image: 'https://oss.qianbaocard.com/20180913/9c42bcdf5c5c4e8abf4c0dc9c14630a5.jpg', num: 0}})
@@ -568,7 +571,11 @@
                 this.giftPictures.push(mediaData.url)
               })
               this.drawRule = res.data.metadata.drawRule
-              this.isShare = res.data.metadata.isShare
+              if (res.data.metadata.isShare === 'true') {
+                this.isShare = true
+              } else {
+                this.isShare = false
+              }
               this.prizeDescription = res.data.description
               this.prizeExplainText = res.data.metadata.prizeExplainText
               if (res.data.metadata.drawRule === 'timed') {
