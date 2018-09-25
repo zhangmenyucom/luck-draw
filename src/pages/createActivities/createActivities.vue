@@ -140,7 +140,8 @@
           jsonString: '',
           mediaData: [],
           showAttention: false,
-          activityId: ''
+          activityId: '',
+          navPage: 0
         }
       },
       components: {
@@ -439,7 +440,7 @@
           Promise.all([create1, create2, create3]).then(res => {
             this.$hideLoading()
             this.$showToast('修改成功！')
-            this.$navigateBack(1)
+            this.$navigateBack(parseInt(this.navPage))
             this.clearData()
           })
         },
@@ -591,7 +592,9 @@
         this.clearData()
         this.getNowDate()
         if (options.id) {
+          console.log(options.navPage)
           this.activityId = options.id
+          this.navPage = options.navPage
           this.getPersonalActivity(this.activityId)
         }
         this.userInfo = this.$getStorageSync('userInfo')

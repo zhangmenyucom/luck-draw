@@ -33,6 +33,14 @@
       </div>
       <!-- 活动信息及状态end -->
 
+      <!-- 编辑 -->
+      <div class="edit" v-if="participantTotal == 0 && activitie.status == 'CREATED' && activitie.owner.id == userInfo.id" >
+        <a :href="activitie.metadata.edition === 'baseEdition'?'/pages/baseCreateActivity/createActivities?id='+activitie.id:'/pages/createActivities/createActivities?id='+activitie.id+'&navPage=1'">
+          编辑抽奖
+        </a>
+      </div>
+      <!-- 编辑结束 -->
+
 
       <!-- 赞助商 -->
       <a class="hint" v-if="activitie.metadata.hasSponsor == 'true' || activitie.type == 'PERSONAL_LUCKY_DRAW'">
