@@ -114,7 +114,9 @@
     },
     methods: {
       hideModal () {
-        if (this.isFree) return (this.isFree = false)
+        if (this.isFree) {
+          this.$emit('update:isFree', false)
+        }
         if (this.state === 3 || this.state === 1) this.$emit('update:state', this.oldState)
         this.ticketsNum = 1
         this.isModal = false

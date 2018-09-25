@@ -169,6 +169,7 @@
       height: 100*@2;
       position: relative;
       margin: 16*@2 auto;
+      background:#F9F9F9;
       >div {
        width: 90*@2;
        height: 90*@2;
@@ -261,6 +262,7 @@
     display: flex;
   }
   .prize {
+    background:#F9F9F9;
     transform: scale(0.7);
     opacity: 0.7;
     position: relative;

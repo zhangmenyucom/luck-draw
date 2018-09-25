@@ -1,0 +1,403 @@
+.c {
+  height: 0;
+  overflow: hidden;
+}
+a {
+  background: #fff;
+}
+.gray {
+  margin: 0 -32rpx;
+  background: #F9F9F9;
+  padding: 0 32rpx 160rpx;
+}
+.interval {
+  margin: 0 -32rpx;
+  background: #F9F9F9;
+  height: 20rpx;
+}
+.activitiesDetails {
+  width: 100vw;
+  overflow-x: hidden;
+  min-height: calc(4vh);
+  padding: 32rpx 32rpx 0;
+  position: relative;
+  background: #fff;
+  line-height: 0;
+  /*padding-bottom: 80*@2;*/
+  overflow: hidden;
+  box-sizing: border-box;
+}
+.activitiesDetails .swiper {
+  width: 100%;
+  height: 340rpx;
+}
+.activitiesDetails .swiper img {
+  width: 100%;
+  height: 340rpx;
+}
+.activitiesDetails .edit {
+  border-top: 2rpx solid #eaeaea;
+  font-size: 28rpx;
+  line-height: 80rpx;
+  margin: 0 -32rpx;
+  text-align: center;
+}
+.activitiesDetails .description {
+  color: #666666;
+  font-size: 28rpx;
+  line-height: 42rpx;
+  margin: 32rpx 0;
+}
+.activitiesDetails .description span {
+  color: #666666;
+}
+.activitiesDetails .bottom {
+  transition: bottom 1s;
+  background: #ffffff;
+  box-shadow: 0rpx -2rpx 0rpx 0rpx #eaeaea;
+  position: absolute;
+  width: 100%;
+  left: 0;
+  bottom: -112rpx;
+  height: 112rpx;
+  display: flex;
+  padding: 8rpx 20rpx;
+}
+.activitiesDetails .bottom > div {
+  flex: 1;
+  padding: 8rpx;
+}
+.activitiesDetails .bottom .button {
+  height: 80rpx;
+  background: #fe4c52;
+  border-radius: 4rpx;
+  font-size: 28rpx;
+  color: #ffffff;
+}
+.activitiesDetails .bottom .button-o {
+  border: 1px solid #fe4c52;
+  color: #FE4C52;
+  background: #ffffff;
+}
+.activitiesDetails .bottomShow {
+  bottom: 0;
+}
+.activitiesDetails .activitieInfo {
+  float: left;
+  width: 100%;
+  line-height: 34rpx;
+  padding: 20rpx 32rpx;
+  margin: 0 -32rpx;
+}
+.activitiesDetails .activitieInfo > .state {
+  float: left;
+  color: #666666;
+  font-size: 26rpx;
+}
+.activitiesDetails .activitieInfo > .state > text {
+  display: inline;
+  font-size: 26rpx;
+  color: #ff878b;
+  position: relative;
+  right: 4rpx;
+}
+.activitiesDetails .activitieInfo > .info {
+  color: #F3B913;
+  font-size: 28rpx;
+  float: right;
+}
+.activitiesDetails .activitieInfo > .info img {
+  width: 30rpx;
+  height: 28rpx;
+  position: relative;
+  right: 4rpx;
+  top: 2rpx;
+}
+.activitiesDetails .hei {
+  height: 16rpx;
+  background: #F1F1F1;
+  margin: 32rpx -32rpx;
+  clear: both;
+}
+.activitiesDetails text {
+  font-size: 32rpx;
+}
+.activitiesDetails span {
+  font-size: 26rpx;
+  display: inline-block;
+}
+.activitiesDetails .button {
+  background: #f3b913;
+  color: #ffffff;
+  font-size: 32rpx;
+  height: 80rpx;
+  line-height: 80rpx;
+  text-align: center;
+}
+.activitiesDetails .productsInfo .title {
+  color: #999999;
+  font-size: 32rpx;
+  text-align: center;
+  border-bottom: 2rpx solid #D8D8D8;
+  height: 20rpx;
+}
+.activitiesDetails .productsInfo .title > span {
+  padding: 0 20rpx;
+  background: #fff;
+  display: inline-block;
+  line-height: 40rpx;
+}
+.activitiesDetails .productsInfo .info {
+  color: #434343;
+  font-size: 28rpx;
+  line-height: 36rpx;
+  margin-top: 48rpx;
+}
+.activitiesDetails .productsInfo .info img {
+  width: 100%;
+  margin-top: 16rpx;
+}
+.activitiesDetails .prizeq {
+  border: 2rpx solid #E8DAB3;
+  padding: 32rpx;
+  font-size: 28rpx;
+  line-height: 36rpx;
+  color: #999999;
+}
+.activitiesDetails .prizeq .button {
+  background-color: #B5912D;
+  color: #fff;
+  width: 240rpx;
+  margin: 32rpx auto;
+  font-size: 28rpx;
+}
+.activitiesDetails .prizeq > div {
+  margin-bottom: 16rpx;
+}
+.activitiesDetails .prizeq .explain {
+  color: #B5912D;
+  text-align: center;
+  margin-top: 32rpx;
+}
+.activitiesDetails .prizeq .title {
+  color: #A99049;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 30rpx;
+  font-weight: 500;
+}
+.activitiesDetails .prizeq .title > img {
+  width: 36rpx;
+  height: 18rpx;
+  margin-right: 6rpx;
+}
+.activitiesDetails .prizeq .rectangle {
+  height: 80rpx;
+  line-height: 80rpx;
+  color: #999999;
+  font-size: 24rpx;
+  background: #F9F9F9;
+  text-align: center;
+  margin-top: 32rpx;
+}
+.activitiesDetails .prizeq .explainq {
+  font-size: 20rpx;
+}
+.activitiesDetails .prizeq .index {
+  width: 28rpx;
+  height: 28rpx;
+  text-align: center;
+  line-height: 28rpx;
+  color: #fff;
+  font-size: 24rpx;
+  display: inline-block;
+  background: #A99049;
+  border-radius: 12rpx;
+  margin-right: 20rpx;
+}
+.activitiesDetails > img {
+  width: 100%;
+  height: 358rpx;
+}
+.activitiesDetails .prompt {
+  padding: 0 32rpx;
+  height: 80rpx;
+  background: rgba(0, 0, 0, 0.8);
+  font-size: 28rpx;
+  line-height: 80rpx;
+  position: relative;
+  margin-top: -80rpx;
+  z-index: 2;
+  color: #fff;
+}
+.activitiesDetails .prompt span {
+  color: #FFDD3E;
+}
+.activitiesDetails .name {
+  position: relative;
+  left: -12rpx;
+  font-size: 32rpx;
+  line-height: 40rpx;
+  margin-top: 32rpx;
+  font-weight: 600;
+  color: #434343;
+}
+.activitiesDetails .name text {
+  color: #FE4C52;
+}
+.activitiesDetails .goldBean {
+  display: flex;
+  margin-top: 20rpx;
+}
+.activitiesDetails .goldBean img {
+  width: 30rpx;
+  height: 28rpx;
+  margin-top: 4rpx;
+}
+.activitiesDetails .goldBean text {
+  color: #F3B913;
+  font-size: 28rpx;
+  line-height: 36rpx;
+}
+.activitiesDetails .goldBean span {
+  font-size: 26rpx;
+  font-family: PingFangSC-Regular;
+  font-weight: 400;
+  color: #666666;
+}
+.activitiesDetails .goldBean div {
+  font-size: 26rpx;
+  font-family: PingFangSC-Regular;
+  font-weight: 400;
+  color: #666666;
+  line-height: 32rpx;
+  flex: 1;
+}
+.activitiesDetails .draw {
+  line-height: 0 !important;
+  font-size: 0 !important;
+}
+.activitiesDetails .draw > span {
+  line-height: 0 !important;
+  font-size: 0 !important;
+}
+.activitiesDetails .draw > div {
+  margin: 48rpx 0 16rpx;
+  text-align: center;
+  font-size: 36rpx;
+  line-height: 48rpx;
+  color: #434343;
+}
+.activitiesDetails .hint {
+  border-top: 2rpx solid rgba(234, 234, 234, 0.5);
+  clear: both;
+  /*padding: 0 8*@2;*/
+  width: 100%;
+  /*margin-top: 16*@2;*/
+  /*color: #EF8229;*/
+  line-height: 100rpx;
+  /*background: rgba(250, 175, 108, 0.1);*/
+  font-size: 24rpx;
+  /*margin-bottom: 8*@2;*/
+}
+.activitiesDetails .hint > div {
+  float: right;
+  color: #434343;
+  font-size: 28rpx;
+}
+.activitiesDetails .hint > div > img {
+  width: 48rpx;
+  height: 48rpx;
+  border-radius: 24rpx;
+  background: #fff;
+  vertical-align: middle;
+}
+.activitiesDetails .hint > div > i {
+  display: inline-block;
+  margin-left: 8rpx;
+  /*color: #24AF41;*/
+}
+.activitiesDetails .hint > div .gray {
+  color: #999999;
+  margin-left: 30rpx;
+}
+.activitiesDetails .mediaInfo {
+  margin-top: 32rpx;
+  padding-bottom: 32rpx;
+}
+.activitiesDetails .mediaInfo img {
+  width: 100%;
+}
+.activitiesDetails .participant {
+  margin-top: 48rpx;
+  text-align: center;
+}
+.activitiesDetails .participant span {
+  font-size: 24rpx;
+  line-height: 36rpx;
+  margin-bottom: 16rpx;
+  display: block;
+}
+.activitiesDetails .participant span > a {
+  display: inline-block;
+  color: #FE4C52;
+  background: transparent;
+}
+.participantMe {
+  margin-top: 32rpx;
+}
+.participantMe .participantInfo {
+  color: #434343;
+  font-size: 28rpx;
+  line-height: 36rpx;
+}
+.participantMe .participantInfo > i {
+  text-align: center;
+  width: 80rpx;
+  color: #999999;
+  font-size: 24rpx;
+  line-height: 20rpx;
+  float: right;
+}
+.participantMe .explain {
+  margin-top: 32rpx;
+  background: #fff9ed;
+  color: #dfc293;
+  font-size: 24rpx;
+  line-height: 36rpx;
+  padding: 32rpx;
+  text-align: center;
+}
+.free {
+  color: #cccccc;
+  font-size: 24rpx;
+  line-height: 32rpx;
+  margin-top: 80rpx;
+  text-align: center;
+}
+.shade {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(90, 87, 87, 0.5) !important;
+}
+.shade .foot {
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  background: #ffffff;
+}
+.shade .foot > button {
+  text-align: center;
+  height: 104rpx;
+  line-height: 100rpx;
+  border-bottom: 1px solid #FFF0F5;
+  color: #434343;
+  font-size: 16px;
+  border-radius: 0;
+}
+.display {
+  display: none;
+}
