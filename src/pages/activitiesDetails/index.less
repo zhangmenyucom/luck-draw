@@ -7,16 +7,26 @@
 a {
   background: #fff;
 }
-
+.gray{
+  margin: 0 -16*@2 ;
+  background:#F9F9F9;
+  padding:0 16*@2 80*@2;
+}
+.interval{
+  margin: 0 -16*@2;
+  background:#F9F9F9;
+  height: 10*@2;
+}
 .activitiesDetails {
   width: 100vw;
   overflow-x: hidden;
-  min-height: calc(100vh - (64*@2));
-  padding: 16*@2;
+  min-height: calc(100vh - (48*@2));
+  padding: 16*@2 16*@2 0;
   position: relative;
   background: #fff;
   line-height: 0;
-  padding-bottom: 80*@2;
+  /*padding-bottom: 80*@2;*/
+  overflow: hidden;
   box-sizing: border-box;
   .swiper {
     width: 100%;
@@ -41,12 +51,13 @@ a {
     margin: 16*@2 0;
   }
   .bottom {
+    transition: bottom 1s;
     background: rgba(255, 255, 255, 1);
     box-shadow: 0*@2 -1*@2 0*@2 0*@2 rgba(234, 234, 234, 1);
     position: absolute;
     width: 100%;
     left: 0;
-    bottom: 0;
+    bottom: -56*@2;
     height: 56*@2;
     display: flex;
     padding: 4*@2 10*@2;
@@ -66,6 +77,9 @@ a {
       color: #FE4C52;
       background: rgba(255, 255, 255, 1);
     }
+  }
+  .bottomShow{
+    bottom:0;
   }
   .activitieInfo {
     float: left;

@@ -66,6 +66,7 @@
         </div>
       </div>
       <!-- 我发起的活动 可以看到中奖者信息 结束 -->
+        <div class="interval"></div>
       <!-- 奖品详情 -->
       <div class="description">
         {{activitie.description}}
@@ -77,13 +78,13 @@
 
       <!-- 开奖后 -->
       <openingPrizeAfter v-if='state >= 5' :participants="participants" :state="state" :activitie="activitie" />
-        <!-- 开奖后 -->
+      <!-- 开奖后 -->
 
         <!-- 中奖名单 -->
         <luckyitems v-if='state >= 5 && luckyItemList.length > 0' :list='luckyItemList' :activitie = 'activitie' />
-          <!-- 中奖名单结束 -->
+        <!-- 中奖名单结束 -->
+        <div class="gray">
           <!-- 抽奖按钮 -->
-
           <luckDraw v-if='state >= 0 && state <= 3.1' :state = 'state' :participants='participants' :activitie = 'activitie' :modifyState= 'modifyState' :bets='bets'/>
             <!-- 抽奖按钮结束 -->
             <!-- 参加列表 -->
@@ -99,8 +100,9 @@
               点此查看免责说明
             </div>
             <!-- 免责说明结束 -->
+          </div>
             <!-- 底部 -->
-            <div class='bottom'>
+            <div :class='{bottom:true, bottomShow:isBottom}'>
               <div>
                 <a href="/pages/baseCreateActivity/createActivities" class="button">
                   发起抽奖
@@ -206,6 +208,7 @@
         QR: '',
         mediaInfoimg: [], // 商品详情列表
         luckyItemList: [], // 中奖者名单
+        isBottom: false,
         state: 0
         // 0 NotInvolved 未参与
         // 1 Bets 下注
@@ -512,6 +515,10 @@
         this.getMeScores()
         getMeScores.start(this)
       }
+    },
+    onReachBottom () {
+        console.log('ddd')
+        this.isBottom = true
     },
     onLoad (options) {
       this.id = options.id
