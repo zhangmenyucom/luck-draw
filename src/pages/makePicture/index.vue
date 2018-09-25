@@ -49,13 +49,44 @@ export default {
         }
         return rule
     },
+    dealPrize (data, y, line) {
+      let arr = []
+      data.items.forEach(function (item, index) {
+            let obj = {}
+            item.name = item.name.length > 6 ? item.name.slice(0, 5) + '...' : item.name
+            obj.sn = index
+            obj.xelementLayoutType = 'ABSOLUTELY'
+            obj.yelementLayoutType = 'ABSOLUTELY'
+            obj.elementContent = '[奖品] ' + item.name + ' x ' + item.metadata.num
+            obj.y = y + parseInt((index + 1) * line)
+            obj.x = 99
+            obj.elementMediaType = 'TEXT'
+            obj.font = {
+              name: '黑体',
+              elementFontStyle: 0,
+              fontSize: 38
+            }
+            obj.color = {
+              r: 67,
+              g: 67,
+              b: 67,
+              a: 1
+            }
+            if (y === 619) {
+              obj.xelementLayoutType = 'CENTER'
+              obj.x = 0
+            }
+            arr.push(obj)
+      })
+      return arr
+    },
     getPicture (data) {
       let creat = {
         sn: '1009',
         relativeSn: '',
         xelementLayoutType: 'CENTER',
         yelementLayoutType: 'ABSOLUTELY',
-        elementContent: '发起了一个抽奖活动',
+        elementContent: '「发起了一个抽奖活动 」',
         elementMediaType: 'TEXT',
         y: 250,
         font: {
@@ -76,7 +107,7 @@ export default {
         yelementLayoutType: 'ABSOLUTELY',
         elementContent: '',
         elementMediaType: 'TEXT',
-        y: 721,
+        y: 703,
         font: {
           name: '黑体',
           elementFontStyle: 0,
@@ -134,33 +165,13 @@ export default {
           width: 550
         },
         {
-          sn: '1004',
-          relativeSn: '',
-          xelementLayoutType: 'CENTER',
-          yelementLayoutType: 'ABSOLUTELY',
-          elementContent: '[ 一个奖品 ] ' + data.items[0].name,
-          elementMediaType: 'TEXT',
-          y: 663,
-          font: {
-            name: '黑体',
-            elementFontStyle: 0,
-            fontSize: 34
-          },
-          color: {
-            r: 67,
-            g: 67,
-            b: 67,
-            a: 1
-          }
-        },
-        {
           sn: '1005',
           relativeSn: '',
           xelementLayoutType: 'CENTER',
           yelementLayoutType: 'ABSOLUTELY',
           elementContent: this.twoCode,
           elementMediaType: 'IMG',
-          y: 769,
+          y: 785,
           height: 150,
           width: 150
         },
@@ -171,7 +182,7 @@ export default {
           yelementLayoutType: 'ABSOLUTELY',
           elementContent: '长按识别小程序码，参与抽奖',
           elementMediaType: 'TEXT',
-          y: 975,
+          y: 991,
           font: {
             name: 'PingFangSC',
             elementFontStyle: 0,
@@ -223,30 +234,37 @@ export default {
       if (data.owner.id === this.$getStorageSync('userInfo').id) {
         items.push(creat)
         if (data.items.length === 1) {
+          items = items.concat(this.dealPrize(data, 619, 46))
+          creatRule.y = 737
           items.push(creatRule)
-        } else if (data.items.length >= 2) {
-          let prizeName = ''
-          data.items.forEach(function (item, index) {
-            prizeName += item.name + ' X ' + item.metadata.num + '、'
+        } else if (data.items.length === 2) {
+          let arr = this.dealPrize(data, 606, 45).map(function (item, index) {
+              item.font.fontSize = 32
+              item.x = 138
+              return item
           })
-          items[3].elementContent = '[ 奖品] ' + prizeName
-          items[3].font = {
-            name: '黑体',
-            elementFontStyle: 0,
-            fontSize: 30
-          }
+          items = items.concat(arr)
+          creatRule.y = 753
+          items.push(creatRule)
+        } else if (data.items.length === 3) {
+          let arr = this.dealPrize(data, 595, 40).map(function (item, index) {
+            item.font.fontSize = 28
+            item.x = 164
+            return item
+          })
+          items = items.concat(arr)
+          creatRule.y = 761
           items.push(creatRule)
         }
       }
       // 中奖
       if (this.lucky === true) {
         creat.elementContent = '「我中奖了」'
-        items[4].y = 711
-        items[5].y = 917
+        items = items.concat(this.dealPrize(data, 619, 46))
         items.push(creat)
       }
       MakePictureService.add({
-        backgroundUrl: 'https://oss.qianbaocard.com/20180912/c45dced1f0564763a949c9067c209584.png',
+        backgroundUrl: 'https://oss.qianbaocard.com/20180925/932bf2248ed44a38a8100caa37617f73.jpg',
         items
       }).then((res) => {
         if (res.code === 0) {
