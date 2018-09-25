@@ -35,6 +35,20 @@ export default {
         })
       })
     },
+    dealRule (data) {
+      let rule = ''
+      if (data.metadata.drawRule === 'timed') {
+          const date = new Date(data.endTime)
+          data.endTimeDay = `${date.getMonth() + 1}月${date.getUTCDate()}日`
+          data.endTimeHours = `${date.getHours() + 1}:${date.getMinutes()}分`
+          rule = data.endTimeDay + data.endTimeHours + '开奖'
+        } else if (data.metadata.drawRule === 'fullTicket') {
+          rule = '满' + data.metadata.ticketsNum + '金豆开奖'
+        } else if (data.metadata.drawRule === 'fullParticipant') {
+          rule = '满' + data.metadata.participantsNum + '人开奖'
+        }
+        return rule
+    },
     getPicture (data) {
       let creat = {
         sn: '1009',
@@ -62,7 +76,7 @@ export default {
         yelementLayoutType: 'ABSOLUTELY',
         elementContent: '',
         elementMediaType: 'TEXT',
-        y: 680,
+        y: 721,
         font: {
           name: '黑体',
           elementFontStyle: 0,
@@ -124,7 +138,7 @@ export default {
           relativeSn: '',
           xelementLayoutType: 'CENTER',
           yelementLayoutType: 'ABSOLUTELY',
-          elementContent: '[ 奖品1 ] ' + data.items[0].name,
+          elementContent: '[ 一个奖品 ] ' + data.items[0].name,
           elementMediaType: 'TEXT',
           y: 663,
           font: {
@@ -204,139 +218,35 @@ export default {
           }
         }
       ]
-      this.bgUrl = 'https://oss.qianbaocard.com/20180912/c45dced1f0564763a949c9067c209584.png'
+      creatRule.elementContent = this.dealRule(data)
       // 个人发起抽奖
       if (data.owner.id === this.$getStorageSync('userInfo').id) {
         items.push(creat)
-        if (data.metadata.drawRule === 'timed') {
-          const date = new Date(data.endTime)
-          data.endTimeDay = `${date.getMonth() + 1}月${date.getUTCDate()}日`
-          data.endTimeHours = `${date.getHours() + 1}:${date.getMinutes()}分`
-          creatRule.elementContent = data.endTimeDay + data.endTimeHours + '开奖'
-        } else if (data.metadata.drawRule === 'fullTicket') {
-          creatRule.elementContent = '满' + data.metadata.ticketsNum + '金豆开奖'
-        } else if (data.metadata.drawRule === 'fullParticipant') {
-          creatRule.elementContent = '满' + data.num + '人开奖'
-        }
-        // 两种奖品
         if (data.items.length === 1) {
-          this.bgUrl = 'https://oss.qianbaocard.com/20180912/c45dced1f0564763a949c9067c209584.png'
-          creatRule.y = 721
           items.push(creatRule)
         } else if (data.items.length >= 2) {
-          this.bgUrl = 'https://oss.qianbaocard.com/20180912/58ceabb9c6df4067acdfe6c7a2f70954.png'
-          data.items.shift()
+          let prizeName = ''
           data.items.forEach(function (item, index) {
-            let obj = {}
-            obj.sn = index
-            obj.xelementLayoutType = 'CENTER'
-            obj.yelementLayoutType = 'ABSOLUTELY'
-            obj.elementContent = '[ 奖品' + (index + 2) + ' ] ' + item.name
-            obj.y = 621 + parseInt((index + 2) * 48)
-            obj.elementMediaType = 'TEXT'
-            obj.font = {
-              name: '黑体',
-              elementFontStyle: 0,
-              fontSize: 34
-            }
-            obj.color = {
-              r: 67,
-              g: 67,
-              b: 67,
-              a: 1
-            }
-            items.push(obj)
+            prizeName += item.name + ' X ' + item.metadata.num + '、'
           })
-          items[4].y = 1166
-          items[5].y = 1372
-          creatRule.creatRule = 1318
-          creatRule.y = 1118
+          items[3].elementContent = '[ 奖品] ' + prizeName
+          items[3].font = {
+            name: '黑体',
+            elementFontStyle: 0,
+            fontSize: 30
+          }
           items.push(creatRule)
-        //   let secondPrize = [
-        //     {
-        //       sn: '1011',
-        //       relativeSn: '',
-        //       xelementLayoutType: 'CENTER',
-        //       yelementLayoutType: 'ABSOLUTELY',
-        //       elementContent: data.items[1].metadata.image ? data.items[1].metadata.image : data.items[0].metadata.url,
-        //       elementMediaType: 'IMG',
-        //       y: 703,
-        //       height: 275,
-        //       width: 550
-        //     },
-        //     {
-        //       sn: '1012',
-        //       relativeSn: '',
-        //       xelementLayoutType: 'CENTER',
-        //       yelementLayoutType: 'ABSOLUTELY',
-        //       elementContent: '[ 奖品 ]  ' + data.items[1].name,
-        //       elementMediaType: 'TEXT',
-        //       y: 1060,
-        //       font: {
-        //         name: '黑体',
-        //         elementFontStyle: 0,
-        //         fontSize: 34
-        //       },
-        //       color: {
-        //         r: 67,
-        //         g: 67,
-        //         b: 67,
-        //         a: 1
-        //       }
-        //     },
-        //     {
-        //     sn: '1013',
-        //     relativeSn: '',
-        //     xelementLayoutType: 'ABSOLUTELY',
-        //     yelementLayoutType: 'ABSOLUTELY',
-        //     elementContent: 'https://oss.qianbaocard.com/20180918/4948be7a3ca6451a8eda67a04bc71930.png',
-        //     elementMediaType: 'IMG',
-        //     x: 420,
-        //     y: 727,
-        //     height: 56,
-        //     width: 176
-        //   },
-        //   {
-        //     sn: '1014',
-        //     relativeSn: '',
-        //     xelementLayoutType: 'ABSOLUTELY',
-        //     yelementLayoutType: 'ABSOLUTELY',
-        //     elementContent: '抽奖助手 赞助',
-        //     elementMediaType: 'TEXT',
-        //     x: 432,
-        //     y: 764,
-        //     font: {
-        //       name: 'PingFangSC',
-        //       elementFontStyle: 0,
-        //       fontSize: 24
-        //     },
-        //     color: {
-        //       r: 255,
-        //       g: 255,
-        //       b: 255,
-        //       a: 1
-        //     }
-        //   }
-        //   ]
-        //   this.bgUrl = 'https://oss.qianbaocard.com/20180912/58ceabb9c6df4067acdfe6c7a2f70954.png'
-        //   items = items.concat(secondPrize)
-        //   items[4].y = 1166
-        //   items[5].y = 1372
-        //   creatRule.creatRule = 1318
-        //   creatRule.y = 1118
-        //   items.push(creatRule)
         }
       }
       // 中奖
       if (this.lucky === true) {
         creat.elementContent = '「我中奖了」'
-        this.bgUrl = 'https://oss.qianbaocard.com/20180912/5eb971d853a849c8a22f4e10a3c53cc4.png'
         items[4].y = 711
         items[5].y = 917
         items.push(creat)
       }
       MakePictureService.add({
-        backgroundUrl: this.bgUrl,
+        backgroundUrl: 'https://oss.qianbaocard.com/20180912/c45dced1f0564763a949c9067c209584.png',
         items
       }).then((res) => {
         if (res.code === 0) {
@@ -357,6 +267,7 @@ export default {
     this.twoCode = options.twoCode
     this.activity = []
     this.activity = JSON.parse(options.activity)
+    console.log(this.activity)
     this.getPicture(this.activity)
     this.$showLoading()
   },

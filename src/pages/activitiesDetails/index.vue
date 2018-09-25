@@ -34,7 +34,7 @@
       <!-- 活动信息及状态end -->
       <!-- 编辑 -->
       <div class="edit" v-if="participantTotal == 0 && activitie.status == 'CREATED' && activitie.owner.id == userInfo.id" >
-        <a :href="activitie.metadata.edition === 'baseEdition'?'/pages/baseCreateActivity/createActivities?id='+activitie.id:'/pages/createActivities/createActivities?id='+activitie.id">
+        <a :href="activitie.metadata.edition === 'baseEdition'?'/pages/baseCreateActivity/createActivities?id='+activitie.id:'/pages/createActivities/createActivities?id='+activitie.id+'&navPage=1'">
           编辑抽奖
         </a>
       </div>

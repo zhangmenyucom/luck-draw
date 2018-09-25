@@ -84,7 +84,7 @@
           initIndexMulPicker: [],
           userInfo: {},
           prizeDescription: '',
-          isShare: true,
+          isShare: false,
           itemName: [],
           itemNum: [],
           peopleNum: '',
@@ -255,7 +255,7 @@
         navToUper () {
           this.$setStorageSync('topscene', 'createActivities')
           if (this.activityId) {
-            this.$navigateTo('/pages/createActivities/createActivities?id=' + this.activityId)
+            this.$navigateTo('/pages/createActivities/createActivities?id=' + this.activityId + '&navPage=2')
           } else {
             this.$navigateTo('/pages/createActivities/createActivities')
           }

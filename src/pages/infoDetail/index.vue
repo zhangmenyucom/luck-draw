@@ -151,7 +151,7 @@
       getActivity (type = 'PERSONAL_LUCKY_DRAW') {
         PersonalActivity.getList(type).then((res) => {
           if (res.code === 0) {
-            this.meCreateNum = res.data.length
+            this.meCreateNum = res.total
           }
         })
       },
