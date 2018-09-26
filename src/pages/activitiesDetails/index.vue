@@ -57,13 +57,6 @@
       </a>
       <!-- 赞助商结束 -->
 
-      <!-- 编辑 -->
-      <div class="edit" v-if="participantTotal == 0 && activitie.status == 'CREATED' && activitie.owner.id == userInfo.id" >
-        <a :href="activitie.metadata.edition === 'baseEdition'?'/pages/baseCreateActivity/createActivities?id='+activitie.id:'/pages/createActivities/createActivities?id='+activitie.id">
-          编辑抽奖
-        </a>
-      </div>
-      <!-- 编辑结束 -->
 
       <!-- 我发起的活动 可以看到中奖者信息 -->
       <div class="participantMe" v-if="activitie.type == 'PERSONAL_LUCKY_DRAW' && state >= 5 && participantTotal > 0">
@@ -256,7 +249,6 @@ export default {
       mta.Event.stat('share', {
         method: '抽奖详情页分享'
       })
-      console.log(this.activitie)
       if (this.activitie.owner.id !== this.$getStorageSync('userInfo').id) {
         if (this.activitie.metadata.isShare === 'false') {
           this.$showToast('该活动不允许参与者分享！')
@@ -382,12 +374,12 @@ export default {
       ActivitiesService.get({
         id,
         append: 'BET_NUM'
-      }).then(res => {
+      }).then((res) => {
+        console.log('this', this)
         if (res.code === 0) {
           if (res.data.metadata.sponsor) {
             res.data.metadata.sponsor = JSON.parse(res.data.metadata.sponsor)
           }
-
           if (res.data.metadata.ticketsNum) {
             res.data.metadata.ticketsNum = parseInt(
               res.data.metadata.ticketsNum
@@ -554,7 +546,6 @@ export default {
         }
       }).then(res => {
         this.$hideLoading()
-
         if (res.code === 0) {
           this.participants = res.data
           this.state = 2
