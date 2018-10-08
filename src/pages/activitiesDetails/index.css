@@ -55,7 +55,7 @@ a {
   transition: bottom 1s;
   background: #ffffff;
   box-shadow: 0rpx -2rpx 0rpx 0rpx #eaeaea;
-  position: absolute;
+  position: fixed;
   width: 100%;
   left: 0;
   bottom: -112rpx;
@@ -345,6 +345,7 @@ a {
 }
 .participantMe {
   margin-top: 32rpx;
+  padding-bottom: 30rpx;
 }
 .participantMe .participantInfo {
   color: #434343;

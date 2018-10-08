@@ -60,9 +60,9 @@ export default {
             return participant
           })
           if (this.onPullDownRefresh) {
-              this.onPullDownRefresh = false
-              this.$stopPullDownRefresh()
-            }
+            this.onPullDownRefresh = false
+            this.$stopPullDownRefresh()
+          }
           this.pageNum++
           this.participantList = [...oldParticipantList, ...participantList]
           if (this.participantList.length >= res.total) this.complete = true

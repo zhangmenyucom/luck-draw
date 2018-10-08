@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="luckierList">
         <top title='中奖者'/>
         <div class="head">
             <div class="IconDiv">
@@ -17,7 +17,7 @@
             <span>中奖名单</span>
             <div class="list">
                 <div class="list-content">
-                    <div v-for="(item, index) in luckyItems" :class="index === luckyItems.length-1?'bottomMargin':''">
+                    <div v-for="(item, index) in luckyItems" :key='index' :class="index === luckyItems.length-1?'bottomMargin':''">
                         <div class="list-content-one">
                             <div >
                                 <div class="avatar"><img :src="item.user.avatar" alt=""></div>

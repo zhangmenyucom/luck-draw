@@ -38,45 +38,45 @@ export default {
     dealRule (data) {
       let rule = ''
       if (data.metadata.drawRule === 'timed') {
-          const date = new Date(data.endTime)
-          data.endTimeDay = `${date.getMonth() + 1}月${date.getUTCDate()}日`
-          data.endTimeHours = `${date.getHours() + 1}:${date.getMinutes()}分`
-          rule = data.endTimeDay + data.endTimeHours + '开奖'
-        } else if (data.metadata.drawRule === 'fullTicket') {
-          rule = '满' + data.metadata.ticketsNum + '金豆开奖'
-        } else if (data.metadata.drawRule === 'fullParticipant') {
-          rule = '满' + data.metadata.participantsNum + '人开奖'
-        }
-        return rule
+        const date = new Date(data.endTime)
+        data.endTimeDay = `${date.getMonth() + 1}月${date.getUTCDate()}日`
+        data.endTimeHours = `${date.getHours() + 1}:${date.getMinutes()}分`
+        rule = data.endTimeDay + data.endTimeHours + '开奖'
+      } else if (data.metadata.drawRule === 'fullTicket') {
+        rule = '满' + data.metadata.ticketsNum + '金豆开奖'
+      } else if (data.metadata.drawRule === 'fullParticipant') {
+        rule = '满' + data.metadata.participantsNum + '人开奖'
+      }
+      return rule
     },
     dealPrize (data, y, line) {
       let arr = []
       data.items.forEach(function (item, index) {
-            let obj = {}
-            item.name = item.name.length > 6 ? item.name.slice(0, 5) + '...' : item.name
-            obj.sn = index
-            obj.xelementLayoutType = 'ABSOLUTELY'
-            obj.yelementLayoutType = 'ABSOLUTELY'
-            obj.elementContent = '[奖品] ' + item.name + ' x ' + item.metadata.num
-            obj.y = y + parseInt((index + 1) * line)
-            obj.x = 99
-            obj.elementMediaType = 'TEXT'
-            obj.font = {
-              name: '黑体',
-              elementFontStyle: 0,
-              fontSize: 38
-            }
-            obj.color = {
-              r: 67,
-              g: 67,
-              b: 67,
-              a: 1
-            }
-            if (y === 619) {
-              obj.xelementLayoutType = 'CENTER'
-              obj.x = 0
-            }
-            arr.push(obj)
+        let obj = {}
+        item.name = item.name.length > 6 ? item.name.slice(0, 5) + '...' : item.name
+        obj.sn = index
+        obj.xelementLayoutType = 'ABSOLUTELY'
+        obj.yelementLayoutType = 'ABSOLUTELY'
+        obj.elementContent = '[奖品] ' + item.name + ' x ' + item.metadata.num
+        obj.y = y + parseInt((index + 1) * line)
+        obj.x = 99
+        obj.elementMediaType = 'TEXT'
+        obj.font = {
+          name: '黑体',
+          elementFontStyle: 0,
+          fontSize: 38
+        }
+        obj.color = {
+          r: 67,
+          g: 67,
+          b: 67,
+          a: 1
+        }
+        if (y === 619) {
+          obj.xelementLayoutType = 'CENTER'
+          obj.x = 0
+        }
+        arr.push(obj)
       })
       return arr
     },
@@ -239,9 +239,9 @@ export default {
           items.push(creatRule)
         } else if (data.items.length === 2) {
           let arr = this.dealPrize(data, 606, 45).map(function (item, index) {
-              item.font.fontSize = 32
-              item.x = 138
-              return item
+            item.font.fontSize = 32
+            item.x = 138
+            return item
           })
           items = items.concat(arr)
           creatRule.y = 753

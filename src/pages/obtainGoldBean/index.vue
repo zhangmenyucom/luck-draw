@@ -88,7 +88,7 @@
           <br />
           <div class="expalin" v-if="shareRule.maxStep > shareNumber">{{shareRule.base}}<img src="/static/img/goldBean.png" alt=""><text>/&nbsp;次</text> &nbsp;&nbsp;</div>
         </div>
-        <button @tap="shareWx" v-if="shareRule.maxStep > shareNumber" open-type="share">领取 {{shareNumber}}/{{(shareRule.maxStep - shareNumber)<0?0:(shareRule.maxStep)}}</button>
+        <button @tap="shareWx" v-if="shareRule.maxStep > shareNumber" open-type="share">领取 {{shareNumber}}/{{(shareRule.maxStep - shareNumber) <= 0 ? 0:(shareRule.maxStep)}}</button>
         <div v-else class='complete'>
           今日已领完
         </div>
@@ -165,30 +165,26 @@
           iv: e.mp.detail.iv
         }).then(res => {
           if (res.code === 0) {
-            this.$setStorageSync('contactNumber', res.data.contactNumber)
+            this.$setStorageSync('userInfo', res.data)
+            this.userInfo = res.data
           }
         })
       },
       getScoreRules () {
         ScoreRulesService.getList().then(res => {
           if (res.code === 0) {
-            const rule = JSON.parse(res.data.filter(data => data.type === 4)[0] ? res.data.filter(data => data.type === 4)[0].rule : {})
+            const rule = JSON.parse(res.data.filter(data => data.type === 4)[0] ? res.data.filter(data => data.type === 4)[0].rule : '{}')
             rule.total = Object.values(rule).reduce((total, num) => parseInt(total, 10) + parseInt(num, 10))
-            if (this.userInfo.contactNumber) {
-              rule.total -= parseInt(rule.mobile)
-            } else if (this.userInfo.location) {
-              rule.total -= parseInt(rule.area)
-            } else if (this.userInfo.birthday) {
-              rule.total -= parseInt(rule.birthday)
-            } else if (this.userInfo.gender) {
-              rule.total -= parseInt(rule.gender)
-            }
-            const shareRule = JSON.parse(res.data.filter(data => data.type === 3)[0] ? res.data.filter(data => data.type === 3)[0].rule : {})
-            const advertiseRule = JSON.parse(res.data.filter(data => data.type === 6)[0] ? res.data.filter(data => data.type === 6)[0].rule : {})
+            rule.total -= this.userInfo.contactNumber ? parseInt(rule.mobile) : 0
+            rule.total -= this.userInfo.location ? parseInt(rule.area) : 0
+            rule.total -= this.userInfo.birthday ? parseInt(rule.birthday) : 0
+            rule.total -= this.userInfo.gender ? parseInt(rule.gender) : 0
+            const shareRule = JSON.parse(res.data.filter(data => data.type === 3)[0] ? res.data.filter(data => data.type === 3)[0].rule : '{}')
+            const advertiseRule = JSON.parse(res.data.filter(data => data.type === 6)[0] ? res.data.filter(data => data.type === 6)[0].rule : '{}')
             this.advertiseRule = advertiseRule
             this.rule = rule
             this.shareRule = shareRule
-            const number = this.scoreCounters.number > 7 ? this.scoreCounters.number - 7 : 0 // 需要展示的第一天
+            const number = this.scoreCounters.number > 5 ? this.scoreCounters.number - 5 : 0 // 需要展示的第一天
             this.number = number
             const goldBeanRules = JSON.parse(res.data.filter((rule) => rule.type === 2)[0].rule)
             --goldBeanRules.maxStep
@@ -226,23 +222,28 @@
         this.display = !this.display
       },
       toXcx (id) {
-        // console.log(id)
         Footprints.add(id).then((res) => {
           if (res.code === 0) {
-            this.appId = res.data.target.id
+            this.$showToast('领取成功', 'success', '/static/img/goldBean.png')
           }
-          return DailyFootprintsService.getList({
-            userId: this.userInfo.id,
-            type: 'VIEW_AD'
-          }).then((res) => {
-            console.log(res)
-          })
         })
       },
       getMeScores () {
         MeScoresService.getList().then(res => {
           if (res.code === 0) {
             this.score = res.data.score
+          }
+        })
+      },
+      getDailyFootprintsViewAd () {
+        DailyFootprintsService.getList({
+          userId: this.userInfo.id,
+          pageNum: 1,
+          pageSize: 100,
+          type: 'VIEW_AD'
+        }).then((res) => {
+          if (res.code === 0) {
+
           }
         })
       },

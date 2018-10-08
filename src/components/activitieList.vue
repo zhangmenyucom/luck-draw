@@ -69,119 +69,136 @@
 
 <style scoped >
   @import '../common/less/util.less';
+
   .prompt {
-   padding: 0 16*@2;
-   height: 40*@2;
-   background: rgba(0, 0, 0, 0.8);
-   font-size: 14*@2;
-   line-height: 40*@2;
-   position: relative;
-   margin-top: -40*@2;
-   z-index: 2;
-   color: #fff;
-   span {
-     color: #FFDD3E
-   }
- }
- .v{
-  margin-top: 103*@2;
-  text-align: center;
-  >img{
-    width: 189*@2;
-  }
-  >text{
-    font-size: 12*@2;
-    line-height: 17*@2;
+    padding: 0 16*@2;
+    height: 40*@2;
+    background: rgba(0, 0, 0, 0.8);
+    font-size: 14*@2;
+    line-height: 40*@2;
     position: relative;
-    top: 26*@2;
-    color: RGBA(204, 204, 204, 1);
-  }
-}
-.list{
-  padding: 32*@1 15*@2 37*@2;
-  background: #FFFFFF;
-  margin-bottom: 18*@1;
-}
-.state{
-  font-size: 40rpx;
-  line-height: 48rpx;
-  font-family: PingFangSC-Semibold;
-  font-weight:600;
-  background-color: rgba(255,255,255,1);
-  color:rgba(67,67,67,1);
-  padding-top: 46*@2;
-  padding-left: 10*@2;
-  display: flex;
-  color: rgba(67,67,67,1);
-  i{
-    color: #FE4C52;
-    margin-left: 16*@1;
-    font-size: 28rpx;
+    margin-top: -40*@2;
+    z-index: 2;
+    color: #fff;
+
+    span {
+      color: #FFDD3E
+    }
   }
 
-}
-.fullGoldBean {
-  font-size: 14*@2;
-  font-family: PingFangSC-Semibold;
-  float: right;
-  font-weight:600;
-  color:rgba(243,185,19,1);
-  > img{
-    width:15px;
-    height:14px;
-    position:relative;
-    top:2px;
-    margin: 0 3*@2;
-    left:-1*@2;
+  .v {
+    margin-top: 103*@2;
+    text-align: center;
+
+    >img {
+      width: 189*@2;
+    }
+
+    >text {
+      font-size: 12*@2;
+      line-height: 17*@2;
+      position: relative;
+      top: 26*@2;
+      color: RGBA(204, 204, 204, 1);
+    }
   }
-}
-img {
-  width: 345*@2;
-  height: 170*@2;
-}
-.name{
-  font-size: 16*@2;
-  line-height: 20*@2;
-  margin-top: 12*@2;
-  margin-bottom:4*@2;
-  font-family:PingFangSC-Semibold;
-  font-weight:600;
-  color:rgba(67,67,67,1);
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  overflow:hidden;
-  text-align: left;
-}
-.goldBean{
-  color:rgba(102,102,102,1);
-  font-family: PingFangSC-Regular;
-  font-size: 14*@2;
-  float: left;
-  span{
-    font-size:14*@2;
-    line-height: 17*@2;
-    color: #434343;
-    flex:1;
-    color: #ff5459;
-    text-align:right;
-    position: relative;
-    left:-2*@2;
+
+  .list {
+    padding: 32*@1 15*@2 37*@2;
+    background: #FFFFFF;
+    margin-bottom: 18*@1;
   }
-}
-.joined {
-  font-size:28rpx;
-  font-family:PingFangSC-Semibold;
-  font-weight:600;
-  color:rgba(253,183,0,1);
-  float: left;
-  margin-right: 8px;
-}
-form button{
-  width: 100%;
-  height: auto;
-  padding: 0;
-  font-size: 0;
-  line-height: 0;
-  background: transparent!important;
-}
+
+  .state {
+    font-size: 40rpx;
+    line-height: 48rpx;
+    font-family: PingFangSC-Semibold;
+    font-weight: 600;
+    background-color: rgba(255, 255, 255, 1);
+    color: rgba(67, 67, 67, 1);
+    padding-top: 46*@2;
+    padding-left: 10*@2;
+    display: flex;
+    color: rgba(67, 67, 67, 1);
+
+    i {
+      color: #FE4C52;
+      margin-left: 16*@1;
+      font-size: 28rpx;
+    }
+
+  }
+
+  .fullGoldBean {
+    font-size: 14*@2;
+    font-family: PingFangSC-Semibold;
+    float: right;
+    font-weight: 600;
+    color: rgba(243, 185, 19, 1);
+
+    >img {
+      width: 15px;
+      height: 14px;
+      position: relative;
+      top: 2px;
+      margin: 0 3*@2;
+      left: -1*@2;
+    }
+  }
+
+  img {
+    width: 345*@2;
+    height: 170*@2;
+  }
+
+  .name {
+    font-size: 16*@2;
+    line-height: 20*@2;
+    margin-top: 12*@2;
+    margin-bottom: 4*@2;
+    font-family: PingFangSC-Semibold;
+    font-weight: 600;
+    color: rgba(67, 67, 67, 1);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-align: left;
+  }
+
+  .goldBean {
+    color: rgba(102, 102, 102, 1);
+    font-family: PingFangSC-Regular;
+    font-size: 14*@2;
+    float: left;
+
+    span {
+      font-size: 14*@2;
+      line-height: 17*@2;
+      color: #434343;
+      flex: 1;
+      color: #ff5459;
+      text-align: right;
+      position: relative;
+      left: -2*@2;
+    }
+  }
+
+  .joined {
+    font-size: 14*@2;
+    line-height: 14*@2;
+    font-family: PingFangSC-Semibold;
+    /* font-weight: 600; */
+    color: rgba(253, 183, 0, 1);
+    float: left;
+    margin-right: 8*@2;
+  }
+
+  form button {
+    width: 100%;
+    height: auto;
+    padding: 0;
+    font-size: 0;
+    line-height: 0;
+    background: transparent !important;
+  }
 </style>

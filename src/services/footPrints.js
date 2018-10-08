@@ -8,7 +8,7 @@ class Footprints extends ServiceBase {
     if (!data.target) {
       data.target = {
         type: 'VINCI_CC_FOOTPRINT',
-        id: appid,
+        id: userInfo.id,
         name: userInfo.nickName
       }
       data.type = 'VIEW_AD'
