@@ -357,7 +357,7 @@
             }).then(res => {
               this.$hideLoading()
               this.$showToast('发起成功！')
-              this.$navigateTo(`/pages/activitiesDetails/index?id=${res.data.id}`)
+              this.$navigateTo(`/pages/activitiesDetails/index?id=${res.data.id}&isOneself=true`)
               this.clearData()
             })
           }

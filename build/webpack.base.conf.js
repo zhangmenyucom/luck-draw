@@ -8,6 +8,7 @@ var path = require('path')
   var MpvueEntry = require('mpvue-entry')
   var CopyWebpackPlugin = require('copy-webpack-plugin')
   var fs = require('fs')
+  var webpack = require('webpack')
 
   function resolve(dir) {
     return path.join(__dirname, '..', dir)
@@ -27,7 +28,7 @@ var path = require('path')
     app: resolve('./src/main.js')
   }
   const pagesEntry = getEntry(resolve('./src'), 'pages/**/main.js')
-// console.log('process.env.NODE_ENV', process.env.NODE_ENV)
+
 const rules = process.env.DISABLE_ESLINT == 'no'?[]:[
 {
   test: /\.(js|vue)$/,
@@ -54,6 +55,7 @@ const entry = async () => {
   }
   return {...vueEntry}
 }
+console.log('process.env.NODE_ENV', process.env.NODE_ENV)
 module.exports = {
   // 如果要自定义生成的 dist 目录里面的文件路径，
   // 可以将 entry 写成 {'toPath': 'fromPath'} 的形式，
@@ -122,7 +124,10 @@ module.exports = {
   },
   plugins: [
   new MpvuePlugin(),
-  new MpvueEntry()
+  new MpvueEntry(),
+  new webpack.DefinePlugin({
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+  })
   // new CopyWebpackPlugin([{
   //   from: path.resolve(__dirname, '../src/services/meScoresService.js'),
   //   to: path.resolve(__dirname, '../dist/services/meScoresService.js'),

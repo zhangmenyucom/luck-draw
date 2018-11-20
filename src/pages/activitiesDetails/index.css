@@ -43,13 +43,10 @@ a {
   text-align: center;
 }
 .activitiesDetails .description {
-  color: #666666;
+  color: #fdb700;
   font-size: 28rpx;
   line-height: 42rpx;
   margin: 32rpx 0;
-}
-.activitiesDetails .description span {
-  color: #666666;
 }
 .activitiesDetails .bottom {
   transition: bottom 1s;
@@ -86,7 +83,7 @@ a {
   float: left;
   width: 100%;
   line-height: 34rpx;
-  padding: 20rpx 32rpx;
+  padding: 20rpx 0 20rpx 32rpx;
   margin: 0 -32rpx;
 }
 .activitiesDetails .activitieInfo > .state {

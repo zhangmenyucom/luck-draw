@@ -1,0 +1,101 @@
+.w20 {
+  width: 20%;
+}
+.w80 {
+  width: 80%;
+}
+.bd {
+  border-bottom: 2rpx solid #EAEAEA;
+  position: relative;
+}
+.edit_container {
+  background: #fff;
+  min-height: 100vh;
+}
+.edit_container .editList ul {
+  padding-left: 32rpx;
+}
+.edit_container .editList ul li,
+.edit_container .editList ul a {
+  padding: 32rpx;
+  padding-left: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: ;
+}
+.edit_container .editList ul li .list_r,
+.edit_container .editList ul a .list_r {
+  color: #999;
+  font-size: 28rpx;
+}
+.edit_container .editList ul li .list_r .img,
+.edit_container .editList ul a .list_r .img {
+  width: 80rpx;
+  height: 80rpx;
+  background: pink;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.edit_container .editList ul li .list_r .img > img,
+.edit_container .editList ul a .list_r .img > img {
+  width: 80rpx;
+  height: 80rpx;
+}
+.edit_container .editList ul li .list_r textarea,
+.edit_container .editList ul a .list_r textarea {
+  width: 100%;
+}
+.edit_container .editList ul li .list_r .arrow,
+.edit_container .editList ul a .list_r .arrow {
+  font-size: 24rpx;
+  display: inline-block;
+}
+.edit_container .editList ul li .list_info,
+.edit_container .editList ul a .list_info {
+  display: flex;
+  /* div:nth-child(1){
+         margin-right:16*@2;
+       }*/
+}
+.edit_container .editList ul li .list_info div,
+.edit_container .editList ul a .list_info div {
+  width: 120rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+  text-align: center;
+  border-radius: 32rpx;
+  border: 2rpx solid #979797;
+  color: #999;
+}
+.edit_container .editList ul li .list_info div.active,
+.edit_container .editList ul a .list_info div.active {
+  color: #FE4C52;
+  border: 2rpx solid #FE4C52;
+}
+.edit_container .editList ul li .list_l,
+.edit_container .editList ul a .list_l {
+  font-size: 28rpx;
+  color: #434343;
+}
+.edit_container .editList ul li .list_l span,
+.edit_container .editList ul a .list_l span {
+  color: #F3B913;
+}
+.edit_container .editList ul li .list_l span > img,
+.edit_container .editList ul a .list_l span > img {
+  width: 18rpx;
+  height: 18rpx;
+  display: inline-block;
+}
+.button::after {
+  border: none;
+}
+.button {
+  background-color: #fff;
+  text-align: right;
+  float: right;
+  height: 50rpx;
+  line-height: 50rpx;
+  position: absolute;
+  right: 0;
+}

@@ -1,6 +1,6 @@
 import wxLogin from './wxLogin'
 import ext from '../ext/ext'
-import {check, formatDate} from './formatDate'
+import { check, formatDate } from './formatDate'
 
 function formatNumber (n) {
   const str = n.toString()

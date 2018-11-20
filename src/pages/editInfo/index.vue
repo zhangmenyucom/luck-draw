@@ -46,7 +46,7 @@
 </a>
 <a v-else href="/pages/mobile/index" class="bd">
   <div class="list_l">手机号 <span>+{{rule.mobile}} <img src='/static/img/goldBean.png'></span></div>
-  <button class="list_r"> 去绑定
+  <button class="list_r button"> 去绑定
     <i class="arrow icon iconfont icon-huise"></i>
   </button>
 </a>
@@ -54,9 +54,10 @@
   <div class="list_l">地址</div>
   <div class="list_r">{{userInfo.location.address}}</div>
 </li>
-<li v-else class="bd" @click ="chooseLocation">
+<li v-else class="bd">
   <div class="list_l">地址 <span>+{{rule.area}} <img src='/static/img/goldBean.png'></span></div>
-  <div class="list_r">{{infoArea}}<i class="arrow icon iconfont icon-huise"></i></div>
+  <div  v-if='isLocation' @click ="chooseLocation" class="list_r">{{infoArea}}<i class="arrow icon iconfont icon-huise"></i></div>
+  <button  v-else open-type="openSetting" @openSetting="chooseLocation" class="list_r button">{{infoArea}}<i class="arrow icon iconfont icon-huise"></i></button>
 </li>
 </ul>
 </div>
@@ -77,7 +78,8 @@
         infoArea: '未选择',
         getNum: '未绑定',
         userInfo: {},
-        rule: {}
+        rule: {},
+        isLocation: true
       }
     },
     components: {
@@ -125,8 +127,8 @@
       },
       // 选择区域
       chooseLocation () {
-        this.$chooseLocation().then(res => {
-          console.log('res', res)
+        this.$chooseLocation().finally(res => {
+          if (!res) return
           this.userPut('location', {
             addition: res.address + '-' + res.name,
             address: res.address,
@@ -161,7 +163,6 @@
             }
           })
         })
-        console.log(this.userInfo.location.address)
       }
     },
     onShow () {
@@ -169,10 +170,12 @@
       this.startDate = today
       this.endDate = today
       this.pickerStart = today
-
       const userInfo = getUserInfo()
       this.userInfo = userInfo
       this.getScoreRules()
+      this.$getSetting().then(res => {
+        this.isLocation = res.authSetting['scope.userLocation']
+      })
     },
     onShareAppMessage: share()
   }

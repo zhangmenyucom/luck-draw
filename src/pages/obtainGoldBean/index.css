@@ -1,0 +1,154 @@
+.obtainGoldBean {
+  background: #fff;
+  min-height: 100vh;
+}
+.obtainGoldBean .classify {
+  padding: 0 30rpx;
+  color: #434343;
+  line-height: 100rpx;
+  border-bottom: 1px solid rgba(117, 115, 115, 0.068);
+  font-size: 30rpx;
+  font-weight: bold;
+}
+.obtainGoldBean .list {
+  padding: 30rpx 30rpx 0 30rpx;
+}
+.obtainGoldBean .list > div > div {
+  color: #f3b913;
+  font-size: 24rpx;
+}
+.obtainGoldBean .list > div > div .expalin > img {
+  width: 18rpx;
+  height: 18rpx;
+  margin-right: 3rpx;
+}
+.obtainGoldBean .list > div > div > i {
+  font-size: 70rpx;
+}
+.obtainGoldBean .list > div > div > span {
+  color: #434343;
+  font-size: 28rpx;
+}
+.obtainGoldBean .list > div > .icon {
+  margin-right: 28rpx;
+}
+.obtainGoldBean .list > div navigator,
+.obtainGoldBean .list > div a,
+.obtainGoldBean .list > div button {
+  background: #fff;
+  width: 144rpx;
+  display: inline-block;
+  float: right;
+  line-height: 64rpx;
+  padding: 0;
+  border-radius: 4rpx;
+  border: 2rpx solid #fe4c52;
+  text-align: center;
+  font-size: 28rpx;
+  color: #fe4c52;
+  margin-top: 20rpx;
+}
+.obtainGoldBean .list > div button::after {
+  border: none;
+}
+.obtainGoldBean .list > div .number {
+  text-align: center;
+  color: #999999;
+}
+.obtainGoldBean .list > div .complete {
+  float: right;
+  width: 160rpx;
+  height: 64rpx;
+  text-align: center;
+  line-height: 64rpx;
+  margin-top: 20rpx;
+}
+.obtainGoldBean .headInterval {
+  height: 16rpx;
+  background: #F9F9F9;
+}
+.obtainGoldBean .head {
+  padding: 15px;
+  font-size: 15px;
+  /*color: rgba(67, 67, 67, 1);*/
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+}
+.obtainGoldBean .head .right {
+  font-size: 24rpx;
+}
+.obtainGoldBean .head img {
+  width: 100%;
+  height: 380rpx;
+}
+.obtainGoldBean .head > div > a {
+  font-size: 28rpx;
+}
+.obtainGoldBean .head > div .record {
+  border-top: 2rpx solid rgba(255, 255, 255, 0.3);
+  margin-top: 20rpx;
+  padding-top: 60rpx;
+  display: flex;
+}
+.obtainGoldBean .head > div .record .opacity {
+  opacity: 0.3;
+}
+.obtainGoldBean .head > div .record .ellipsis {
+  line-height: 48rpx !important;
+}
+.obtainGoldBean .head > div .record > div {
+  flex: 1;
+  line-height: 0;
+  text-align: center;
+  position: relative;
+}
+.obtainGoldBean .head > div .record > div .icon {
+  font-size: 20rpx;
+  line-height: 20rpx;
+  position: absolute;
+  /*color: RGBA(255, 221, 62, 1);*/
+  color: #fff;
+  right: 20rpx;
+  top: -6rpx;
+}
+.obtainGoldBean .head > div .record > div img {
+  width: 54rpx;
+  height: 54rpx;
+  margin-bottom: 10rpx;
+}
+.obtainGoldBean .head > div .record > div text {
+  display: block;
+  line-height: 32rpx;
+  font-size: 24rpx;
+  height: 32rpx;
+}
+.obtainGoldBean .display {
+  display: none;
+}
+.obtainGoldBean .shade {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+}
+.obtainGoldBean .shade .foot {
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  z-index: 9999;
+}
+.obtainGoldBean .shade .foot > button {
+  text-align: center;
+  height: 100rpx;
+  line-height: 100rpx;
+  border-bottom: 1px solid #FFF0F5;
+  width: 288px;
+}
+.noBean {
+  height: 56px;
+  line-height: 56px;
+}
+.hasBean {
+  padding: 10px 0 10px 0;
+}

@@ -3,7 +3,7 @@
     <span>
       我的金豆：{{score}}
     </span>
-    <a open-type="switchTab" href="/pages/obtainGoldBean/index" class='right' @click="getBean">
+    <a v-if="!isHideJump" open-type="switchTab" href="/pages/obtainGoldBean/index" class='right' @click="getBean">
       赚金豆>
     </a>
   </div>
@@ -11,7 +11,7 @@
 
 <script>
   export default {
-    props: ['score', 'getBean']
+    props: ['score', 'getBean', 'isHideJump']
   }
 </script>
 
@@ -19,7 +19,7 @@
   @import '../common/less/util.less';
   .meIntegral{
     height: 35*@2;
-    background: RGBA(0, 0, 0, 0.9);
+    background: RGBA(0, 0, 0, 0.8);
     line-height: 35*@2;
     font-size: 13*@2;
     color: #fff;

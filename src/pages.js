@@ -91,7 +91,7 @@ module.exports = [{
   path: '/pages/commonQuestion/index',
   config: {
     navigationBarTitleText: '常见问题',
-    enablePullDownRefresh: true
+    disableScroll: true
   }
 }, {
   path: '/pages/meCreate/index',

@@ -1,55 +1,49 @@
- @import '../../common/less/util.less';
- .index {
+.index {
   min-height: 100vh;
- }
-
- span {
-   font-size: 15*@2
- }
-
- text {
-   font-size: 12*@2
- }
-
- .opacity {
-   opacity: 0.5;
- }
-
- .head-line {
-   position: fixed;
-   z-index: 99999;
-   height: 32*@2;
-   width: 100%;
-   opacity: 0.9;
-   line-height: 32*@2;
-   background-color: rgba(0,0,0,0.8);
-   box-shadow:0px 1px 0px 0px rgba(255,240,209,1);
-
-   >div {
-     padding: 0 10*@2;
-     top: 0;
-     bottom: 0;
-     left: 0;
-     right: 0;
-     >a {
-       font-size: 14*@2;
-     }
-     >span {
-       font-size: 14*@2;
-     }
-     .left {
-       font-family: PingFang-SC-Medium;
-       font-weight: 500;
-       color: rgba(255,255,255,1);
-     }
-     .right {
-       font-family: PingFangSC-Regular;
-       font-weight: 400;
-       color: rgba(255,255,255,1);
-     }
-   }
- }
- /*
+}
+span {
+  font-size: 30rpx;
+}
+text {
+  font-size: 24rpx;
+}
+.opacity {
+  opacity: 0.5;
+}
+.head-line {
+  position: fixed;
+  z-index: 99999;
+  height: 64rpx;
+  width: 100%;
+  opacity: 0.9;
+  line-height: 64rpx;
+  background-color: rgba(0, 0, 0, 0.8);
+  box-shadow: 0px 1px 0px 0px #fff0d1;
+}
+.head-line > div {
+  padding: 0 20rpx;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.head-line > div > a {
+  font-size: 28rpx;
+}
+.head-line > div > span {
+  font-size: 28rpx;
+}
+.head-line > div .left {
+  font-family: PingFang-SC-Medium;
+  font-weight: 500;
+  color: #ffffff;
+}
+.head-line > div .right {
+  font-family: PingFangSC-Regular;
+  font-weight: 400;
+  color: #ffffff;
+}
+/*
  .showModel {
    transform: scale3d(1, 1, 1)!important;
    opacity: 1!important;

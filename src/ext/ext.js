@@ -1,4 +1,4 @@
- // 尽量只扩展微信相关接口
+// 尽量只扩展微信相关接口
 import {
   isWx
 } from '../decorator'
@@ -86,7 +86,9 @@ export default class ext {
 
   static removeStorage (key) {
     if (this.isWx) {
-      return wx.removeStorage({key})
+      return wx.removeStorage({
+        key
+      })
     }
   }
 
@@ -124,13 +126,17 @@ export default class ext {
 
   static navigateBack (delta = 1) {
     if (this.isWx) {
-      wx.navigateBack({delta})
+      wx.navigateBack({
+        delta
+      })
     }
   }
 
   static navigateTo (url) {
     if (this.isWx) {
-      wx.navigateTo({url})
+      wx.navigateTo({
+        url
+      })
     }
   }
 
@@ -278,7 +284,25 @@ export default class ext {
       return wx.getSystemInfoSync().windowHeight
     }
   }
-
+  static getSetting () {
+    if (this.isWx) {
+      return new Promise((resolve, reject) => {
+        wx.getSetting({
+          success (res) {
+            resolve(res)
+          },
+          fail (err) {
+            reject(err)
+          }
+        })
+      })
+    }
+  }
+  static updateShareMenu (object) {
+    if (this.isWx) {
+      wx.updateShareMenu(object)
+    }
+  }
   static install (Vue, options) {
     Vue.prototype.$getStorageSync = this.getStorageSync.bind(this)
     Vue.prototype.$setStorageSync = this.setStorageSync.bind(this)
@@ -308,5 +332,7 @@ export default class ext {
     Vue.prototype.$getWindowH = this.getWindowH.bind(this)
     Vue.prototype.$uploadFile = this.uploadFile.bind(this)
     Vue.prototype.$getFileInfo = this.getFileInfo.bind(this)
+    Vue.prototype.$getSetting = this.getSetting.bind(this)
+    Vue.prototype.$updateShareMenu = this.updateShareMenu.bind(this)
   }
 }

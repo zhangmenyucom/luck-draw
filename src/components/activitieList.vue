@@ -7,6 +7,7 @@
       <button form-type='submit' >
         <a v-if='onDraw.length > 0' class="list" :key="i">
           <img mode='aspectFill' :src='item.items[0].metadata.image'>
+          <div v-if="item.metadata.hasSponsor == 'true'" class='sponsor'>{{item.sponsor.appName}}&nbsp;赞助</div>
           <div class="name antialiased">
             [ 奖品 ]&nbsp;&nbsp;{{item.items[0].name}}
           </div>
@@ -107,6 +108,7 @@
     padding: 32*@1 15*@2 37*@2;
     background: #FFFFFF;
     margin-bottom: 18*@1;
+    position: relative;
   }
 
   .state {
@@ -200,5 +202,19 @@
     font-size: 0;
     line-height: 0;
     background: transparent !important;
+  }
+  .sponsor{
+    position: absolute;
+    z-index: 1000000;
+    right: 32*@2;
+    top: 32*@2;
+    line-height: 28*@2;
+    height: 28*@2;
+    background: rgba(0, 0, 0, 1);
+    color:rgba(255,255,255,1);
+    font-weight: 400;
+    font-size: 13*@2;
+    opacity: 0.7;
+    padding:0 8*@2;
   }
 </style>

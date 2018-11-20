@@ -7,6 +7,7 @@
 }
 .bd{
   border-bottom:1*@2 solid #EAEAEA;
+  position: relative;
 }
 .edit_container{
   background:#fff;
@@ -41,7 +42,7 @@
          .arrow{
             font-size: 12*@2;
            display:inline-block;
-           margin-top:4*@2;
+          //  margin-top:4*@2;
          }
 
        }
@@ -82,15 +83,16 @@
 }
 }
 }
-button::after{
+.button::after{
   border:none;
 }
-button {
+.button {
   background-color: #fff;
   text-align:right;
   float:right;
-  height:25px;
+  height:25*@2;
+  line-height: 25*@2;
   position: absolute;
   right:0;
-  top:322px;
+  // top:322px;
 }

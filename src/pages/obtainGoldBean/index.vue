@@ -1,6 +1,7 @@
 <template>
   <div class="obtainGoldBean">
     <top :hideIcone='true' title='任务中心' />
+    <meIntegral :score='score' :isHideJump="true" />
     <div class="head">
       <div>
         <span class='left bold'>
@@ -105,7 +106,7 @@
           <br />
           <div class="expalin">{{item.score}}<img src="/static/img/goldBean.png" alt=""> &nbsp;&nbsp;</div>
         </div>
-        <navigator target='miniProgram' :app-id="item.appId" @error='fail' @success="() => toXcx(item.appId)">{{shareRule.maxStep > shareNumber ? '领取' : '今日已领完'}}</navigator>
+        <navigator target='miniProgram' :app-id="item.appId" @error='fail' @complete="() => toXcx(item.appId)">{{shareRule.maxStep > shareNumber ? '领取' : '领取'}}</navigator>
         <div class="c"></div>
       </div>
     </div>
@@ -125,6 +126,7 @@
   import ScoreRulesService from '@/services/scoreRulesService'
   import BindPhoneService from '@/services/bindPhoneService'
   import share from '@/common/js/share.js'
+  import meIntegral from '@/components/meIntegral'
   import getMeScores from '@/common/js/getMeScores.js'
   import MeScoresService from '@/services/meScoresService.js'
   import Footprints from '@/services/footPrints.js'
@@ -148,12 +150,14 @@
         scoreCounters: {},
         number: 0,
         appId: '',
-        advertiseRule: []
+        advertiseRule: [],
+        isMiniProgram: false
       }
     },
     components: {
       signIn,
-      top
+      top,
+      meIntegral
     },
     methods: {
       fail (err) {
@@ -168,6 +172,18 @@
             this.$setStorageSync('userInfo', res.data)
             this.userInfo = res.data
           }
+        })
+      },
+      getScoreCounters () {
+        const userInfo = getUserInfo()
+        return DailyFootprintsService.getList({
+          userId: userInfo.id,
+          pageNum: 1,
+          pageSize: 1,
+          type: 'SIGN_IN'
+        }).then((res) => {
+          const scoreCounters = (res.code === 0 && res.data[0]) ? res.data[0] : {}
+          return scoreCounters
         })
       },
       getScoreRules () {
@@ -192,7 +208,7 @@
           }
         })
       },
-      signInCB (data) {
+      signInCB: async function (data) {
         const signIn = this.$getStorageSync('signIn')
         if (signIn) {
           this.isModel = false
@@ -203,7 +219,7 @@
         } else {
           this.getMeScores()
         }
-        this.scoreCounters = data.scoreCounters || this.$getStorageSync('scoreCounters') // 获取连续签到天数
+        this.scoreCounters = await this.getScoreCounters()
         this.getScoreRules()
         this.getDailyFootprintsShare()
         getMeScores.start(this)
@@ -224,7 +240,7 @@
       toXcx (id) {
         Footprints.add(id).then((res) => {
           if (res.code === 0) {
-            this.$showToast('领取成功', 'success', '/static/img/goldBean.png')
+            this.isMiniProgram = true
           }
         })
       },
@@ -232,18 +248,6 @@
         MeScoresService.getList().then(res => {
           if (res.code === 0) {
             this.score = res.data.score
-          }
-        })
-      },
-      getDailyFootprintsViewAd () {
-        DailyFootprintsService.getList({
-          userId: this.userInfo.id,
-          pageNum: 1,
-          pageSize: 100,
-          type: 'VIEW_AD'
-        }).then((res) => {
-          if (res.code === 0) {
-
           }
         })
       },
@@ -273,6 +277,10 @@
       this.$setStorageSync('signIn', false)
     },
     onShow () {
+      if (this.isMiniProgram) {
+        this.$showToast('领取成功', 'success', '/static/img/goldBean.png')
+        this.isMiniProgram = false
+      }
       const userInfo = getUserInfo()
       if (userInfo.id) {
         this.userInfo = userInfo

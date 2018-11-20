@@ -28,7 +28,7 @@
                     <span class="weui-cell__ft" style="font-size:12px;font-family:PingFangSC-Regular;font-weight:400;color:rgba(153,153,153,1);">{{prizeTextLength}}/100</span>
                 </div>
                 <div class="weui-cell weui-cell_access">
-                    <textarea class="weui-cell__bd" placeholder="请输入" maxlength="100" auto-height="true" :value="prizeExplainText" data-name="prizeExplain" @input="inputText"></textarea>
+                     <textarea class="weui-cell__bd" placeholder="请输入" :value="prizeDescription" maxlength="100" auto-height="true" data-name="giftExplain" @input="inputText"></textarea>
                 </div>
             </div>
             <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
@@ -47,9 +47,9 @@
                         <span style="font-size:36rpx;">+</span><span>添加图片</span>
                     </div>
                 </div>
-                <div class="weui-cell weui-cell_access">
+                <!-- <div class="weui-cell weui-cell_access">
                     <textarea class="weui-cell__bd" placeholder="请输入" :value="prizeDescription" maxlength="100" auto-height="true" data-name="giftExplain" @input="inputText"></textarea>
-                </div>
+                </div> -->
             </div>
             <div class="weui-cells weui-cells_after-title" style="margin-top: 8px;">
                 <div class="weui-cell weui-cell_access border-middle">

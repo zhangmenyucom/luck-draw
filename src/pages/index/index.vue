@@ -120,6 +120,10 @@
                 activitie.endTimeDay = `${date.getMonth() + 1}月${date.getDate()}日`
                 activitie.endTimeHours = `${date.getHours()}:${date.getMinutes()}分`
               }
+              if (activitie.metadata.hasSponsor === 'true') {
+                activitie.sponsor = JSON.parse(activitie.metadata.sponsor)
+                console.log(activitie.sponsor)
+              }
               // 现在多余 留待后用
               if (date > activitie.startTime) {
                 onLuckyDraw.push(activitie)

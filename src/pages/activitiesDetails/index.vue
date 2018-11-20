@@ -22,7 +22,6 @@
         <div v-if="activitie.metadata.drawRule == 'fullParticipant'" class='state'>满<text>{{activitie.metadata.participantsNum}}</text>人开奖，剩余<text>{{activitie.metadata.participantsNum-activitie.realNum}}</text>人</div>
 
         <div v-if="activitie.metadata.drawRule == 'timed'" class='state'>{{activitie.endTimeDay}}<text>{{activitie.endTimeHours}}</text>开奖</div>
-
         <div v-if='activitie.metadata.price' class="info">
           {{activitie.metadata.price}}<img src='/static/img/goldBean.png' class="" />参与
         </div>
@@ -33,6 +32,21 @@
       </div>
       <!-- 活动信息及状态end -->
 
+      <!-- 赞助商 -->
+      <navigator target='miniProgram' class="hint" v-if="activitie.metadata.hasSponsor == 'true' || activitie.type == 'PERSONAL_LUCKY_DRAW'" :app-id="activitie.metadata.sponsor&&activitie.metadata.sponsor.appId" :path="activitie.metadata.sponsor&&activitie.metadata.sponsor.path" :extra-data="activitie.metadata.sponsor&&activitie.metadata.sponsor.params">
+        <span>{{activitie.type == "PERSONAL_LUCKY_DRAW" ? '抽奖发起人' : '赞助商'}}</span>
+        <div v-if='activitie.metadata.hasSponsor' class="">
+          <span class='bold'>{{activitie.metadata.sponsor.appName}}</span>
+          <i class='icon iconfont icon-xiaochengxu' />
+          <i class='icon iconfont icon-xuanzedizhi' />
+        </div>
+        <div v-else>
+          <img :src="activitie.owner.avatar" />
+          {{activitie.owner.nickName}}
+        </div>
+      </navigator>
+      <!-- 赞助商结束 -->
+
       <!-- 编辑 -->
       <div class="edit" v-if="participantTotal == 0 && activitie.status == 'CREATED' && activitie.owner.id == userInfo.id" >
         <a :href="activitie.metadata.edition === 'baseEdition'?'/pages/baseCreateActivity/createActivities?id='+activitie.id:'/pages/createActivities/createActivities?id='+activitie.id+'&navPage=1'">
@@ -41,25 +55,8 @@
       </div>
       <!-- 编辑结束 -->
 
-
-      <!-- 赞助商 -->
-      <a class="hint" v-if="activitie.metadata.hasSponsor == 'true' || activitie.type == 'PERSONAL_LUCKY_DRAW'">
-        <span>{{activitie.type == "PERSONAL_LUCKY_DRAW" ? '抽奖发起人' : '赞助商'}}</span>
-        <div v-if='activitie.metadata.hasSponsor' class="">
-          <span class='bold'>{{activitie.metadata.sponsor.appName}}</span>
-          <i class='icon iconfont icon-xiaochengxu' />
-          <i class='icon iconfont icon-xuanzedizhi gray' />
-        </div>
-        <div v-else>
-          <img :src="activitie.owner.avatar" />
-          {{activitie.owner.nickName}}
-        </div>
-      </a>
-      <!-- 赞助商结束 -->
-
-
       <!-- 我发起的活动 可以看到中奖者信息 -->
-      <div class="participantMe" v-if="activitie.type == 'PERSONAL_LUCKY_DRAW' && state >= 5 && participantTotal > 0">
+      <div class="participantMe" v-if="activitie.owner.id == userInfo.id && activitie.type == 'PERSONAL_LUCKY_DRAW' && state >= 5 && participantTotal > 0">
         <a :href="'/pages/luckierList/index?id=' + activitie.id" class="participantInfo">
           查看中奖者收货信息（{{addressExistTotal}}/{{ticketsTotal}}） <i class ='icon iconfont icon-xuanzedizhi' />
         </a>
@@ -72,11 +69,12 @@
       <div class="interval c"></div>
       <!-- 奖品详情 -->
       <div class="description" v-if='activitie.description'>
-        <span>
+        <!-- <span>
           奖品说明：
-        </span></br>
+        </span></br> -->
         {{activitie.description}}
       </div>
+      <div class="interval c"></div>
       <div class="mediaInfo" v-if="mediaInfoimg.length > 0">
         <img mode='widthFix' v-for='(item, i) in mediaInfoimg' :src="item.url">
       </div>
@@ -110,13 +108,16 @@
             </div>
             <!-- 底部 -->
             <div :class='{bottom:true, bottomShow:isBottom}'>
-              <div>
+              <div v-if="activitie.owner.id != userInfo.id">
                 <a href="/pages/baseCreateActivity/createActivities" class="button">
                   发起抽奖
                 </a>
               </div>
               <div v-if="state <= 3" >
-                <button class="button button-o" @click="share">
+                <button v-if="activitie.owner.id == userInfo.id" class="button button-o" @click="share">
+                  发送抽奖邀请
+                </button>
+                <button v-else class="button button-o" @click="share">
                   分享领金豆
                 </button>
               </div>
@@ -385,7 +386,12 @@ export default {
               res.data.metadata.ticketsNum
             )
           }
-
+          // 处理不能二次分享
+          if (res.data.metadata.isShare && res.data.metadata.isShare === 'false') {
+            wx.updateShareMenu({
+              withShareTicket: true
+            })
+          }
           // 转化需要注数的数据类型
           res.data.metadata.ticketsNum =
             res.data.metadata.ticketsNum &&

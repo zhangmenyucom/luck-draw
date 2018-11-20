@@ -1,8 +1,7 @@
 // const consfig = requestConfig
-import config from 'config'
 import ext from '../ext/ext'
+import config from 'config'
 import enumsMap from '@/common/js/enumsMap'
-
 // import authService from './authService'
 var Fly = require(`flyio/dist/npm/wx`)
 var fly = new Fly()

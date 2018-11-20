@@ -4,14 +4,14 @@
     <load :isshow="isShow" />
     <div v-if='!isShow'>
       <div class="infoHeader">
-        <div class="infoImg">
+        <a href="/pages/meIntegral/index" class="infoImg">
           <img :src='userInfo.wx.avatar' />
           <div class="infoText">
             <text>{{userInfo.wx.nickName}}</text><br/>
             <img src="/static/img/goldBean.png" alt=""/>
             <text style="vertical-align:middle;font-size:16px">{{score + ''}}</text>
           </div>
-        </div>
+        </a>
         <div class="info_r">
           <div class="editInfo">
             <a href="/pages/editInfo/index" class="antialiased" style="opacity:1;">
