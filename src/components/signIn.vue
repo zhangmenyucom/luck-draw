@@ -42,8 +42,8 @@
           return false
         }
         if (this.isSignInService) {
-           return false
-        }else {
+          return false
+        } else {
           this.isSignInService = true
         }
         AuthService.wxLogin(e.mp.detail).then((res) => {
