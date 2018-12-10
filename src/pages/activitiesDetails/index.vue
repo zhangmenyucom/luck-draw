@@ -108,11 +108,12 @@
             </div>
             <!-- 底部 -->
             <div :class='{bottom:true, bottomShow:isBottom}'>
-              <div v-if="activitie.owner.id != userInfo.id">
+              <!-- #warning  暂时不上 -->
+              <!-- <div v-if="activitie.owner.id != userInfo.id">
                 <a href="/pages/baseCreateActivity/createActivities" class="button">
                   发起抽奖
                 </a>
-              </div>
+              </div> -->
               <div v-if="state <= 3" >
                 <button v-if="activitie.owner.id == userInfo.id" class="button button-o" @click="share">
                   发送抽奖邀请

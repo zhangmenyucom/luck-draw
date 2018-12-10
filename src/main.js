@@ -45,11 +45,12 @@ export default {
         'selectedIconPath': 'static/img/index.png',
         'pagePath': 'pages/index/index',
         'text': '抽奖'
-      }, {
-        'iconPath': 'static/img/createDraw.png',
-        'selectedIconPath': 'static/img/createDraw1.png',
-        'pagePath': 'pages/baseCreateActivityHome/index',
-        'text': '发起抽奖'
+      // #warning  暂时不上
+      // }, {
+      //   'iconPath': 'static/img/createDraw.png',
+      //   'selectedIconPath': 'static/img/createDraw1.png',
+      //   'pagePath': 'pages/baseCreateActivityHome/index',
+      //   'text': '发起抽奖'
       }, {
         'iconPath': 'static/img/obtain-normal.png',
         'selectedIconPath': 'static/img/obtain.png',
