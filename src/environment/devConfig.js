@@ -2,5 +2,5 @@ import common from './common'
 export default {
   ...common,
   'baseURL': `https://vinci-api-test.qianbaocard.org/`,
-  'appId': `wx8e18aa1fa3957964`
+  'appId': `wx8efd09a2f9314c2a`
 }
