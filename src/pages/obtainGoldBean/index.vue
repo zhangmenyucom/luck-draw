@@ -258,7 +258,7 @@
           pageSize: 1,
           type: 'SHARE'
         }).then((res) => {
-          if (res.code === 0) {
+          if (res.code === 0 && res.data.length > 0) {
             const scoreCounters = res.data[0]
             const lastSignInTime = scoreCounters.lastOperationTime
             if (lastSignInTime) {

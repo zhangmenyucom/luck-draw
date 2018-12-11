@@ -403,7 +403,7 @@ export default {
             case 'fullTicket':
               if (parseInt(res.data.metadata.ticketsNum) === res.data.betNum) {
                 this.modifyState(3.1)
-              }
+              }infodetal
               break
             case 'fullParticipant':
               if (
@@ -441,6 +441,7 @@ export default {
           this.participateBet = parseInt(
             this.score / parseInt(this.activitie.metadata.price)
           )
+          debugger
           this.getShareImg(res.data)
         }
       })

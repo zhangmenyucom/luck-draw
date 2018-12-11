@@ -62,6 +62,9 @@ export default {
         'pagePath': 'pages/infoDetail/index',
         'text': '我的'
       }]
-    }
+    },
+    navigateToMiniProgramAppIdList: [
+      'wx8e18aa1fa3957964' // 正版抽奖
+    ]
   }
 }

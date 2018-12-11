@@ -31,11 +31,12 @@
               <div  class="detailContent">我的抽奖</div>
               <div class="interval"></div>
             </a>
-            <a href="/pages/meCreate/index" class="" style="flex:1">
+            <!-- #warning 隐藏 -->
+            <!-- <a href="/pages/meCreate/index" class="" style="flex:1">
               <div class="detailNum">{{meCreateNum}}</div>
               <div class="detailContent">我发起的</div>
               <div class="interval"></div>
-            </a>
+            </a> -->
             <a href="/pages/meActivitiesList/index?type=lucky" style="flex:1">
               <div class="detailNum">{{LuckyActivitieTotal}}</div>
               <div class="detailContent">中奖记录</div>
@@ -213,7 +214,7 @@
           pageSize: 1,
           type: 'SHARE'
         }).then((res) => {
-          if (res.code === 0) {
+          if (res.code === 0 && res.data.length > 0) {
             const scoreCounters = res.data[0]
             const lastSignInTime = scoreCounters.lastOperationTime
             if (lastSignInTime) {
