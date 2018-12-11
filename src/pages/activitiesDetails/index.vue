@@ -81,7 +81,7 @@
       <!-- 奖品详情结束 -->
 
       <!-- 开奖后 -->
-      <openingPrizeAfter v-if='state >= 5' :participants="participants" :state="state" :activitie="activitie" />
+      <openingPrizeAfter v-if='state >= 5' :toMakeImg="toMakeImg" :participants="participants" :state="state" :activitie="activitie" />
         <!-- 开奖后 -->
 
         <!-- 中奖名单 -->
@@ -107,7 +107,9 @@
               <!-- 免责说明结束 -->
             </div>
             <!-- 底部 -->
-            <div :class='{bottom:true, bottomShow:isBottom}'>
+            
+            <!-- #warning 去掉 v-if="state <= 3" -->
+            <div :class='{bottom:true, bottomShow:isBottom}' v-if="state <= 3" >
               <!-- #warning  暂时不上 -->
               <!-- <div v-if="activitie.owner.id != userInfo.id">
                 <a href="/pages/baseCreateActivity/createActivities" class="button">
@@ -403,7 +405,7 @@ export default {
             case 'fullTicket':
               if (parseInt(res.data.metadata.ticketsNum) === res.data.betNum) {
                 this.modifyState(3.1)
-              }infodetal
+              }
               break
             case 'fullParticipant':
               if (
@@ -441,7 +443,6 @@ export default {
           this.participateBet = parseInt(
             this.score / parseInt(this.activitie.metadata.price)
           )
-          debugger
           this.getShareImg(res.data)
         }
       })

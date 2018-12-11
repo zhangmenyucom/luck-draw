@@ -35,7 +35,7 @@
       </div>
       <div class="divButton">
         <a :href="'/pages/takePrize/index?id='+participants.id" class="butotn-o" >{{state === 6 ? '去领奖' : '信息已填写'}}</a>
-        <a class="button">炫耀一下</a>
+        <a class="button" @tap="()=>toMakeImg(true)">炫耀一下</a>
       </div>
       <span></span>
     </div>
@@ -44,7 +44,7 @@
 <script>
   import drawList from '@/components/drawList'
   export default {
-    props: ['state', 'participants'],
+    props: ['state', 'participants', 'toMakeImg'],
     components: {
       drawList
     }
