@@ -9,7 +9,7 @@
         <div class='explain'>
           签到第{{number+1}}天
         </div>
-        <button @tap.stop="bindgetuserinfo" type="">领取{{signInRule}}金豆</button>
+        <button @tap.stop="bindgetuserinfo" type="">领取{{signInRule}}金豆</button> 
       </div>
     </div>
   </div>
@@ -65,28 +65,48 @@
           pageSize: 1,
           type: 'SIGN_IN'
         }).then(res => {
-          if (res.code === 0 && res.data.length > 0) {
-            this.getScoreRules(res.data[0].number)
-            const scoreCounters = res.data[0]
-            const oldScoreCounters = this.$getStorageSync('scoreCounters')
-            if (oldScoreCounters.number !== scoreCounters) {
-              this.$setStorageSync('scoreCounters', scoreCounters)
+          if (res.code === 0) {
+            if (res.data.length > 0) {
+              const scoreCounters = res.data[0]
+              const oldScoreCounters = this.$getStorageSync('scoreCounters')
+              if (oldScoreCounters.number !== scoreCounters.number) {
+                this.$setStorageSync('scoreCounters', scoreCounters)
+              }
+              // 记录最新签到信息
+              this.scoreCounters = scoreCounters
+
+              // 对比今天是否签到 上一次是否是昨天
+              const lastSignInTime = scoreCounters.lastOperationTime
+              if (lastSignInTime) {
+                const date = new Date()
+                const strDate = date.getFullYear() + '' + this.check(date.getMonth() + 1) + this.check(date.getDate())
+                date.setTime(date.getTime() - 24 * 60 * 60 * 1000)
+                const strPreDate = date.getFullYear() + '' + this.check(date.getMonth() + 1) + this.check(date.getDate())
+                if (strDate === lastSignInTime) {
+                  // 上一次签到是今天
+                  this.getScoreRules(scoreCounters.number)
+                  this.number = scoreCounters.number
+                  return true
+                } else if (strPreDate === lastSignInTime) {
+                  // 上一次签到是昨天
+                  this.getScoreRules(scoreCounters.number)
+                  this.number = scoreCounters.number
+                  return false
+                } else {
+                  // 上一次签到是昨天之前 断开了
+                  this.getScoreRules(0)
+                  this.number = 0
+                  return false
+                }
+              }
             }
-            // 记录最新签到信息
-            this.scoreCounters = scoreCounters
-            // 记录连续签到天数
-            this.number = scoreCounters.number
-            // 对比今天是否签到
-            const lastSignInTime = scoreCounters.lastOperationTime
-            if (!lastSignInTime) return false
-            const newDate = new Date()
-            const date = parseInt(newDate.getFullYear() + '' + this.check(newDate.getMonth() + 1) + this.check(newDate.getDate()), 10)
-            if (date > parseInt(lastSignInTime)) {
-              return false
-            } else {
-              return true
-            }
+
+            // 没有上一次签到信息
+            this.getScoreRules(0)
+            this.number = 0
+            return false
           } else {
+            // error
             return false
           }
         })

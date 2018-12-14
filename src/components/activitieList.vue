@@ -205,7 +205,7 @@
   }
   .sponsor{
     position: absolute;
-    z-index: 1000000;
+    z-index: 199998;
     right: 32*@2;
     top: 32*@2;
     line-height: 28*@2;

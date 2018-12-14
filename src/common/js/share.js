@@ -9,7 +9,8 @@ export default (cb) => () => ({
             type: 'SHARE'
         }).then((res) => {
             if (res.code === 0) {
-                ext.showToast('分享成功', 'success', '/static/img/goldBeanshare.png')
+                // #warning goldBeanshare.png 写死了
+                ext.showToast('分享成功', 'success', '/static/img/goldBean.png')
                 if (cb) {
                     cb()
                 }
