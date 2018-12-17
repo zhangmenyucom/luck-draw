@@ -35,7 +35,7 @@ export default {
       navigationBarBackgroundColor: '#000',
       navigationStyle: 'custom'
     },
-    workers: 'workers',
+    // workers: 'workers',
     tabBar: {
       backgroundColor: '#ffffff',
       color: '#999999',
@@ -64,7 +64,8 @@ export default {
       }]
     },
     navigateToMiniProgramAppIdList: [
-      'wx8e18aa1fa3957964' // 正版抽奖
+      'wx8e18aa1fa3957964', // 正版抽奖
+      'wx863f2ae4c229d733' //榕港
     ]
   }
 }

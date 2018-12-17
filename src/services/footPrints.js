@@ -1,18 +1,15 @@
 import ServiceBase from './serviceBase'
 import request from './request'
-import { getUserInfo } from '@/utils'
+// import { getUserInfo } from '@/utils'
 class Footprints extends ServiceBase {
-  add (appid) {
+  add (appid, title) {
     let data = {}
-    const userInfo = getUserInfo()
-    if (!data.target) {
-      data.target = {
-        type: 'VINCI_CC_FOOTPRINT',
-        id: userInfo.id,
-        name: userInfo.nickName
-      }
-      data.type = 'VIEW_AD'
+    data.target = {
+      type: 'VINCI_CC_FOOTPRINT',
+      id: appid,
+      name: title
     }
+    data.type = 'VIEW_AD'
     return request.post(`${this.url}`, data)
   }
 }

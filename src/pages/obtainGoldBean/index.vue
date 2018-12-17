@@ -28,8 +28,8 @@
       新手任务
     </div>
     <div class="list">
-
-      <div>
+      <!-- #warning 绑定手机号 -->
+      <!-- <div>
         <div class="left icon">
           <i class="icon iconfont icon-bangdingshoujihao" :style="{color:'RGBA(255, 151, 58, 1)'}"></i>
         </div>
@@ -49,7 +49,7 @@
           </div>
         </div>
         <div class="c"></div>
-      </div>
+      </div> -->
       <div>
         <div class="left icon">
           <i class="icon iconfont icon-wanshanziliao"></i>
@@ -106,7 +106,10 @@
           <br />
           <div class="expalin">{{item.score}}<img src="/static/img/goldBean.png" alt=""> &nbsp;&nbsp;</div>
         </div>
-        <navigator target='miniProgram' :app-id="item.appId" @error='fail' @complete="() => toXcx(item.appId)">{{shareRule.maxStep > shareNumber ? '领取' : '领取'}}</navigator>
+        <navigator target='miniProgram' v-if="adAppIds[item.appId] > 0" :app-id="item.appId" @error='fail' @success="() => toXcx(item.appId, item.title)">领取</navigator>
+        <div v-else class='complete'>
+          今日已领完
+        </div>
         <div class="c"></div>
       </div>
     </div>
@@ -149,7 +152,7 @@
         score: 0,
         scoreCounters: {},
         number: 0,
-        appId: '',
+        adAppIds: [],
         advertiseRule: [],
         isMiniProgram: false
       }
@@ -222,6 +225,7 @@
         this.scoreCounters = await this.getScoreCounters()
         this.getScoreRules()
         this.getDailyFootprintsShare()
+        this.getDailyFootprintsAD()
         getMeScores.start(this)
       },
       shareWx () {
@@ -237,9 +241,11 @@
       changeDisplay () {
         this.display = !this.display
       },
-      toXcx (id) {
-        Footprints.add(id).then((res) => {
+      toXcx (id, title) {
+        Footprints.add(id, title).then((res) => {
           if (res.code === 0) {
+            this.getMeScores()
+            this.getDailyFootprintsAD()
             this.isMiniProgram = true
           }
         })
@@ -266,6 +272,27 @@
               const date = parseInt(newDate.getFullYear() + '' + check(newDate.getMonth() + 1) + check(newDate.getDate()), 10)
               if (date <= parseInt(lastSignInTime)) {
                 this.shareNumber = res.data[0].number
+              }
+            }
+          }
+        })
+      },
+      getDailyFootprintsAD () {
+        DailyFootprintsService.getList({
+          userId: this.userInfo.id,
+          pageNum: 1,
+          pageSize: 11,
+          type: 'VIEW_AD'
+        }).then((res) => {
+          debugger
+          if (res.code === 0 && res.data.length > 0) {
+            const scoreCounters = res.data[0]
+            const lastSignInTime = scoreCounters.lastOperationTime
+            if (lastSignInTime) {
+              const newDate = new Date()
+              const date = parseInt(newDate.getFullYear() + '' + check(newDate.getMonth() + 1) + check(newDate.getDate()), 10)
+              if (date <= parseInt(lastSignInTime)) {
+                // this.adAppIds
               }
             }
           }
