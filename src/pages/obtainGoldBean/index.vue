@@ -106,7 +106,7 @@
           <br />
           <div class="expalin">{{item.score}}<img src="/static/img/goldBean.png" alt=""> &nbsp;&nbsp;</div>
         </div>
-        <navigator target='miniProgram' v-if="adAppIds[item.appId] > 0" :app-id="item.appId" @error='fail' @success="() => toXcx(item.appId, item.title)">领取</navigator>
+        <navigator target='miniProgram' v-if="!adAppIds[item.appId] || adAppIds[item.appId] <= 0" :app-id="item.appId" @error='fail' @success="() => toXcx(item.appId, item.title)">领取</navigator>
         <div v-else class='complete'>
           今日已领完
         </div>
@@ -281,10 +281,9 @@
         DailyFootprintsService.getList({
           userId: this.userInfo.id,
           pageNum: 1,
-          pageSize: 11,
+          pageSize: 1,
           type: 'VIEW_AD'
         }).then((res) => {
-          debugger
           if (res.code === 0 && res.data.length > 0) {
             const scoreCounters = res.data[0]
             const lastSignInTime = scoreCounters.lastOperationTime
@@ -292,7 +291,7 @@
               const newDate = new Date()
               const date = parseInt(newDate.getFullYear() + '' + check(newDate.getMonth() + 1) + check(newDate.getDate()), 10)
               if (date <= parseInt(lastSignInTime)) {
-                // this.adAppIds
+                this.adAppIds = scoreCounters.metadata
               }
             }
           }

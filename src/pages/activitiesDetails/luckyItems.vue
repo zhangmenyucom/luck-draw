@@ -10,19 +10,19 @@
       </div>
     </div>
     <div class="list">
-      <drawList :list="list" />
+      <draw :list="list.length > 3 ? list.slice(0,3) : list" />
     </div>
     <a :href="'/pages/prizewinning/index?id='+ activitie.id"  v-if="list.length > 3">
-      查看更多<img src="/static/img/right.png" alt="">
+      查看全部<img src="/static/img/right.png" alt="">
     </a>
   </div>
 </template>
 <script>
-  import drawList from '@/components/drawList'
+  import draw from '@/components/drawList'
   export default {
     props: ['list', 'activitie'],
     components: {
-      drawList
+      draw
     }
   }
 </script>
@@ -57,13 +57,14 @@
    }
  }
  >a {
-   background: #fff;
+   // background: #fff;
    font-size: 14*@2;
    line-height: 18*@2;
    text-align: center;
    display: block;
    width: 100%;
    color: #999999;
+   padding-bottom: 25*@2;
    >img {
      width: 12*@2;
      height: 12*@2;

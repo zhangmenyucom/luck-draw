@@ -65,7 +65,10 @@ export default {
     },
     navigateToMiniProgramAppIdList: [
       'wx8e18aa1fa3957964', // 正版抽奖
-      'wx863f2ae4c229d733' //榕港
+      'wx863f2ae4c229d733', // 榕港
+      'wxe2e9103368bb3884', // 京料理
+      'wx0cdcad29618b74a3', // 混沌
+      'wxcc097374656e18a3' // 华莱士
     ]
   }
 }

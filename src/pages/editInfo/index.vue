@@ -56,8 +56,8 @@
 </li>
 <li v-else class="bd">
   <div class="list_l">地址 <span>+{{rule.area}} <img src='/static/img/goldBean.png'></span></div>
-  <div  v-if='isLocation' @click ="chooseLocation" class="list_r">{{infoArea}}<i class="arrow icon iconfont icon-huise"></i></div>
-  <button  v-else open-type="openSetting" @openSetting="chooseLocation" class="list_r button">{{infoArea}}<i class="arrow icon iconfont icon-huise"></i></button>
+  <div @click ="chooseLocation" class="list_r">{{infoArea}}<i class="arrow icon iconfont icon-huise"></i></div>
+  <!-- <button  v-else open-type="openSetting" @openSetting="chooseLocation" class="list_r button">{{infoArea}}<i class="arrow icon iconfont icon-huise"></i></button> -->
 </li>
 </ul>
 </div>
@@ -127,7 +127,7 @@
       },
       // 选择区域
       chooseLocation () {
-        this.$chooseLocation().finally(res => {
+        this.$chooseLocation().then(res => {
           if (!res) return
           this.userPut('location', {
             addition: res.address + '-' + res.name,

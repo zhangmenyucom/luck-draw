@@ -7,10 +7,10 @@
     <div>
       <div class='bold antialiased'>
         <form v-if="activitie.metadata.drawRule == 'fullTicket'" :data-state="state + 1" @submit.stop = "modifyState">
-          <button form-type = "submit">点我抽奖</button>
+          <button form-type = "submit">点我<br />抽奖</button>
         </form>
         <form v-else report-submit @submit.stop = "bets">
-          <button form-type = "submit">点我抽奖</button>
+          <button form-type = "submit">点我<br />抽奖</button>
         </form>
       </div>
     </div>
@@ -27,13 +27,13 @@
   <div>
     <div class='bold antialiased'>
       <form  v-if="activitie.metadata.drawRule == 'fullTicket'"  :data-state="state + 1" @submit.stop = "modifyState">
-        <button form-type = "submit" >
+        <button form-type = "submit">
           加注
           <span class='tickets' >已下{{participants.tickets.length * activitie.metadata.price}}金豆</span>
         </button>
       </form>
       <form v-else>
-        <button  open-type="share" >分享加速</button>
+        <button  open-type="share" >分享<br />加速</button>
       </form>
     </div>
   </div>
@@ -50,7 +50,7 @@
       <div>
         <div class='bold antialiased'>
           <form >
-            <button form-type = "submit">等待开奖</button>
+            <button form-type = "submit">等待<br />开奖</button>
           </form>
         </div>
       </div>
@@ -90,7 +90,7 @@
     },
     watch: {
       state (val) {
-        console.log('val', val)
+        // console.log('val', val)
         this.current = val <= 1 ? 0 : (val <= 3 ? 1 : 2)
       }
     }
@@ -99,7 +99,7 @@
 <style scoped>
   @import '../../common/less/util.less';
   .scroll{
-    width: 100;
+    width: 100*@2;
   }
   form, button {
     position: relative;
@@ -107,9 +107,10 @@
   }
   .tickets{
     font-size: 10*@2;
-    margin:-5*@2 -20*@2;
+    /*margin: 0 10*@2;*/
     display: inline-block;
     text-align: center;
+    line-height: 11*@2;
   }
   .loop(@count) when( @count > 0 ){
     >div:nth-child(@{count}){
@@ -211,6 +212,7 @@
          color: #fff;
          line-height: 28*@2;
          border: none;
+
        }
        button::after {
          border: none;
@@ -230,6 +232,7 @@
 .luckDraw{
   transition:all 0.5s;
   width: 100%;
+  height: 150*@2;
   display: flex;
   justify-content:center;
   .circular{
@@ -290,12 +293,13 @@
        font-size: 22*@2;
        color: #fff;
        text-align: center;
-       padding: 16*@2 20*@2;
+       padding: 16*@2 0;
        box-sizing: border-box;
        button {
          font-family: "HYe4gj";
          background: transparent!important;
-         padding: 0;
+         /*padding: -10*@2 0;*/
+         /*margin: 0 10*@2;*/
          color: #fff;
          line-height: 28*@2;
          border: none;

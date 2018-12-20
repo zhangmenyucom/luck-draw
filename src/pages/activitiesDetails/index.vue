@@ -85,7 +85,7 @@
         <!-- 开奖后 -->
 
         <!-- 中奖名单 -->
-        <luckyitems v-if='state >= 5 && luckyItemList.length > 0' :list='luckyItemList' :activitie = 'activitie' />
+      <luckyitems v-if='state >= 5 && luckyItemList.length > 0' :list='luckyItemList' :activitie = 'activitie' />
           <!-- 中奖名单结束 -->
           <div class="gray">
             <div class="c"></div>
@@ -128,8 +128,9 @@
             <!-- 底部结束 -->
 
             <!-- 弹出层 -->
-            <model :luckyItemList='luckyItemList' :modifyState='modifyState' :bets='bets' :toMakeImg='toMakeImg' :score = 'score' :participants='participants' :activitie = 'activitie' :state.sync = 'state' :isFree.sync = 'isFree' :oldState= 'oldState'  />
+            <model :luckyItemList='luckyItemList' :modifyState='modifyState' :bets='bets' :toMakeImg='toMakeImg' :score = 'score' :participants='participants' :activitie = 'activitie' :state.sync = 'state' :isFree.sync = 'isFree' :oldState= 'oldState' :noscore.sync='noscore'/>
             <!-- 弹出层结束 -->
+
           </div>
         </div>
         <div class="shade" v-if="display" @tap="shadeShow">
@@ -222,7 +223,7 @@ export default {
       mediaInfoimg: [], // 商品详情列表
       luckyItemList: [], // 中奖者名单
       isBottom: false,
-      state: 0
+      state: 0,
       // 0 NotInvolved 未参与
       // 1 Bets 下注
       // 2 ParticipateIn 参与过
@@ -232,6 +233,7 @@ export default {
       // 6 已中奖
       // 7 已添加地址
       // 8 未参加活动结束
+      noscore: false
     }
   },
   onPullDownRefresh () {
@@ -448,12 +450,14 @@ export default {
       })
     },
     modifyState (e) {
-      const state =
+      let state =
         typeof e === 'number' ? e : parseInt(e.target.dataset.state, 10)
       // 下注或重新下注前查看 积分是否够用
       if (state === 1 || state === 3) {
         if (this.activitie.metadata.price > this.score) {
-          this.$showToast('金豆不足')
+          // this.$showToast('金豆不足')
+          this.isModal = true
+          this.noscore = true
           return false
         }
       }
@@ -464,7 +468,7 @@ export default {
           // 等待子组件调整
           this.state = state
         }
-      }, 100)
+      }, 300)
     },
     getParticipants (activityId) {
       const userInfo = getUserInfo()
@@ -511,11 +515,13 @@ export default {
         lucky: true
       }).then(res => {
         if (res.code === 0) {
-          this.luckyItemList = res.data.map(data => {
+          res.data.forEach(data => {
             data.img = data.user.avatar
             data.nickName = data.user.nickName
-            return data
           })
+          this.luckyItemList = JSON.parse(JSON.stringify(res.data))
+          console.log('==========' + this.luckyItemList.length)
+          // var aa = this.luckyItemList
           this.ticketsTotal = res.total
         }
       })
@@ -542,6 +548,7 @@ export default {
       this.$showLoading()
       const { activitie } = this
       const user = getUserInfo()
+      console.log('=============formId :' + e.mp.detail.formId)
       ParticipantsService.add({
         activityId: activitie.id,
         scene: 'MEMBER_JOIN_LUCKY_DRAW',
@@ -554,7 +561,7 @@ export default {
           formId: e.mp.detail.formId
         }
       }).then(res => {
-        this.$hideLoading()
+        // this.$hideLoading()
         if (res.code === 0) {
           this.participants = res.data
           this.state = 2
@@ -571,6 +578,7 @@ export default {
     chooseAddress () {
       this.$navigateTo('/pages/takePrize/index?id=' + this.activitie.id)
     },
+
     signInCB () {
       const id = this.id
       this.getActivitie(id)

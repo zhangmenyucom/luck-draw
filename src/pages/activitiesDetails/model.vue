@@ -1,8 +1,9 @@
 <template>
- <div class="modal" @tap="hideModal" v-if="isModal && (state === 1 || state === 3 || (participants.id && (state === 5 || state === 6)) || isFree)">
+ <div class="modal" @tap="hideModal" v-if="isModal && (state === 1 || state === 3 || (participants.id && (state === 5 || state === 6)) || isFree || noscore)">
+
   <div class="content" @tap.stop="">
     <div class="title">
-      —— {{isFree ? '提示' : (state < 5 ? '下注' : '开奖结果')}} ——
+      —— {{isFree ? '提示' : (state < 5 ? (state < 1 ? '金豆不足' : '下注') : '开奖结果')}} ——
     </div>
     <div class="modalFree" v-if="isFree">
       <img src="/static/img/lightModal.png">
@@ -66,23 +67,23 @@
         </div>
         <!-- 中奖结束 -->
         <!-- 中奖者名单 -->
-        <luckyitems :list='luckyList' :activitie = 'activitie' />
+        <!-- {{luckyList.length}} -->
+        <luckyitems :list='luckyItemList' :activitie = 'activitie' />
         <!-- 中奖者名单结束 -->
       </div>
       <!-- 开奖结束 -->
-      <!-- 提示 -->
-      <div class="point" v-if="false">
+      <!-- 金豆不足   -->
+      <div class="point" v-if='noscore'>
+        <img src='/static/img/noscore.png'>
         <div>
-          还差<span>4</span>金豆<br />可分享至微信群获得金豆
+            抱歉，金豆不足
         </div>
-        <button class="button">
-          去分享
-        </button>
-        <span>
-          还剩4次分享机会
-        </span>
+        <a class="button" open-type="switchTab" href='/pages/obtainGoldBean/index'>
+          赚取金豆
+        </a>
       </div>
-      <!-- 提示结束 -->
+      <!-- 金豆不足结束 -->
+
     </div>
   </div>
 </div>
@@ -90,7 +91,7 @@
 <script>
   import luckyitems from './luckyItems'
   export default {
-    props: ['isFree', 'luckyItemList', 'state', 'activitie', 'oldState', 'participants', 'score', 'toMakeImg', 'bets'],
+    props: ['isFree', 'luckyItemList', 'state', 'activitie', 'oldState', 'participants', 'score', 'toMakeImg', 'bets', 'noscore'],
     data () {
       return {
         isModal: false,
@@ -106,7 +107,10 @@
         this.isModal = true
       },
       luckyItemList (newVal) {
-        this.luckyList = newVal
+        this.luckyList = JSON.parse(JSON.stringify(newVal))
+      },
+      noscore(val){
+        this.isModal = val
       }
     },
     components: {
@@ -117,9 +121,13 @@
         if (this.isFree) {
           this.$emit('update:isFree', false)
         }
+        if (this.noscore) {
+          this.$emit('update:noscore', false)
+        }
         if (this.state === 3 || this.state === 1) this.$emit('update:state', this.oldState)
         this.ticketsNum = 1
         this.isModal = false
+
       },
       modifyTicketsNum (e) {
         const type = e.target.dataset.type
@@ -313,23 +321,21 @@
             }
           }
           .point {
+            text-align: center;
+            >img {
+              width: 100*@2;
+              height: 150*@2;
+              margin: 25*@2 auto;
+            }
             >div {
               font-size: 18*@2;
               color: RGBA(252, 229, 194, 1);
-              margin: 50*@2 auto 56*@2;
+              margin: 20*@2 auto;
               text-align: center;
               line-height: 26*@2;
               span {
                 font-size: 22*@2;
               }
-            }
-            >span {
-              font-size: 12*@2;
-              line-height: 16*@2;
-              margin: 8*@2 auto;
-              display: block;
-              color: RGBA(252, 229, 194, 0.6);
-              text-align: center;
             }
           }
         }

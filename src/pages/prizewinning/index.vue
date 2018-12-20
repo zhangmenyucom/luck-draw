@@ -85,7 +85,11 @@
           if (res.code === 0) {
             // 处理中奖信息
             if (res.data.metadata.luckyItems) {
-              const luckyItems = JSON.parse(res.data.metadata.luckyItems)
+              let luckyItems = JSON.parse(res.data.metadata.luckyItems)
+              luckyItems.forEach(data => {
+                data.img = data.luckyGuy.avatar
+                data.nickName = data.luckyGuy.nickName
+              })
               console.log('luckyItems', luckyItems)
               this.luckyItems = luckyItems
             }

@@ -42,9 +42,9 @@ const rules = process.env.DISABLE_ESLINT == 'no'?[]:[
 
 // 处理 worker 文件 现在写死 文件目录 后期需要改为通过main.js 获取work配置
 const workerEntry = {}
-const workers = fs.readdirSync('./src/workers').forEach((worker) => {
-  workerEntry[`../../workers/${worker.split('.')[0]}`] = `./src/workers/${worker}`
-})
+// const workers = fs.readdirSync('./src/workers').forEach((worker) => {
+//   workerEntry[`../../workers/${worker.split('.')[0]}`] = `./src/workers/${worker}`
+// })
 
 // page 入口页
 let vueEntry

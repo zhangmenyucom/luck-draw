@@ -194,40 +194,40 @@ export default {
             b: 102,
             a: 1
           }
-        },
-        {
-          sn: '1007',
-          relativeSn: '',
-          xelementLayoutType: 'ABSOLUTELY',
-          yelementLayoutType: 'ABSOLUTELY',
-          elementContent: 'https://oss.qianbaocard.com/20180918/4948be7a3ca6451a8eda67a04bc71930.png',
-          elementMediaType: 'IMG',
-          x: 420,
-          y: 330,
-          height: 56,
-          width: 176
-        },
-        {
-          sn: '1008',
-          relativeSn: '',
-          xelementLayoutType: 'ABSOLUTELY',
-          yelementLayoutType: 'ABSOLUTELY',
-          elementContent: '抽奖助手 赞助',
-          elementMediaType: 'TEXT',
-          x: 432,
-          y: 367,
-          font: {
-            name: 'PingFangSC',
-            elementFontStyle: 0,
-            fontSize: 24
-          },
-          color: {
-            r: 255,
-            g: 255,
-            b: 255,
-            a: 1
-          }
         }
+        // {
+        //   sn: '1007',
+        //   relativeSn: '',
+        //   xelementLayoutType: 'ABSOLUTELY',
+        //   yelementLayoutType: 'ABSOLUTELY',
+        //   elementContent: 'https://oss.qianbaocard.com/20180918/4948be7a3ca6451a8eda67a04bc71930.png',
+        //   elementMediaType: 'IMG',
+        //   x: 420,
+        //   y: 330,
+        //   height: 56,
+        //   width: 176
+        // },
+        // {
+        //   sn: '1008',
+        //   relativeSn: '',
+        //   xelementLayoutType: 'ABSOLUTELY',
+        //   yelementLayoutType: 'ABSOLUTELY',
+        //   elementContent: '抽奖助手 赞助',
+        //   elementMediaType: 'TEXT',
+        //   x: 432,
+        //   y: 367,
+        //   font: {
+        //     name: 'PingFangSC',
+        //     elementFontStyle: 0,
+        //     fontSize: 24
+        //   },
+        //   color: {
+        //     r: 255,
+        //     g: 255,
+        //     b: 255,
+        //     a: 1
+        //   }
+        // }
       ]
       creatRule.elementContent = this.dealRule(data)
       // 个人发起抽奖
