@@ -23,13 +23,13 @@ fly.interceptors.request.use((request) => {
 
 fly.interceptors.response.use(
   (response) => {
-    ext.hideLoading()
+    //   ext.hideLoading()
     // 只将请求结果的data字段返回
     if (response.data.code !== 0) ext.showToast(enumsMap[response.data.code] || response.data.message)
     return response.data
   },
   (err) => {
-    ext.hideLoading()
+    //   ext.hideLoading()
     // 发生网络错误后会走到这里
     if (err.status === 401) {
       if (err.request.url !== `/uc/v1/auth/refresh-token`) {
@@ -41,7 +41,8 @@ fly.interceptors.response.use(
         })
       } else {
         ext.clearStorageSync()
-        ext.switchTab('/pages/index/index')
+        // ext.switchTab('/pages/index/index')
+        ext.navigateTo('/pages/login/index')
       }
     } else {
       ext.showToast('当前服务不可用，请稍后再试！')

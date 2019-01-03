@@ -16,6 +16,10 @@
         'statShareApp': true,
         'statReachBottom': true
       })
+      const updateManager = wx.getUpdateManager()
+      updateManager.onUpdateReady(function () {
+        updateManager.applyUpdate()
+      })
     }
   }
 </script>

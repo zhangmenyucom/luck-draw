@@ -44,8 +44,8 @@
           {{participants.user.nickName}}
         </div>
         <div class="goodsName" v-if="state == 6" >
-          <div v-for="(item, i) in participants.rewards">
-            奖品{{i+1}}：{{item.name}}
+          <div v-for="(item, i) in activitie.items">
+            奖品：{{item.name}}
           </div>
         </div>
         <!-- 中奖 -->
@@ -78,7 +78,7 @@
         <div>
             抱歉，金豆不足
         </div>
-        <a class="button" open-type="switchTab" href='/pages/obtainGoldBean/index'>
+        <a class="button" @tap.stop="goObtainGold">
           赚取金豆
         </a>
       </div>
@@ -109,7 +109,7 @@
       luckyItemList (newVal) {
         this.luckyList = JSON.parse(JSON.stringify(newVal))
       },
-      noscore(val){
+      noscore (val) {
         this.isModal = val
       }
     },
@@ -127,7 +127,6 @@
         if (this.state === 3 || this.state === 1) this.$emit('update:state', this.oldState)
         this.ticketsNum = 1
         this.isModal = false
-
       },
       modifyTicketsNum (e) {
         const type = e.target.dataset.type
@@ -145,6 +144,10 @@
         if (newTicketsNum > 0 && this.score >= totalTicketsNum && surplusTicketsNum >= newTicketsNum) {
           this.ticketsNum = newTicketsNum
         }
+      },
+      goObtainGold () {
+        this.$emit('update:noscore', false)
+        this.$switchTab('/pages/obtainGoldBean/index')
       }
     }
   }

@@ -98,6 +98,7 @@
           status: 'CREATED',
           append: ['BET_NUM', 'PARTICIPATED'],
           userId: this.userId,
+          // actorId: this.userId,
           startTimeLt: date, // 过滤未到时间活动
           pageNum,
           pageSize

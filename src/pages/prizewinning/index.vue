@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="list">
-      <drawList :list="luckyItems" />
+      <participantsList :list="luckyItems" />
     </div>
   </div>
 </template>
@@ -63,7 +63,7 @@
   }
 </style>
 <script>
-  import drawList from '@/components/drawList'
+  import participantsList from '@/components/participantsList'
   import ActivitiesService from '@/services/activitiesService'
   import share from '@/common/js/share.js'
   import top from '@/components/top'
@@ -74,7 +74,7 @@
       }
     },
     components: {
-      drawList,
+      participantsList,
       top
     },
     methods: {
@@ -87,8 +87,9 @@
             if (res.data.metadata.luckyItems) {
               let luckyItems = JSON.parse(res.data.metadata.luckyItems)
               luckyItems.forEach(data => {
-                data.img = data.luckyGuy.avatar
-                data.nickName = data.luckyGuy.nickName
+                data.user = {}
+                data.user.avatar = data.luckyGuy.avatar
+                data.user.nickName = data.luckyGuy.nickName
               })
               console.log('luckyItems', luckyItems)
               this.luckyItems = luckyItems

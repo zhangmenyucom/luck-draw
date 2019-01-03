@@ -91,13 +91,23 @@
         }
         this.address.remarks = this.remarks
         console.log('this.participant', this.participant)
-        ParticipantsService.addMetadata({
-          id: this.participant.id,
-          key: 'address',
-          value: JSON.stringify(this.address)
-        }).then((res) => {
-          if (res.code === 0) {
-            this.$navigateBack()
+        wx.showModal({
+          title: '确认使用以下收货信息？',
+          content: this.address.name + '   ' + this.address.phone + '\n' + this.address.addition,
+          confirmColor: '#108EE9',
+          cancelColor: '#898989',
+          success: (res) => {
+            if (res.confirm) {
+              ParticipantsService.addMetadata({
+                id: this.participant.id,
+                key: 'address',
+                value: JSON.stringify(this.address)
+              }).then((res) => {
+                if (res.code === 0) {
+                  this.$navigateBack()
+                }
+              })
+            }
           }
         })
       }

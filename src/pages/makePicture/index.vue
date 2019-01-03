@@ -284,7 +284,8 @@ export default {
     this.title = options.title
     this.twoCode = options.twoCode
     this.activity = []
-    this.activity = JSON.parse(options.activity)
+    this.activity = this.$getStorageSync('makePic_activity')
+    this.$removeStorage('makePic_activity')
     console.log(this.activity)
     this.getPicture(this.activity)
     this.$showLoading()

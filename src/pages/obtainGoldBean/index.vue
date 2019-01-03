@@ -106,7 +106,7 @@
           <br />
           <div class="expalin">{{item.score}}<img src="/static/img/goldBean.png" alt=""> &nbsp;&nbsp;</div>
         </div>
-        <navigator target='miniProgram' v-if="!adAppIds[item.appId] || adAppIds[item.appId] <= 0" :app-id="item.appId" @error='fail' @success="() => toXcx(item.appId, item.title)">领取</navigator>
+        <navigator target='miniProgram' v-if="!adAppIds[item.appId] || adAppIds[item.appId] <= 0" :app-id="item.appId" :path="item.path" @error='fail' @success="() => toXcx(item.appId, item.title)">领取</navigator>
         <div v-else class='complete'>
           今日已领完
         </div>

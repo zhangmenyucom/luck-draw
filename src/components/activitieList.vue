@@ -12,35 +12,44 @@
             [ 奖品 ]&nbsp;&nbsp;{{item.items[0].name}}
           </div>
           <div v-if="item.metadata.drawRule === 'fullTicket'">
-            <span class="joined" v-if="item.metadata.participated">
-              <img style="width:23rpx;height:23rpx;margin-right:3px;" src="/static/img/Combined Shape.png" />
-              已参与 <span style="margin-left:8px;">|</span>
-            </span>
             <span class="goldBean">
-              满<span >{{item.metadata.ticketsNum * item.metadata.price}}</span>金豆开奖
+              满{{item.metadata.ticketsNum * item.metadata.price}}金豆开奖<span style="margin-left:8rpx;color: #666666;">|</span>
             </span>
-            <div class="fullGoldBean">
+            <span class="joined" v-if="item.metadata.participated=='true'">
+              <img style="width:23rpx;height:23rpx;margin-right:3px;" src="/static/img/Combined Shape.png" />
+              已参与
+            </span>
+            <div class="fullGoldBean" v-else>
               {{item.metadata.price}}
-              <img src='/static/img/goldBean.png'/>参与
+              <img src='/static/img/goldBean.png'/>
+            </div>
+            <div class="freeClick">
+              免费抽奖
             </div>
           </div>
           <div v-if="item.metadata.drawRule === 'timed'" style="margin-top: 5rpx;">
-            <span class="joined" v-if="item.metadata.participated">
-              <img style="width:23rpx;height:23rpx;margin-right:3px;" src="/static/img/Combined Shape.png" />
-              已参与 <span style="margin-left:8px;">|</span>
-            </span>
             <span class="goldBean">
-              {{item.endTimeDay}}<span style="color:red">{{item.endTimeHours}}</span>开奖
+              {{item.endTimeDay}}{{item.endTimeHours}}开奖<span style="margin-left:8rpx;color: #666666;" v-if="item.metadata.participated=='true'">|</span>
             </span>
+            <span class="joined" v-if="item.metadata.participated=='true'">
+              <img style="width:23rpx;height:23rpx;margin-right:3px;" src="/static/img/Combined Shape.png" />
+              已参与
+            </span>
+            <div class="freeClick">
+              免费抽奖
+            </div>
           </div>
           <div v-if="item.metadata.drawRule === 'fullParticipant'" style="margin-top: 5rpx;">
-            <span class="joined" v-if="item.metadata.participated">
-              <img style="width:23rpx;height:23rpx;margin-right:3px;" src="/static/img/Combined Shape.png" />
-              已参与 <span style="margin-left:8px;">|</span>
-            </span>
             <span class="goldBean">
-              满<span style="color:red">{{item.metadata.participantsNum}}</span>人开奖
+              满{{item.metadata.participantsNum}}人开奖<span style="margin-left:8rpx;color: #666666;">{{item.metadata.participated=='true'?'|':' '}}</span>
             </span>
+            <span class="joined" v-if="item.metadata.participated=='true'">
+              <img style="width:23rpx;height:23rpx;margin-right:3px;" src="/static/img/Combined Shape.png" />
+              已参与
+            </span>
+            <div class="freeClick">
+              免费抽奖
+            </div>
           </div>
         </a>
       </button>
@@ -134,8 +143,10 @@
   .fullGoldBean {
     font-size: 14*@2;
     font-family: PingFangSC-Semibold;
-    float: right;
+    float: left;
     font-weight: 600;
+    padding-left: 6*@2;
+    margin-top: -1*@2;
     color: rgba(243, 185, 19, 1);
 
     >img {
@@ -148,6 +159,20 @@
     }
   }
 
+  .freeClick {
+    font-size: 14*@2;
+    font-family: PingFangSC-Semibold;
+    float: right;
+    font-weight: 400;
+    color:rgba(255,255,255,1);
+    background: #FE4C52;
+    width:72*@2;
+    height:30*@2;
+    line-height:30*@2;
+    margin-top: -8*@2;
+    border-radius: 2*@2;
+  }
+
   img {
     width: 345*@2;
     height: 170*@2;
@@ -157,7 +182,7 @@
     font-size: 16*@2;
     line-height: 20*@2;
     margin-top: 12*@2;
-    margin-bottom: 4*@2;
+    margin-bottom: 14*@2;
     font-family: PingFangSC-Semibold;
     font-weight: 600;
     color: rgba(67, 67, 67, 1);
@@ -168,20 +193,21 @@
   }
 
   .goldBean {
-    color: rgba(102, 102, 102, 1);
+    color: #666666;
     font-family: PingFangSC-Regular;
     font-size: 14*@2;
     float: left;
-
+    line-height: 17*@2;
+    display: flex;
     span {
       font-size: 14*@2;
       line-height: 17*@2;
       color: #434343;
       flex: 1;
       color: #ff5459;
-      text-align: right;
+      text-align: left;
       position: relative;
-      left: -2*@2;
+      /*left: -2*@2;*/
     }
   }
 
@@ -192,7 +218,8 @@
     /* font-weight: 600; */
     color: rgba(253, 183, 0, 1);
     float: left;
-    margin-right: 8*@2;
+    margin-top: 1*@2;
+    margin-left: 8*@2;
   }
 
   form button {

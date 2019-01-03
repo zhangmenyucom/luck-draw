@@ -12,7 +12,7 @@
       </swiper>
       <div class="name antialiased">
         <div v-for="(item, i) in activitie.items" :key= "i">
-          <text>「奖品{{i+1}}」</text>{{item.name}}&nbsp;<span>X&nbsp;{{item.metadata.num}}</span>
+          <text>「奖品」</text>{{item.name}}&nbsp;<span>X&nbsp;{{item.metadata.num}}</span>
         </div>
       </div>
       <!-- 活动信息及状态 -->
@@ -84,11 +84,11 @@
       <openingPrizeAfter v-if='state >= 5' :toMakeImg="toMakeImg" :participants="participants" :state="state" :activitie="activitie" />
         <!-- 开奖后 -->
 
-        <!-- 中奖名单 -->
+      <!-- 中奖名单 -->
       <luckyitems v-if='state >= 5 && luckyItemList.length > 0' :list='luckyItemList' :activitie = 'activitie' />
           <!-- 中奖名单结束 -->
           <div class="gray">
-            <div class="c"></div>
+            <div class="c">===</div>
             <!-- 抽奖按钮 -->
             <luckDraw v-if='state >= 0 && state <= 3.1' :state = 'state' :participants='participants' :activitie = 'activitie' :modifyState= 'modifyState' :bets='bets'/>
               <!-- 抽奖按钮结束 -->
@@ -222,7 +222,7 @@ export default {
       QR: '',
       mediaInfoimg: [], // 商品详情列表
       luckyItemList: [], // 中奖者名单
-      isBottom: false,
+      isBottom: true,
       state: 0,
       // 0 NotInvolved 未参与
       // 1 Bets 下注
@@ -358,17 +358,17 @@ export default {
     toMakeImg (lucky) {
       TwoCodeService.get().then(res => {
         this.QR = res.data.url
+
         if (res.code === 0) {
+          this.$setStorageSync('makePic_activity', this.activitie)
+
           lucky === true
             ? this.$navigateTo(
-              '../makePicture/index?title=生成分享图&lucky=true&activity=' +
-                  JSON.stringify(this.activitie) +
-                  '&twoCode=' +
+              '../makePicture/index?title=生成分享图&lucky=true&twoCode=' +
                   res.data.url
             )
             : this.$navigateTo(
-              '../makePicture/index?title=生成分享图&activity=' +
-                  JSON.stringify(this.activitie) +
+              '../makePicture/index?title=生成分享图&twoCode=' +
                   '&twoCode=' +
                   res.data.url
             )
@@ -478,6 +478,7 @@ export default {
         userId: userInfo.id
       }).then(res => {
         if (res.code === 0 && res.data.length > 0) {
+          console.log(res.data)
           this.participants = res.data[0]
           if (res.data[0].metadata.address) {
             // 判断是否添加过地址
@@ -545,7 +546,7 @@ export default {
     },
     bets (e) {
       // 下注 参与活动
-      this.$showLoading()
+      // this.$showLoading()
       const { activitie } = this
       const user = getUserInfo()
       console.log('=============formId :' + e.mp.detail.formId)
@@ -588,10 +589,10 @@ export default {
     }
   },
   onReachBottom () {
-    this.isBottom = true
+    // this.isBottom = true
   },
   onLoad (options) {
-    this.isBottom = false
+    this.isBottom = true
     this.id = options.id
     const userInfo = getUserInfo()
     this.userInfo = userInfo
@@ -630,6 +631,7 @@ export default {
       this.isLoad()
       this.userInfo = userInfo
       this.display = false
+      this.noscore = false
     } else {
       this.$navigateTo('/pages/login/index')
     }
@@ -637,26 +639,25 @@ export default {
   onShareAppMessage () {
     // const introductionImageUrl = this.activitie.media.filter(media => media.layout === 'INTRODUCTION')[0]
     const _this = this
+    FootprintsActivities.add({
+      type: 'SHARE',
+      target: {
+        type: 'VINCI_CC_FOOTPRINT',
+        id: _this.activitie.id,
+        name: _this.activitie.name
+      }
+    }).then(res => {
+      if (res.code === 0) {
+        setTimeout(() => {
+          _this.$showToast('分享成功', 'success', '/static/img/goldBean.png')
+        }, 2000)
+      }
+    })
+    // const _this = this
     return {
       title: this.activitie.description || this.activitie.name,
       path: `pages/activitiesDetails/index?id=${this.activitie.id}`,
-      imageUrl: this.shareImg,
-      success (res) {
-        if (res) {
-          FootprintsActivities.add({
-            type: 'SHARE',
-            target: {
-              type: 'VINCI_CC_FOOTPRINT',
-              id: _this.activitie.id,
-              name: _this.activitie.name
-            }
-          }).then(res => {
-            if (res.code === 0) {
-              _this.$showToast('分享成功')
-            }
-          })
-        }
-      }
+      imageUrl: this.shareImg
     }
   }
 }

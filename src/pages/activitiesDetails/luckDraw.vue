@@ -1,81 +1,82 @@
 <template>
-  <swiper previous-margin='150rpx' next-margin="150rpx" :current='current' v-if =" activitie.metadata && activitie.metadata.drawRule !== 'timed'"  :class="{luckDraw:true}">
-   <swiper-item>
-   <div class="circular">
-  </div>
-  <div :class="{prize: true, current:current == 0 }">
-    <div>
-      <div class='bold antialiased'>
-        <form v-if="activitie.metadata.drawRule == 'fullTicket'" :data-state="state + 1" @submit.stop = "modifyState">
-          <button form-type = "submit">点我<br />抽奖</button>
-        </form>
-        <form v-else report-submit @submit.stop = "bets">
-          <button form-type = "submit">点我<br />抽奖</button>
-        </form>
+  <swiper previous-margin='150rpx' next-margin="150rpx" :current='current' v-if=" activitie.metadata && activitie.metadata.drawRule !== 'timed'" :class="{luckDraw:true}">
+    <swiper-item>
+      <div class="circular">
       </div>
-    </div>
-  </div>
-  <div class="circular">
-    <div v-for='i in 3' />
-  </div>
-</swiper-item>
-<swiper-item>
-<div class="circular">
-  <div v-for='i in 3' />
-</div>
-<div :class="{prize: true, current:current == 1 }">
-  <div>
-    <div class='bold antialiased'>
-      <form  v-if="activitie.metadata.drawRule == 'fullTicket'"  :data-state="state + 1" @submit.stop = "modifyState">
-        <button form-type = "submit">
-          加注
-          <span class='tickets' >已下{{participants.tickets.length * activitie.metadata.price}}金豆</span>
-        </button>
-      </form>
-      <form v-else>
-        <button  open-type="share" >分享<br />加速</button>
-      </form>
-    </div>
-  </div>
-</div>
-<div class="circular">
-  <div v-for='i in 3' />
-</div>
-</swiper-item>
-    <swiper-item >
-    <div class="circular">
-      <div v-for='i in 3' />
-    </div>
-    <div :class="{prize: true, current:current == 2 }">
+      <div :class="{prize: true, current:current == 0 }">
+        <div>
+          <div class='bold antialiased'>
+            <form v-if="activitie.metadata.drawRule == 'fullTicket'" :data-state="state + (current == 0 ? 1 : 0)" @submit.stop="modifyState">
+              <button form-type="submit">点我<br />抽奖</button>
+            </form>
+            <form v-else report-submit @submit.stop="bets">
+              <button form-type="submit">点我<br />抽奖</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="circular">
+        <div v-for='i in 3' />
+      </div>
+    </swiper-item>
+    <swiper-item>
+      <div class="circular">
+        <div v-for='i in 3' />
+      </div>
+      <div :class="{prize: true, current:current == 1 }">
+        <div>
+          <div class='bold antialiased'>
+            <form v-if="activitie.metadata.drawRule == 'fullTicket'" :data-state="state + (current == 1 ? 1 : 0)" @submit.stop="modifyState">
+              <button form-type="submit">
+                加注
+                <span class='tickets' >已下{{participants.tickets.length * activitie.metadata.price}}金豆</span>
+              </button>
+            </form>
+            <form v-else>
+              <button open-type="share">分享<br />加速</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="circular">
+        <div v-for='i in 3' />
+      </div>
+    </swiper-item>
+    <swiper-item>
+      <div class="circular">
+        <div v-for='i in 3' />
+      </div>
+      <div :class="{prize: true, current:current == 2 }">
+        <div>
+          <div class='bold antialiased'>
+            <form>
+              <button form-type="submit">等待<br />开奖</button>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="circular">
+      </div>
+    </swiper-item>
+  </swiper>
+  <!-- 按日期开奖 -->
+  <div v-else :class="{'luckDraw-t':true, 'luckDraws-t':state >= 2}">
+    <div class="c"></div>
+    <div class="date" v-if='state == 2'>已参与，{{activitie.endTimeDay}} {{activitie.endTimeHours}}开奖</div>
+    <div class="prize">
       <div>
         <div class='bold antialiased'>
-          <form >
-            <button form-type = "submit">等待<br />开奖</button>
+          <div class="animation">
+          </div>
+          <form report-submit @submit.stop="bets">
+            <button form-type="submit"> {{state == 2 ? "等待开奖":'参与抽奖'}} </button>
           </form>
         </div>
       </div>
     </div>
-    <div class="circular">
-    </div>
-  </swiper-item>
-</swiper>
-<!-- 按日期开奖 -->
-<div v-else :class="{'luckDraw-t':true, 'luckDraws-t':state >= 2}">
-  <div class="c"></div>
-  <div class="date" v-if='state == 2'>已参与，{{activitie.endTimeDay}} {{activitie.endTimeHours}}开奖</div>
-  <div class="prize">
-    <div>
-      <div class='bold antialiased'>
-        <div class="animation">
-        </div>
-        <form report-submit @submit.stop = "bets">
-          <button form-type = "submit"> {{state == 2 ? "等待开奖":'参与抽奖'}} </button>
-        </form>
-      </div>
-    </div>
   </div>
-</div>
 </template>
+
 <script>
   import drawList from '@/components/drawList'
   export default {
