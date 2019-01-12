@@ -6,7 +6,7 @@
         <span class='left'>
           我的金豆：{{score+''}}
         </span>
-        <a class='right' open-type="switchTab" href="/pages/obtainGoldBean/index" >
+        <a class='right' open-type="switchTab" href="/pages/obtainGoldBean/index"  @tap='onGetGold'>
           赚金豆&nbsp;&nbsp;>
         </a>
         <div class="c"></div>
@@ -78,6 +78,9 @@
         this.onPullDownRefresh = true
         this.complete = false
         this.getActivitieList()
+      },
+      onGetGold () {
+        getApp().aldstat.sendEvent('抽奖-顶部赚金豆页面')
       },
       getBean () {
         this.$setStorageSync('getBeanMethod', '首页-赚金豆')

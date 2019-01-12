@@ -41,13 +41,19 @@
     },
     methods: {
       bindgetuserinfo (e) {
-        FootprintsActivities.add({
-          type: 'SIGN_IN'
-        }).then((res) => {
-          if (res.code === 0) {
-            this.isModel = false
-          }
-        })
+        getApp().aldstat.sendEvent('抽奖-签到领取金豆')
+        const userInfo = getUserInfo()
+        if (userInfo.wx) {
+          FootprintsActivities.add({
+            type: 'SIGN_IN'
+          }).then((res) => {
+            if (res.code === 0) {
+              this.isModel = false
+            }
+          })
+        } else {
+          this.$navigateTo('/pages/login/index')
+        }
       },
       getScoreRules (number) {
         ScoreRulesService.getList().then((res) => {

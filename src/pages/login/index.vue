@@ -38,7 +38,11 @@ export default {
       console.log(11)
       AuthService.wxLogin(e.mp.detail).then((res) => {
         if (res.code === 0) {
-          this.$navigateBack()
+          if (res.data.user.wx) {
+            this.$navigateBack()
+          } else {
+            // this.$switchTab('/pages/index/index')
+          }
         }
       })
     }

@@ -88,7 +88,8 @@
     "ignore": [
       "/build/",
       "/src/ext/",
-      "/src/common/js"
+      "/src/common/js",
+      "/static/"
     ],
     "globals": [
       "wx",
@@ -98,7 +99,8 @@
       "}",
       "=",
       "worker",
-      "setInerval"
+      "setInerval",
+      "getApp"
     ]
   },
   "engines": {

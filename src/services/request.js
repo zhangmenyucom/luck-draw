@@ -58,6 +58,9 @@ function refreshToken () {
     if (res.code === 0) {
       ext.setStorageSync('token', `${res.data.tokenType} ${res.data.accessToken}`)
       ext.setStorageSync('refreshToken', res.data.refreshToken)
+    } else {
+      ext.clearStorageSync()
+      ext.navigateTo('/pages/login/index')
     }
     return res
   })

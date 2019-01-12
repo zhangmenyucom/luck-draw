@@ -255,6 +255,14 @@ export default {
       mta.Event.stat('share', {
         method: '抽奖详情页分享'
       })
+      if (!this.display) {
+        getApp().aldstat.sendEvent('抽奖详情-分享领金豆')
+      }
+      const userInfo = getUserInfo()
+      if (!userInfo.wx) {
+        this.$navigateTo('/pages/login/index')
+        return
+      }
       if (this.activitie.owner.id !== this.$getStorageSync('userInfo').id) {
         if (this.activitie.metadata.isShare === 'false') {
           this.$showToast('该活动不允许参与者分享！')
@@ -354,8 +362,12 @@ export default {
     },
     shadeShow () {
       this.display = !this.display
+      if (!this.display) {
+        getApp().aldstat.sendEvent('分享领金豆-取消')
+      }
     },
     toMakeImg (lucky) {
+      getApp().aldstat.sendEvent('分享领金豆-生成分享图')
       TwoCodeService.get().then(res => {
         this.QR = res.data.url
 
@@ -450,6 +462,11 @@ export default {
       })
     },
     modifyState (e) {
+      const userInfo = getUserInfo()
+      if (!userInfo.wx) {
+        this.$navigateTo('/pages/login/index')
+        return
+      }
       let state =
         typeof e === 'number' ? e : parseInt(e.target.dataset.state, 10)
       // 下注或重新下注前查看 积分是否够用
@@ -459,6 +476,11 @@ export default {
           this.isModal = true
           this.noscore = true
           return false
+        }
+        if (state === 1) {
+          getApp().aldstat.sendEvent('抽奖详情-点我抽奖')
+        } else if (state === 3) {
+          getApp().aldstat.sendEvent('抽奖详情-加注')
         }
       }
       setTimeout(() => {
@@ -547,6 +569,7 @@ export default {
     bets (e) {
       // 下注 参与活动
       // this.$showLoading()
+      getApp().aldstat.sendEvent('抽奖详情-下注')
       const { activitie } = this
       const user = getUserInfo()
       console.log('=============formId :' + e.mp.detail.formId)
@@ -626,7 +649,7 @@ export default {
   onShow () {
     this.isAnimation = false
     const userInfo = getUserInfo()
-    if (userInfo.id) {
+    if (userInfo.id && userInfo.wx) {
       this.signInCB()
       this.isLoad()
       this.userInfo = userInfo
@@ -638,6 +661,7 @@ export default {
   },
   onShareAppMessage () {
     // const introductionImageUrl = this.activitie.media.filter(media => media.layout === 'INTRODUCTION')[0]
+    getApp().aldstat.sendEvent('分享领金豆-邀请微信好友')
     const _this = this
     FootprintsActivities.add({
       type: 'SHARE',

@@ -26,7 +26,7 @@
       <div class="info_content">
         <div class="content_detail">
           <div class="infoDetail clearfix">
-            <a href="/pages/meActivitiesList/index?type=all" style="flex:1">
+            <a href="/pages/meActivitiesList/index?type=all" style="flex:1" @tap='onJoin'>
               <div  class="detailNum">{{activitieTotal}}</div>
               <div  class="detailContent">我的抽奖</div>
               <div class="interval"></div>
@@ -37,7 +37,7 @@
               <div class="detailContent">我发起的</div>
               <div class="interval"></div>
             </a> -->
-            <a href="/pages/meActivitiesList/index?type=lucky" style="flex:1">
+            <a href="/pages/meActivitiesList/index?type=lucky" style="flex:1" @tap='onOwn'>
               <div class="detailNum">{{LuckyActivitieTotal}}</div>
               <div class="detailContent">中奖记录</div>
             </a>
@@ -97,7 +97,8 @@
     data () {
       return ({
         userInfo: {
-          wx: {}
+          wx: {avatar: '',
+            nickName: ''}
         },
         activitieTotal: 0,
         LuckyActivitieTotal: 0,
@@ -135,6 +136,12 @@
         this.getDailyFootprintsShare()
         getMeScores.start(this)
       },
+      onOwn () {
+        getApp().aldstat.sendEvent('我的-中奖记录')
+      },
+      onJoin () {
+        getApp().aldstat.sendEvent('我的-我的抽奖')
+      },
       shareWx () {
         if (!this.shareNumber < this.shareRule.maxStep) {
           mta.Event.stat('share', {'method': '我的-立即分享'})
@@ -144,6 +151,7 @@
         mta.Event.stat('bind_phone', {'from': '我的页面'})
       },
       doTask () {
+        getApp().aldstat.sendEvent('我的-做任务赚金豆')
         this.$switchTab('../obtainGoldBean/index')
       },
       commonQuestion () {
@@ -240,10 +248,10 @@
     },
     onShow () {
       const userInfo = getUserInfo()
-      if (userInfo.id) {
+      if (userInfo.wx) {
         this.signInCB({})
       } else {
-        this.isModel = true
+        this.$navigateTo('/pages/login/index')
       }
     },
     onShareAppMessage: share(this.shareCb)

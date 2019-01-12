@@ -1,6 +1,9 @@
+import '../static/sdk/ald-stat'
+// import './common/js/ald-stat'
 import Vue from 'vue'
 import App from './App'
 import ext from './ext/ext'
+
 // import activitieList from '@/components/activitieList'
 // import components from '@/components'
 Vue.use(ext)

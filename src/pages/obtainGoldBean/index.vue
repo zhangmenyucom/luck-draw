@@ -62,7 +62,7 @@
           <div class="expalin" v-if="!(userInfo.contactNumber && userInfo.location && userInfo.birthday)">{{rule.total}} <img src="/static/img/goldBean.png" alt=""> &nbsp;&nbsp;</div>
         </div>
         <div class="right" :class="{noBean:(userInfo.contactNumber && userInfo.location && userInfo.birthday)}">
-          <a v-if="!(userInfo.contactNumber && userInfo.location && userInfo.birthday)" href="/pages/editInfo/index" @click="complete">
+          <a v-if="!(userInfo.contactNumber && userInfo.location && userInfo.birthday)" href="/pages/editInfo/index" @tap="onCompleteInfo">
             去完善
           </a>
           <div v-else class='complete'>
@@ -106,7 +106,7 @@
           <br />
           <div class="expalin">{{item.score}}<img src="/static/img/goldBean.png" alt=""> &nbsp;&nbsp;</div>
         </div>
-        <navigator target='miniProgram' v-if="!adAppIds[item.appId] || adAppIds[item.appId] <= 0" :app-id="item.appId" :path="item.path" @error='fail' @success="() => toXcx(item.appId, item.title)">领取</navigator>
+        <navigator target='miniProgram' v-if="!adAppIds[item.appId] || adAppIds[item.appId] <= 0" :app-id="item.appId" :path="item.path" @error='fail' @success="() => toXcx(item.appId, item.title)" @fail='() => toXcxFail(item.appId, item.title)' @complete='() => toXcxClick(item.appId, item.title)'>领取</navigator>
         <div v-else class='complete'>
           今日已领完
         </div>
@@ -165,6 +165,9 @@
     methods: {
       fail (err) {
         console.log('err', err)
+      },
+      onCompleteInfo () {
+        getApp().aldstat.sendEvent('赚金豆-去完善资料')
       },
       getPhoneNumber (e) {
         return BindPhoneService.add({
@@ -229,6 +232,7 @@
         getMeScores.start(this)
       },
       shareWx () {
+        getApp().aldstat.sendEvent('赚金豆-分享微信群')
         mta.Event.stat('share', {
           'method': '赚金豆分享'
         })
@@ -242,6 +246,11 @@
         this.display = !this.display
       },
       toXcx (id, title) {
+        if (id === 'wx2c9a9ada28d13fe8') { // 2048
+          getApp().aldstat.sendEvent('赚金豆-即将打卡2048方块拼除【允许】')
+        } else if (id === 'wx2c6bf13295abb15f') { // 生活福利惠
+          getApp().aldstat.sendEvent('赚金豆-即将打开福利惠【允许】')
+        }
         Footprints.add(id, title).then((res) => {
           if (res.code === 0) {
             this.getMeScores()
@@ -249,6 +258,20 @@
             this.isMiniProgram = true
           }
         })
+      },
+      toXcxFail (id, title) {
+        if (id === 'wx2c9a9ada28d13fe8') { // 2048
+          getApp().aldstat.sendEvent('赚金豆-即将打卡2048方块拼除【取消】')
+        } else if (id === 'wx2c6bf13295abb15f') { // 生活福利惠
+          getApp().aldstat.sendEvent('赚金豆-即将打开福利惠【取消】')
+        }
+      },
+      toXcxClick (id, title) {
+        if (id === 'wx2c9a9ada28d13fe8') { // 2048
+          getApp().aldstat.sendEvent('赚金豆-2048方块拼除领取')
+        } else if (id === 'wx2c6bf13295abb15f') { // 生活福利惠
+          getApp().aldstat.sendEvent('赚金豆-福利惠领取')
+        }
       },
       getMeScores () {
         MeScoresService.getList().then(res => {
@@ -303,16 +326,17 @@
       this.$setStorageSync('signIn', false)
     },
     onShow () {
-      if (this.isMiniProgram) {
-        this.$showToast('领取成功', 'success', '/static/img/goldBean.png')
-        this.isMiniProgram = false
-      }
       const userInfo = getUserInfo()
-      if (userInfo.id) {
+      if (userInfo.wx) {
         this.userInfo = userInfo
         this.signInCB({})
       } else {
         this.isModel = true
+        this.$navigateTo('/pages/login/index')
+      }
+      if (this.isMiniProgram) {
+        this.$showToast('领取成功', 'success', '/static/img/goldBean.png')
+        this.isMiniProgram = false
       }
       let from = ''
       if (!this.$getStorageSync('getBeanMethod')) {
