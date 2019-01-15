@@ -1,12 +1,16 @@
 <template>
   <div :class="{loading: true, isShow: !isshow }">
-    <div class="animation" v-if='!isanimation'>
-      <img class="bean" src="/static/img/bean.png" />
-      <img class="shadow" src="/static/img/shadow.png" />
+    <!-- <div class="gif"> -->
+      <img src="/static/img/loading.gif" />
+    <!-- </div> -->
+    
+    <!-- <div class="animation" v-if='!isanimation'>
+      <img class="bean" src="https://img.zcool.cn/community/012b3c599276cc0000002129ebff53.gif" /> -->
+      <!-- <img class="shadow" src="/static/img/shadow.png" />
       <div class="light">
-        <img v-for='(item, i) in  6' :class="'imglight' + (item+1)" src="/static/img/lighta.png">
-      </div>
-    </div>
+        <img v-for='(item, i) in  6' :class="'imglight' + (item+1)" src="https://img.zcool.cn/community/012b3c599276cc0000002129ebff53.gif">
+      </div> -->
+    <!-- </div> -->
   </div>
 </template>
 
@@ -43,12 +47,18 @@
   }
   .loading{
     position: fixed;
-    top:0;
-    bottom:0;
+    // top:0;
+    // bottom:0;
     left:0;
     right: 0;
     background:#fff;
-    z-index: 100
+    z-index: 100;
+    line-height: 100vh;
+    text-align: center;
+    img{
+      width: 50*@2;
+      height: 50*@2;
+    }
   }
   .animation{
     transform: translateY(-50*@2);

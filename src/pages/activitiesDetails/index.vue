@@ -157,7 +157,10 @@ import FootprintsActivities from '@/services/footprintsActivities'
 import ActivitiesService from '@/services/activitiesService'
 import ParticipantsService from '@/services/participantsService'
 import PictureService from '@/services/pictureService.js'
-import { getUserInfo } from '@/utils'
+import {
+  check,
+  getUserInfo
+} from '@/utils'
 import MeScoresService from '@/services/meScoresService.js'
 import TwoCodeService from '@/services/twoCodeService.js'
 import getMeScores from '@/common/js/getMeScores.js'
@@ -445,7 +448,7 @@ export default {
           if (res.data.metadata.drawRule === 'timed') {
             const date = new Date(res.data.endTime)
             res.data.endTimeDay = `${date.getMonth() + 1}月${date.getDate()}日`
-            res.data.endTimeHours = `${date.getHours()}:${date.getMinutes()}分`
+            res.data.endTimeHours = `${check(date.getHours())}:${check(date.getMinutes())}分`
           }
           // 过滤商品介绍图
           this.mediaInfoimg = res.data.media.filter(
@@ -569,6 +572,14 @@ export default {
     bets (e) {
       // 下注 参与活动
       // this.$showLoading()
+
+      if (this.activitie.metadata.price > this.score) {
+        // this.$showToast('金豆不足')
+        this.isModal = true
+        this.noscore = true
+        return
+      }
+
       getApp().aldstat.sendEvent('抽奖详情-下注')
       const { activitie } = this
       const user = getUserInfo()

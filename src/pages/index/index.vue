@@ -31,6 +31,7 @@
   import top from '@/components/top'
   import ActivitiesService from '@/services/activitiesService'
   import {
+    check,
     getUserInfo
   } from '@/utils'
   import getMeScores from '@/common/js/getMeScores.js'
@@ -122,7 +123,7 @@
               if (activitie.metadata.drawRule === 'timed') {
                 const date = new Date(activitie.endTime)
                 activitie.endTimeDay = `${date.getMonth() + 1}月${date.getDate()}日`
-                activitie.endTimeHours = `${date.getHours()}:${date.getMinutes()}分`
+                activitie.endTimeHours = `${check(date.getHours())}:${check(date.getMinutes())}分`
               }
               if (activitie.metadata.hasSponsor === 'true') {
                 activitie.sponsor = JSON.parse(activitie.metadata.sponsor)

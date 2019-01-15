@@ -71,6 +71,7 @@
               <div class="weui-cell__ft weui-cell__ft_in-access"></div>
           </button>
         </div>
+
 </div>
 <signIn :signInCB = "signInCB" :showModel = "!isModel"/>
 </div>
