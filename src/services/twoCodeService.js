@@ -3,9 +3,9 @@ import request from './request'
 import config from 'config'
 
 class TwoCodeService extends ServiceBase {
-  get () {
+  get (id) {
     return request.post(`${this.url}/${config.appId}/qr-codes/limit`, {
-      path: 'pages/activitiesDetails/index'
+      path: 'pages/activitiesDetails/index?id=' + id + '&method=share'
     })
   }
 }

@@ -371,7 +371,7 @@ export default {
     },
     toMakeImg (lucky) {
       getApp().aldstat.sendEvent('分享领金豆-生成分享图')
-      TwoCodeService.get().then(res => {
+      TwoCodeService.get(this.activitie.id).then(res => {
         this.QR = res.data.url
 
         if (res.code === 0) {
@@ -391,6 +391,10 @@ export default {
       })
     },
     getActivitie (id) {
+      if ( !id) {
+        this.$switchTab('/pages/index/index')
+        return 
+      }
       // 获取活动详情
       ActivitiesService.get({
         id,
@@ -616,6 +620,7 @@ export default {
 
     signInCB () {
       const id = this.id
+
       this.getActivitie(id)
       this.getParticipants(id)
       this.getMeScores()
@@ -658,6 +663,7 @@ export default {
     getMeScores.end()
   },
   onShow () {
+    
     this.isAnimation = false
     const userInfo = getUserInfo()
     if (userInfo.id && userInfo.wx) {

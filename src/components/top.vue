@@ -31,9 +31,8 @@
       }
     },
     onLoad () {
-      const isHome = new Set([1008, 1014, 1007, '1007', 1011, '1011', 'createActivities'])
+      const isHome = new Set([1007, 1008, 1011, 1012, 1013, 1014, 1036, 1047, 1048, 1049, '1007', '1011', 'createActivities'])
       const scene = this.$getStorageSync('topscene')
-
       // 判断是否是isIPhoneX
       const systemInfo = this.$getSystemInfoSync()
       this.isIPhoneX = systemInfo.model.indexOf('iPhone X') > -1
