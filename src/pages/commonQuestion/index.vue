@@ -23,6 +23,11 @@
           抽奖规则
         </div>
         <div class="content">
+          <!-- <ol>
+            <li>用户每日可参加多个抽奖活动</li>
+            <li>用户每日可参加多个日可参加多个日可参加多个日可参加多个日可参加多个抽奖活动</li>
+            <li>用户每日可参加多个日可参加多个日可参加多个日可参加多个日可参加多个日可参加多个抽奖活动</li>
+          </ol> -->
           1、用户每日可参加多个抽奖活动<br>
           2、每日会有两个商品的开奖机会<br>
           3、参与抽奖过程中按提示点击分享可以在分享成功后获得相应的金豆奖励用作抽奖使用<br>
@@ -82,6 +87,13 @@ import top from '@/components/top'
       color: #999999;
       font-size: 12px;
       text-align:justify;
+      // > ol {
+      //   list-style-type: decimal;
+      //   padding-left:20px;
+      //   > li {
+      //     display: list-item;
+      //   }
+      // }
     }
   }
 </style>
