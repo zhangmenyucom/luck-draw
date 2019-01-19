@@ -391,9 +391,9 @@ export default {
       })
     },
     getActivitie (id) {
-      if ( !id) {
+      if (!id) {
         this.$switchTab('/pages/index/index')
-        return 
+        return
       }
       // 获取活动详情
       ActivitiesService.get({
@@ -663,7 +663,6 @@ export default {
     getMeScores.end()
   },
   onShow () {
-    
     this.isAnimation = false
     const userInfo = getUserInfo()
     if (userInfo.id && userInfo.wx) {
