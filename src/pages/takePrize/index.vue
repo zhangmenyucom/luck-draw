@@ -7,7 +7,7 @@
     </div>
     <div class="address">
         <span class="title bold">
-          收货地址
+          收货地址<span style="color: #FE4C52;">*</span><span style="margin-left:8rpx;color: #999999;">（请填写真实地址，用于寄送实物奖品）</span>
         </span>
       <div @tap="chooseAddress" class="center">
           <div>
@@ -22,7 +22,7 @@
     </div>
     <div class="address">
       <span class="title bold">
-        备注
+        邮箱地址<span style="color: #FE4C52;">*</span><span style="margin-left:8rpx;color: #999999;">（用于发放虚拟奖品，如手机充值卡、JD卡）</span>
       </span>
       <div class="center">
         <textarea auto-height :disabled='!isTakePrize' v-model='remarks' placeholder='请输入' name=""></textarea>
@@ -87,6 +87,10 @@
       addAddress () {
         if (!this.address.phone) {
           this.$showToast('请选择地址')
+          return false
+        }
+        if (!this.address.remarks) {
+          this.$showToast('请填写邮箱地址')
           return false
         }
         this.address.remarks = this.remarks

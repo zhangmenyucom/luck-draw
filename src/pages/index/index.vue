@@ -81,7 +81,7 @@
         this.getActivitieList()
       },
       onGetGold () {
-        getApp().aldstat.sendEvent('抽奖-顶部赚金豆页面')
+        getApp().aldstat.sendEvent('抽奖-顶部赚金豆按钮')
       },
       getBean () {
         this.$setStorageSync('getBeanMethod', '首页-赚金豆')
@@ -158,7 +158,10 @@
         getMeScores.start(this)
       }
     },
-    onLoad () {
+    onLoad (opt) {
+      if (opt.from === 'qianbaoPay') {
+        getApp().aldstat.sendEvent('抽奖-来源-钱包Pay-广告位')
+      }
       mta.Page.init()
     },
     onHide () {

@@ -15,39 +15,56 @@
             <span class="goldBean">
               满{{item.metadata.ticketsNum * item.metadata.price}}金豆开奖<span style="margin-left:8rpx;color: #666666;">|</span>
             </span>
-            <span class="joined" v-if="item.metadata.participated=='true'">
+            <!-- <span class="joined" v-if="item.metadata.participated=='true'">
               <img style="width:23rpx;height:23rpx;margin-right:3px;" src="/static/img/Combined Shape.png" />
               已参与
-            </span>
-            <div class="fullGoldBean" v-else>
+            </span> -->
+            <div class="fullGoldBean">
               {{item.metadata.price}}
               <img src='/static/img/goldBean.png'/>
             </div>
-            <div class="freeClick">
+            <div v-if="item.metadata.participated=='true'" class="joinedClick">
+              已参与
+            </div>
+            <div class="freeClick" v-else>
               免费抽奖
             </div>
           </div>
           <div v-if="item.metadata.drawRule === 'timed'" style="margin-top: 5rpx;">
             <span class="goldBean">
-              {{item.endTimeDay}}{{item.endTimeHours}}开奖<span style="margin-left:8rpx;color: #666666;" v-if="item.metadata.participated=='true'">|</span>
+              {{item.endTimeDay}}{{item.endTimeHours}}开奖<span style="margin-left:8rpx;color: #666666;">|</span>
             </span>
-            <span class="joined" v-if="item.metadata.participated=='true'">
+            <!-- <span class="joined" v-if="item.metadata.participated=='true'">
               <img style="width:23rpx;height:23rpx;margin-right:3px;" src="/static/img/Combined Shape.png" />
+              已参与   
+            </span> -->
+            <div class="fullGoldBean">
+              {{item.metadata.price}}
+              <img src='/static/img/goldBean.png'/>
+            </div>
+            <div v-if="item.metadata.participated=='true'" class="joinedClick">
               已参与
-            </span>
-            <div class="freeClick">
+            </div>
+            <div class="freeClick" v-else>
               免费抽奖
             </div>
           </div>
           <div v-if="item.metadata.drawRule === 'fullParticipant'" style="margin-top: 5rpx;">
             <span class="goldBean">
-              满{{item.metadata.participantsNum}}人开奖<span style="margin-left:8rpx;color: #666666;">{{item.metadata.participated=='true'?'|':' '}}</span>
+              满{{item.metadata.participantsNum}}人开奖<span style="margin-left:8rpx;color: #666666;">|</span>
             </span>
-            <span class="joined" v-if="item.metadata.participated=='true'">
+            <!-- <span class="joined" v-if="item.metadata.participated=='true'">
               <img style="width:23rpx;height:23rpx;margin-right:3px;" src="/static/img/Combined Shape.png" />
               已参与
-            </span>
-            <div class="freeClick">
+            </span> -->
+            <div class="fullGoldBean">
+              {{item.metadata.price}}
+              <img src='/static/img/goldBean.png'/>
+            </div>
+            <div v-if="item.metadata.participated=='true'" class="joinedClick">
+              已参与
+            </div>
+            <div class="freeClick" v-else>
               免费抽奖
             </div>
           </div>
@@ -71,7 +88,10 @@
     methods: {
       formSubmit (e) {
         const url = this.onDraw[e.target.dataset.index].url
+        const name = this.onDraw[e.target.dataset.index].items[0].name
         this.$navigateTo(url)
+        getApp().aldstat.sendEvent('抽奖-点击免费抽奖')
+        getApp().aldstat.sendEvent('抽奖-点击免费抽奖-'+name)
       }
     }
   }
@@ -171,6 +191,21 @@
     line-height:30*@2;
     margin-top: -8*@2;
     border-radius: 2*@2;
+  }
+
+  .joinedClick {
+    font-size: 14*@2;
+    font-family: PingFangSC-Semibold;
+    float: right;
+    font-weight: 400;
+    color:#FE4C52;
+    // background: #FE4C52;
+    width:72*@2;
+    height:30*@2;
+    line-height:30*@2;
+    margin-top: -8*@2;
+    border-radius: 2*@2;
+    border:1*@2 solid #FE4C52;
   }
 
   img {

@@ -42,7 +42,7 @@
               <div class="detailContent">中奖记录</div>
             </a>
           </div>
-          <div class="weui-cell" @click="doTask">
+          <!-- <div class="weui-cell" @click="doTask">
             <div class="weui-cell__hd" style="position: relative;margin-right: 10px;">
                 <image src="/static/img/me.png" style="width: 143px; height: 67px; display: block"/>
             </div>
@@ -51,7 +51,7 @@
                 <div><span style="color:#F3B913">100</span>金豆待领取</div>
             </div>
             <div class="weui-cell__ft weui-cell__ft_in-access"></div>
-          </div>
+          </div> -->
           <!-- <div class="weui-cell weui-cell_access">
               <div class="weui-cell__bd">
                   <div style="display: inline-block; vertical-align: middle">我的朋友</div>
