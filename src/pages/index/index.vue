@@ -159,8 +159,10 @@
       }
     },
     onLoad (opt) {
-      if (opt.from === 'qianbaoPay') {
-        getApp().aldstat.sendEvent('抽奖-来源-钱包Pay-广告位')
+      if (opt.from === 'qianbaoPay-payResult') {
+        getApp().aldstat.sendEvent('抽奖-来源-钱包Pay-支付完成-广告位')
+      } else if (opt.from === 'qianbaoPay-ad') {
+        getApp().aldstat.sendEvent('抽奖-来源-钱包Pay-推广-广告位')
       }
       mta.Page.init()
     },

@@ -91,7 +91,7 @@
         const name = this.onDraw[e.target.dataset.index].items[0].name
         this.$navigateTo(url)
         getApp().aldstat.sendEvent('抽奖-点击免费抽奖')
-        getApp().aldstat.sendEvent('抽奖-点击免费抽奖-'+name)
+        getApp().aldstat.sendEvent('抽奖-点击免费抽奖-' + name)
       }
     }
   }

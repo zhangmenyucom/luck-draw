@@ -260,7 +260,7 @@ export default {
       })
       if (!this.display) {
         getApp().aldstat.sendEvent('抽奖详情-分享领金豆')
-        getApp().aldstat.sendEvent('抽奖详情-分享领金豆-'+this.activitie.items[0].name)
+        getApp().aldstat.sendEvent('抽奖详情-分享领金豆-' + this.activitie.items[0].name)
       }
       const userInfo = getUserInfo()
       if (!userInfo.wx) {
@@ -368,12 +368,12 @@ export default {
       this.display = !this.display
       if (!this.display) {
         getApp().aldstat.sendEvent('分享领金豆-取消')
-        getApp().aldstat.sendEvent('分享领金豆-取消-'+this.activitie.items[0].name)
+        getApp().aldstat.sendEvent('分享领金豆-取消-' + this.activitie.items[0].name)
       }
     },
     toMakeImg (lucky) {
       getApp().aldstat.sendEvent('分享领金豆-生成分享图')
-      getApp().aldstat.sendEvent('分享领金豆-生成分享图-'+this.activitie.items[0].name)
+      getApp().aldstat.sendEvent('分享领金豆-生成分享图-' + this.activitie.items[0].name)
       TwoCodeService.get(this.activitie.id).then(res => {
         this.QR = res.data.url
 
@@ -489,10 +489,10 @@ export default {
         }
         if (state === 1) {
           getApp().aldstat.sendEvent('抽奖详情-点我抽奖')
-          getApp().aldstat.sendEvent('抽奖详情-点我抽奖-'+this.activitie.items[0].name)
+          getApp().aldstat.sendEvent('抽奖详情-点我抽奖-' + this.activitie.items[0].name)
         } else if (state === 3) {
           getApp().aldstat.sendEvent('抽奖详情-加注')
-          getApp().aldstat.sendEvent('抽奖详情-加注-'+this.activitie.items[0].name)
+          getApp().aldstat.sendEvent('抽奖详情-加注-' + this.activitie.items[0].name)
         }
       }
       setTimeout(() => {
@@ -590,7 +590,7 @@ export default {
       }
 
       getApp().aldstat.sendEvent('抽奖详情-下注')
-      getApp().aldstat.sendEvent('抽奖详情-下注-'+this.activitie.items[0].name)
+      getApp().aldstat.sendEvent('抽奖详情-下注-' + this.activitie.items[0].name)
       const { activitie } = this
       const user = getUserInfo()
       console.log('=============formId :' + e.mp.detail.formId)
@@ -684,7 +684,7 @@ export default {
   onShareAppMessage () {
     // const introductionImageUrl = this.activitie.media.filter(media => media.layout === 'INTRODUCTION')[0]
     getApp().aldstat.sendEvent('分享领金豆-邀请微信好友')
-    getApp().aldstat.sendEvent('分享领金豆-邀请微信好友-'+this.activitie.items[0].name)
+    getApp().aldstat.sendEvent('分享领金豆-邀请微信好友-' + this.activitie.items[0].name)
     const _this = this
     FootprintsActivities.add({
       type: 'SHARE',
