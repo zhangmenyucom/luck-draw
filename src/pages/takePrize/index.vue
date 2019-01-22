@@ -89,12 +89,12 @@
           this.$showToast('请选择地址')
           return false
         }
+        this.address.remarks = this.remarks
         if (!this.address.remarks) {
           this.$showToast('请填写邮箱地址')
           return false
         }
-        this.address.remarks = this.remarks
-        console.log('this.participant', this.participant)
+        // console.log('this.participant', this.participant)
         wx.showModal({
           title: '确认使用以下收货信息？',
           content: this.address.name + '   ' + this.address.phone + '\n' + this.address.addition,
@@ -120,6 +120,7 @@
       const userInfo = getUserInfo()
       this.userInfo = userInfo
       this.getParticipants(data.id)
+      this.remarks = ''
     },
     onShareAppMessage: share()
   }

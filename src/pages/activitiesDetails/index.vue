@@ -626,9 +626,10 @@ export default {
 
     signInCB () {
       const id = this.id
-
-      this.getActivitie(id)
       this.getParticipants(id)
+      setTimeout(() => {
+        this.getActivitie(id)
+      }, 300)
       this.getMeScores()
       getMeScores.start(this)
     }

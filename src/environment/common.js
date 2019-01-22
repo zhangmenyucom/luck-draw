@@ -8,7 +8,7 @@ export default {
   ]),
   noLoading: new Set([`/mc/v1/me/scores`, `/mc/v1/me/scores?`]),
   share: {
-    title: `佩奇来了~`,
+    title: `福利来了~`,
     path: `pages/index/index`,
     imageUrl: `/static/img/share.jpg`
   }
